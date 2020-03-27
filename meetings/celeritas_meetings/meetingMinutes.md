@@ -26,3 +26,20 @@ and use spack.
 For documentation we will use GitHub, at least for now.
 
 Slides for the CERN Geant4 R&D meeting will be shared soon.
+
+
+
+# Fri Mar 27, 2020
+
+Discussed extension of celeritas requirement list:
+- List is ample, but it is the needed equivalent information for HEP experiments.
+- Description is very general, therefore Kevin Pedro may join the meeting next
+  week to help clarifying the requirements.
+
+
+
+CERN Geant4 R&D meeting:
+- Team decided to aim for Apr 14 instead of Mar 31st.
+- Focus of the talk so far is to present the team, describe the scope of the
+project, and show openness to engage with the community.
+- Slides will be sent around for appraisal.
