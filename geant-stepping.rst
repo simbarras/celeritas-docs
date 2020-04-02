@@ -60,19 +60,19 @@ steps until the track is marked as stopped or killed.
 Outer Stepping function:
 ------------------------
 
-  1. Select process (Along or Post) which shortest ‘proposed physics
-     interaction length’ and gather: [ Process, Type, Proposed Step Length,
-     ProcessFunc to be executed ]
+1. Select process (Along or Post) which shortest ‘proposed physics
+   interaction length’ and gather: [ Process, Type, Proposed Step Length,
+   ProcessFunc to be executed ]
 
-  2. Find next Geometry boundary
+2. Find next Geometry boundary
 
-  3. MSC preparation
+3. MSC preparation
 
-  4. Inner Function (ProcessFunc)
+4. Inner Function (ProcessFunc)
 
-  5. Sensitive Hit recording
+5. Sensitive Hit recording
 
-  6. User Action(s)
+6. User Action(s)
 
 Note: Having an inner function is not strictly necessary but allow to
 express the “early termination” of that code path via return statements.
@@ -81,52 +81,54 @@ express the “early termination” of that code path via return statements.
 InnerFunc(ProcessFunc):
 -----------------------
 
-  a. Integrate Equation of Motion
+a. Integrate Equation of Motion
 
-  b. if !alive **return**
+b. ::
+     if !alive **return**
 
-  c. while did not reach physics length and did not cross a geometrical
-     boundary::
+c. while did not reach physics length and did not cross a geometrical
+   boundary::
 
-       Find next Geometry boundary
-       Integrate Equation of Motion
-       if !alive **return**
+     Find next Geometry boundary
+     Integrate Equation of Motion
+     if !alive **return**
 
-  d. Increase time, decrease interaction length. Delayed updates from MSC
-     AlongStep.
+d. Increase time, decrease interaction length. Delayed updates from MSC
+   AlongStep.
 
-  e. exec ProcessFunc
+e. exec ProcessFunc
 
 ProcessFunc one of:
 ~~~~~~~~~~~~~~~~~~~
 
-  A. Continuous process (AlongStep) was selected (proposed the shortest
-     interaction length) ; also includes the “always-on” continuous
-     processes.::
+A. Continuous process (AlongStep) was selected (proposed the shortest
+   interaction length) ; also includes the “always-on” continuous
+   processes.::
 
-       For each AlongStep process
-         AlongStepDoIt
+     For each AlongStep process
+       AlongStepDoIt
+       if stopped
+         if alive and has-at-rest-processes
+           exec AtRest
+         **return**
+
+B. Discrete process (PostStep) was selected ; also includes the
+   “always-on” continuous and discrete processes.::
+
+     For each along process
+       AlongStepDoIt
+       if stopped
+         if alive && has-at-rest-processes
+          exec AtRest
+         **return**
+
+     For selected PostStep
+       PostStepDoIt
          if stopped
-           if alive and has-at-rest-processes
+           if alive && has-at-rest-processes
              exec AtRest
            **return**
 
-  B. Discrete process (PostStep) was selected ; also includes the
-     “always-on” continuous and discrete processes.::
-
-       For each along process
-         AlongStepDoIt
-         if stopped
-           if alive && has-at-rest-processes
-            exec AtRest
-           **return**
-
-       For selected PostStep
-         PostStepDoIt
-           if stopped
-             if alive && has-at-rest-processes
-               exec AtRest
-             **return**
 or
 
 .. _processfunc-one-of-1:
