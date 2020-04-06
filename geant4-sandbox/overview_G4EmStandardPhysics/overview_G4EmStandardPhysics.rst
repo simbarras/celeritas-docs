@@ -42,7 +42,8 @@ The datasets
 
 The data was simulated by placing the G4ParticleGun at the center of CMS and
 simulating primaries at uniformly random distributed directions over a full
-4$\pi$ solid angle. Specifications of each simulation is described below.
+4$\pi$ solid angle. This analysis used the **master-0c7588d** commit.
+Specifications of each simulation is described below.
 
 To achieve decent statistics without using too much computing time and disk
 space, **2 sets of simulations with 1 TeV primaries** were performed:
