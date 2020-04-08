@@ -55,3 +55,17 @@ the long run.
 **Meeting time changed to every Wednesday, 2 pm, Eastern Time.**
 - Kevin and Sunanda are more than welcome to join regularly, but may be present
 once every 2 weeks.
+
+
+# Wed Apr 8, 2020
+
+- Discussion about Geant4 gdml input, and possible routes to parse the data,
+since VecGeom does not handles the materials and specified energy cuts.
+- CERN Geant4 R&D meeting:
+  - 2 talks will be presented:
+    - Monte Carlo neutron transport in the ECP Coupled Monte Carlo Neutronics
+    and Fluid Flow Simulation of Small Modular Reactor (ExaSMR) project
+    - Celeritas: An accelerated charged-particle detector simulation application
+    for LHC experiments
+  - Slides for the first talk are already on Slack (# general) for appraisal.
+  - Slides for the second talk will be available soon.
