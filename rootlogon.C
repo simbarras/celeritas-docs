@@ -7,9 +7,12 @@
  */
 //---------------------------------------------------------------------------//
 /*!
- *  To set this as default:
- *  Create a .rootrc file in your home directory and add the following line:
- *  Rint.Logon: /path/to/rootlogon.C
+ * To set this as default:
+ * Create a .rootrc file in your home directory and add the following line:
+ * Rint.Logon: /path/to/rootlogon.C
+ *
+ * To load this only inside a specific folder:
+ * Simply copy this file to the folder you are running your ROOT macros.
  */
 //---------------------------------------------------------------------------//
 
