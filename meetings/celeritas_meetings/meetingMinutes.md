@@ -69,3 +69,19 @@ since VecGeom does not handles the materials and specified energy cuts.
     for LHC experiments
   - Slides for the first talk are already on Slack (# general) for appraisal.
   - Slides for the second talk will be available soon.
+
+
+# Wed Apr 15, 2020
+
+- Guilherme is trying to compile `vecGeom-test` and is running into an error
+where headers are searched as `"root/TRootHeader.h"` instead of simply `TRootHeader`.
+- Seth is having a null pointer issue when using the CUDA NavigationPool.
+- Discussion about the implications of having all the physics code connected to
+the transport loop. The larger the code, the more is the usage of on device
+registry, which decreases occupancy.
+- Recap on Tom's presentations in the Geant4 Working Group meeting on Apr 14 for
+the ones who could not make it. The highlights are:
+  - Overall good reception.
+  - Community is aware of the challenges and agrees that tackling only part of
+  the physics is valuable.
+  - Being able to simulate EM showers in the calorimeter is a good milestone.
