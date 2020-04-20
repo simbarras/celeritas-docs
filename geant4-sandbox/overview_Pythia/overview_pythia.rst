@@ -135,7 +135,7 @@ relevance of each physics process for each particle type. The separation by
 particle type implies that in each row the fractions add up to 1.
 
 
-.. figure:: figures/processesHist_em.svg
+.. figure:: figures/processesHist_EM.svg
 
    Overall contribution of each physics process for the EM physics list
    (G4EmStandardPhysics).
