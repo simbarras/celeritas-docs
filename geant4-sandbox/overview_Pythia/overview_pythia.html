@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.15.2: http://docutils.sourceforge.net/" />
+<title>overview_pythia.rst</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 7952 2016-07-26 18:15:59Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: grey; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document">
+
+
+<div class="section" id="abstract">
+<h1>Abstract</h1>
+<p>This document provides an overview of the use of a fairly realistic simulation
+using Pythia + Geant4 with the cms2018.gdml geometry. The lack of magnetic field
+is the important caveat when it comes to compare to real CMS simulations. This
+brief data analysis provides a few insights on both EM (G4EmStandardPhysics) and
+full (FTFP_BERT) Geant4 physics lists. The analysis presents the number of
+secondaries that are to be expected, the number of steps that each track should
+undergo, and which physics processes are more relevant.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="the-geant4-sandbox">
+<h1>The Geant4-Sandbox</h1>
+<p>The Geant4-Sandbox is being developed as a package of the Celeritas Project on
+GitHub. It loads a specified gdml file and uses the G4ParticleGun to simulate
+events. The current output is a ROOT file with 4 TTrees: <em>run</em>, <em>event</em>, <em>track</em>,
+and <em>step</em>. For more information, visit:</p>
+<p><a class="reference external" href="https://github.com/celeritas-project/geant4-sandbox">https://github.com/celeritas-project/geant4-sandbox</a></p>
+</div>
+<div class="section" id="the-purpose-of-the-analysis">
+<h1>The purpose of the analysis</h1>
+<p>The purpose of the analysis consists in understanding the dynamics of Geant4's
+simulation. We use the ROOT output file from the Geant4-Sandbox to verify the
+number of daughters produced by each particle, the average number of steps each
+track undergoes, and which are the most relevant physics processes for each
+particle type. This general overview will allow us to define a more efficient
+path forward for developing Celeritas.</p>
+</div>
+<div class="section" id="the-datasets">
+<h1>The datasets</h1>
+<p>The data was simulated using a CMS HEPEVT data file containing 50 events. This
+analysis used the <strong>master-648ef5a</strong> commit. Specifications of each simulation
+are shown below.</p>
+<p>To achieve decent statistics without using too much computing time and disk
+space, <strong>2 sets of simulations</strong> were performed:</p>
+<ul class="simple">
+<li><strong>Set 1</strong>: Only <em>run</em> and <em>event</em> TTrees are filled, largely decreasing disk
+usage. This set is used to plot the distribution of number of tracks per event
+for different primaries.</li>
+<li><strong>Set 2</strong>: <em>All</em> TTrees are recorded. This set is used to plot distributions
+of the number of steps per track, number of daughter particles each track
+produces, and which physics processes are more relevant.</li>
+</ul>
+<p>Details of both datasets are presented in the table below:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="39%" />
+<col width="27%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Set</th>
+<th class="head">Physics</th>
+<th class="head">Number of events</th>
+<th class="head">Number of steps</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td rowspan="2">1</td>
+<td>Full (FTFP_BERT)</td>
+<td>50</td>
+<td>N/A</td>
+</tr>
+<tr><td>EM (G4EmStandardPhysics)</td>
+<td>50</td>
+<td>N/A</td>
+</tr>
+<tr><td rowspan="2">2</td>
+<td>Full (FTFP_BERT)</td>
+<td>10</td>
+<td>474,729,747</td>
+</tr>
+<tr><td>EM (G4EmStandardPhysics)</td>
+<td>10</td>
+<td>180,578,064</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="results">
+<h1>Results</h1>
+<div class="section" id="tracks-per-event">
+<h2>Tracks per event</h2>
+<p><strong>Set 1</strong> is used to verify the number of tracks per simulated event for both
+EM (G4EmStandardPhysics) and Full (FTFP_BERT) physics lists. The total number
+of tracks differs only by a factor of 3.</p>
+<div class="figure">
+<object data="figures/tracksPerEvent.svg" type="image/svg+xml">
+figures/tracksPerEvent.svg</object>
+<p class="caption">Number of tracks per event for full (FTFP_BERT) and EM (G4EmStandardPhysics)
+physics lists. Dashed lines represent their mean values.</p>
+</div>
+</div>
+<div class="section" id="daughters-per-track">
+<h2>Daughters per track</h2>
+<p>The number of daughters per each track ID was plotted using the track parent
+information available on <strong>Set 2</strong>. Since each track ID is reshuffled/reused to
+define different particles in different events, a cumulative histogram is
+meaningless. Therefore, the plot below only shows a single event of each sample.</p>
+<div class="figure">
+<img alt="figures/daughtersPerTrackID.png" src="figures/daughtersPerTrackID.png" style="width: 572.75px; height: 442.5px;" />
+<p class="caption">Number of daughters produced by each track ID.</p>
+</div>
+</div>
+<div class="section" id="steps-per-track">
+<h2>Steps per track</h2>
+<p>From <strong>Set 2</strong>, the distributions of the number of steps per each track show
+that most particles are fully transported with less than 100 steps. Nevertheless,
+a few tracks still reach up to 5E3 steps.</p>
+<div class="figure">
+<object data="figures/stepsPerTrack.svg" type="image/svg+xml">
+figures/stepsPerTrack.svg</object>
+<p class="caption">Number of steps that each track undergoes for each physics list.</p>
+</div>
+</div>
+<div class="section" id="relevance-of-each-physics-process">
+<h2>Relevance of each physics process</h2>
+<p><strong>Set 2</strong> data allows evaluating the relevance that each physics process has in
+the simulation. In this context, relevance of a process is simply the number of
+steps that a given physics process method was invoked divided the total number of
+steps in the simulation. The 1D histogram below presents the fraction of steps
+that undergone a specific physics process, while the 2D histogram shows the
+relevance of each physics process for each particle type. The separation by
+particle type implies that in each row the fractions add up to 1.</p>
+<div class="figure">
+<object data="figures/processesHist_em.svg" type="image/svg+xml">
+figures/processesHist_em.svg</object>
+<p class="caption">Overall contribution of each physics process for the EM physics list
+(G4EmStandardPhysics).</p>
+</div>
+<div class="figure">
+<object data="figures/particleVsProcess_EM_noIonIoni.svg" type="image/svg+xml">
+figures/particleVsProcess_EM_noIonIoni.svg</object>
+</div>
+<p>Relevance of each physics process for any given particle for EM physics
+(G4EmStandardPhysics). Ion ionization was left out of this plot, since too many
+ions are produced and are both not the focus of this overview nor very relevant
+for the overall simulation (see 1D histogram). The numbers in each row add up to 1.</p>
+</div>
+</div>
+<div class="section" id="preliminary-conclusions">
+<h1>Preliminary conclusions</h1>
+<div class="section" id="number-of-tracks-daughters-steps-per-track">
+<h2>Number of tracks / daughters / steps per track</h2>
+<p>EM physics produces roughly an average of 5E6 tracks per event, with most tracks
+undergoing less than 100 steps. A few tracks may reach up to 5E3 steps.</p>
+<p>Particles produce up to 4E3 daughters, with most producing a little less than 1E2.</p>
+</div>
+<div class="section" id="relevant-physics-processes">
+<h2>Relevant physics processes</h2>
+<p>Muons are probably the simplest particles to implement, as muon ionization and
+transport (including dE/dX) already account for nearly 100% of their simulation
+steps.</p>
+<p>Photons, electrons, and positrons need more work. Electrons need 3 physics
+processes to cover ~100% of the steps, while positrons require 4. For positrons,
+correctly choosing 3 of them is enough encompass ~90% of the steps. Photons also
+reach ~90% of the steps with 3 processes, but need 5 to get really close to
+~100%.</p>
+<p>The table below lists, by order of relevance, the key processes for each
+particle and the fraction of steps they encompass.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="63%" />
+<col width="21%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Particle</th>
+<th class="head">Relevant physics processes</th>
+<th class="head">Steps covered</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Electrons</td>
+<td>transport + eIoni + msc + eBrem</td>
+<td>~100%</td>
+</tr>
+<tr><td>Positrons</td>
+<td>transport + msc + eBrem + eIoni (+ annihil)</td>
+<td>~90% (~100%)</td>
+</tr>
+<tr><td>Muons</td>
+<td>transport + muIoni</td>
+<td>~100%</td>
+</tr>
+<tr><td>Photons</td>
+<td>transport + compt + phot (+ Rayl + conv)</td>
+<td>~90% (~100%)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="appendix-g4emstandardphysics">
+<h1>Appendix: <strong>G4EmStandardPhysics</strong></h1>
+<ul class="simple">
+<li>Standard EM models cover 0-100 TeV physics for e and gammas</li>
+<li>Muons go up to 1 PeV</li>
+<li>Operational energy goes to 0, though not accurate for E &lt; 1 keV</li>
+<li>gammas<ul>
+<li>BetheHeitler: pair production</li>
+<li>Klein-Nishina: Compton scattering</li>
+<li>Livermore: photoelectric and Rayleigh scattering</li>
+</ul>
+</li>
+<li>e<ul>
+<li>Urban: multiple Coulomb scattering, 0 &lt; E &lt; 100 MeV</li>
+<li>WentzelVI: multiple Coulomb scattering, 100 MeV &lt; E &lt; 100 TeV, being also combined with single Coulomb scattering</li>
+<li>eBremSB + eBremLPM: Bremsstrahlung</li>
+<li>Moller-Bhabha: Ionization</li>
+<li>eplus2gg: positron annihilation</li>
+</ul>
+</li>
+<li>mu<ul>
+<li>WentzelVI + eCoulombScattering: Coulomb scattering</li>
+<li>MuBrem: Bremsstrahlung</li>
+<li>Bragg: Ionization, mu+</li>
+<li>ICRU73Q0: Ionization, mu-</li>
+<li>BetheBloch: Ionization, mu+ &amp; mu-, 200 keV &lt; E &lt; 1 GeV</li>
+<li>MuBethBloch: Ionization, mu+ &amp; mu-, 1 GeV &lt; E &lt; 100 TeV</li>
+<li>muPairProduction: e+/e- pairs caused by mu+ or mu-</li>
+</ul>
+</li>
+<li>pi, K, p, and pbar<ul>
+<li>WentzelVI: multiple Coulomb scattering</li>
+<li>eCoulombScattering: Coulomb scattering</li>
+<li>hBrem: Bremsstrahlung</li>
+<li>hPairProduction: e-/e+ pair production</li>
+<li>Bragg: Ionization<ul>
+<li>pi+ with E &lt; 298 keV</li>
+<li>K+ with E &lt; 1.05 MeV</li>
+<li>p with E &lt; 2 MeV</li>
+</ul>
+</li>
+<li>ICRU73Q0: Ionization<ul>
+<li>pi- with E &lt; 298 keV</li>
+<li>K- with E &lt; 1.05 MeV</li>
+<li>pbar with E &lt; 2 MeV</li>
+</ul>
+</li>
+<li>BetheBloch: Ionization, E above the aforementioned thresholds</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</body>
+</html>

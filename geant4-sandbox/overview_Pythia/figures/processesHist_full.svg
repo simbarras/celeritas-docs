@@ -1,0 +1,318 @@
+<?xml version="1.0" standalone="no"?>
+<svg width="567.429" height="392.465" viewBox="0 0 567.429 392.465" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+<title>
+/Users/4s2/celeritas-project/g4-sandbox_analysis/pythia/analysis/processesHist_full.svg
+</title>
+<desc>
+Creator: ROOT Version 6.18/04
+CreationDate: Thu Apr 16 23:39:26 2020</desc>
+<defs>
+</defs>
+<rect x="0.5" y="0" width="566.929" height="391.965" fill="#fefefe"/>
+<rect x="57.1929" y="39.1965" width="453.543" height="293.974" fill="#fefefe"/>
+<rect x="57.1929" y="39.1965" width="453.543" height="293.974" fill="none" stroke="black"/>
+<rect x="57.1929" y="39.1965" width="453.543" height="293.974" fill="#fefefe"/>
+<rect x="57.1929" y="39.1965" width="453.543" height="293.974" fill="none" stroke="black"/>
+<path d="M57.761,332.602v -0.0482158h 8.32494v -243.689h 8.89301v 200.9h 8.89301v 42.8374h 8.89301v -23.1122h 8.89301v -220.625h 35.572v 241.395h 8.89301v -43.4678h 8.89301v -197.927h 17.786v 197.883h 8.89301v -20.7512h 8.89301v 54.0138h 8.89301v
+ 9.67594h 8.89301v 2.91569h 17.786v -0.34992h 8.89301v 0.34992h 275.683" fill="none" stroke="black" stroke-width="2"/>
+<path d="M57.1929,333.17h 453.543" fill="none" stroke="black"/>
+<g transform="rotate(-90,62.9872,350.496)">
+<text xml:space="preserve" x="62.9872" y="350.496" fill="black" font-size="5.29463" font-family="Helvetica">Decay</text>
+</g>
+<g transform="rotate(-90,72.0762,368.674)">
+<text xml:space="preserve" x="72.0762" y="368.674" fill="black" font-size="5.29463" font-family="Helvetica">Transportation</text>
+</g>
+<g transform="rotate(-90,81.1653,346.52)">
+<text xml:space="preserve" x="81.1653" y="346.52" fill="black" font-size="5.29463" font-family="Helvetica">hIoni</text>
+</g>
+<g transform="rotate(-90,89.6862,361.858)">
+<text xml:space="preserve" x="89.6862" y="361.858" fill="black" font-size="5.29463" font-family="Helvetica">pi+Inelastic</text>
+</g>
+<g transform="rotate(-90,99.3434,350.496)">
+<text xml:space="preserve" x="99.3434" y="350.496" fill="black" font-size="5.29463" font-family="Helvetica">ionIoni</text>
+</g>
+<g transform="rotate(-90,107.296,349.928)">
+<text xml:space="preserve" x="107.296" y="349.928" fill="black" font-size="5.29463" font-family="Helvetica">compt</text>
+</g>
+<g transform="rotate(-90,116.385,345.952)">
+<text xml:space="preserve" x="116.385" y="345.952" fill="black" font-size="5.29463" font-family="Helvetica">phot</text>
+</g>
+<g transform="rotate(-90,126.042,346.52)">
+<text xml:space="preserve" x="126.042" y="346.52" fill="black" font-size="5.29463" font-family="Helvetica">eIoni</text>
+</g>
+<g transform="rotate(-90,134.563,359.585)">
+<text xml:space="preserve" x="134.563" y="359.585" fill="black" font-size="5.29463" font-family="Helvetica">hadElastic</text>
+</g>
+<g transform="rotate(-90,143.652,349.928)">
+<text xml:space="preserve" x="143.652" y="349.928" fill="black" font-size="5.29463" font-family="Helvetica">nKiller</text>
+</g>
+<g transform="rotate(-90,152.173,347.088)">
+<text xml:space="preserve" x="152.173" y="347.088" fill="black" font-size="5.29463" font-family="Helvetica">conv</text>
+</g>
+<g transform="rotate(-90,161.262,351.064)">
+<text xml:space="preserve" x="161.262" y="351.064" fill="black" font-size="5.29463" font-family="Helvetica">eBrem</text>
+</g>
+<g transform="rotate(-90,169.783,345.384)">
+<text xml:space="preserve" x="169.783" y="345.384" fill="black" font-size="5.29463" font-family="Helvetica">msc</text>
+</g>
+<g transform="rotate(-90,179.441,350.496)">
+<text xml:space="preserve" x="179.441" y="350.496" fill="black" font-size="5.29463" font-family="Helvetica">annihil</text>
+</g>
+<g transform="rotate(-90,187.393,345.952)">
+<text xml:space="preserve" x="187.393" y="345.952" fill="black" font-size="5.29463" font-family="Helvetica">Rayl</text>
+</g>
+<g transform="rotate(-90,197.051,372.083)">
+<text xml:space="preserve" x="197.051" y="372.083" fill="black" font-size="5.29463" font-family="Helvetica">neutronInelastic</text>
+</g>
+<g transform="rotate(-90,205.572,356.745)">
+<text xml:space="preserve" x="205.572" y="356.745" fill="black" font-size="5.29463" font-family="Helvetica">nCapture</text>
+</g>
+<g transform="rotate(-90,214.093,369.242)">
+<text xml:space="preserve" x="214.093" y="369.242" fill="black" font-size="5.29463" font-family="Helvetica">protonInelastic</text>
+</g>
+<g transform="rotate(-90,223.75,357.313)">
+<text xml:space="preserve" x="223.75" y="357.313" fill="black" font-size="5.29463" font-family="Helvetica">dInelastic</text>
+</g>
+<g transform="rotate(-90,232.839,351.064)">
+<text xml:space="preserve" x="232.839" y="351.064" fill="black" font-size="5.29463" font-family="Helvetica">muIoni</text>
+</g>
+<g transform="rotate(-90,241.36,366.402)">
+<text xml:space="preserve" x="241.36" y="366.402" fill="black" font-size="5.29463" font-family="Helvetica">CoulombScat</text>
+</g>
+<g transform="rotate(-90,249.881,360.153)">
+<text xml:space="preserve" x="249.881" y="360.153" fill="black" font-size="5.29463" font-family="Helvetica">pi-Inelastic</text>
+</g>
+<g transform="rotate(-90,258.97,386.852)">
+<text xml:space="preserve" x="258.97" y="386.852" fill="black" font-size="5.29463" font-family="Helvetica">hBertiniCaptureAtRest</text>
+</g>
+<g transform="rotate(-90,267.491,369.242)">
+<text xml:space="preserve" x="267.491" y="369.242" fill="black" font-size="5.29463" font-family="Helvetica">photonNuclear</text>
+</g>
+<g transform="rotate(-90,276.58,390.261)">
+<text xml:space="preserve" x="276.58" y="390.261" fill="black" font-size="5.29463" font-family="Helvetica">muMinusCaptureAtRest</text>
+</g>
+<g transform="rotate(-90,285.669,380.036)">
+<text xml:space="preserve" x="285.669" y="380.036" fill="black" font-size="5.29463" font-family="Helvetica">anti_protonInelastic</text>
+</g>
+<g transform="rotate(-90,294.758,371.515)">
+<text xml:space="preserve" x="294.758" y="371.515" fill="black" font-size="5.29463" font-family="Helvetica">kaon0LInelastic</text>
+</g>
+<g transform="rotate(-90,303.847,367.538)">
+<text xml:space="preserve" x="303.847" y="367.538" fill="black" font-size="5.29463" font-family="Helvetica">kaon-Inelastic</text>
+</g>
+<g transform="rotate(-90,312.368,368.674)">
+<text xml:space="preserve" x="312.368" y="368.674" fill="black" font-size="5.29463" font-family="Helvetica">kaon+Inelastic</text>
+</g>
+<g transform="rotate(-90,321.457,372.083)">
+<text xml:space="preserve" x="321.457" y="372.083" fill="black" font-size="5.29463" font-family="Helvetica">kaon0SInelastic</text>
+</g>
+<g transform="rotate(-90,330.546,371.515)">
+<text xml:space="preserve" x="330.546" y="371.515" fill="black" font-size="5.29463" font-family="Helvetica">lambdaInelastic</text>
+</g>
+<g transform="rotate(-90,338.499,382.876)">
+<text xml:space="preserve" x="338.499" y="382.876" fill="black" font-size="5.29463" font-family="Helvetica">anti_neutronInelastic</text>
+</g>
+<g transform="rotate(-90,348.156,362.994)">
+<text xml:space="preserve" x="348.156" y="362.994" fill="black" font-size="5.29463" font-family="Helvetica">muPairProd</text>
+</g>
+<g transform="rotate(-90,357.245,356.177)">
+<text xml:space="preserve" x="357.245" y="356.177" fill="black" font-size="5.29463" font-family="Helvetica">tInelastic</text>
+</g>
+<g transform="rotate(-90,365.766,353.337)">
+<text xml:space="preserve" x="365.766" y="353.337" fill="black" font-size="5.29463" font-family="Helvetica">hBrems</text>
+</g>
+<g transform="rotate(-90,374.855,371.515)">
+<text xml:space="preserve" x="374.855" y="371.515" fill="black" font-size="5.29463" font-family="Helvetica">electronNuclear</text>
+</g>
+<g transform="rotate(-90,383.944,358.449)">
+<text xml:space="preserve" x="383.944" y="358.449" fill="black" font-size="5.29463" font-family="Helvetica">hPairProd</text>
+</g>
+<g transform="rotate(-90,391.897,371.515)">
+<text xml:space="preserve" x="391.897" y="371.515" fill="black" font-size="5.29463" font-family="Helvetica">sigma+Inelastic</text>
+</g>
+<g transform="rotate(-90,400.986,382.308)">
+<text xml:space="preserve" x="400.986" y="382.308" fill="black" font-size="5.29463" font-family="Helvetica">anti_sigma+Inelastic</text>
+</g>
+<g transform="rotate(-90,410.075,385.148)">
+<text xml:space="preserve" x="410.075" y="385.148" fill="black" font-size="5.29463" font-family="Helvetica">hFritiofCaptureAtRest</text>
+</g>
+<g transform="rotate(-90,419.164,360.721)">
+<text xml:space="preserve" x="419.164" y="360.721" fill="black" font-size="5.29463" font-family="Helvetica">xi-Inelastic</text>
+</g>
+<g transform="rotate(-90,428.253,381.172)">
+<text xml:space="preserve" x="428.253" y="381.172" fill="black" font-size="5.29463" font-family="Helvetica">anti-lambdaInelastic</text>
+</g>
+<g transform="rotate(-90,436.774,372.083)">
+<text xml:space="preserve" x="436.774" y="372.083" fill="black" font-size="5.29463" font-family="Helvetica">anti_xi0Inelastic</text>
+</g>
+<g transform="rotate(-90,445.863,361.858)">
+<text xml:space="preserve" x="445.863" y="361.858" fill="black" font-size="5.29463" font-family="Helvetica">xi0Inelastic</text>
+</g>
+<g transform="rotate(-90,454.384,381.172)">
+<text xml:space="preserve" x="454.384" y="381.172" fill="black" font-size="5.29463" font-family="Helvetica">anti_sigma-Inelastic</text>
+</g>
+<g transform="rotate(-90,463.473,366.97)">
+<text xml:space="preserve" x="463.473" y="366.97" fill="black" font-size="5.29463" font-family="Helvetica">alphaInelastic</text>
+</g>
+<g transform="rotate(-90,472.562,364.13)">
+<text xml:space="preserve" x="472.562" y="364.13" fill="black" font-size="5.29463" font-family="Helvetica">He3Inelastic</text>
+</g>
+<g transform="rotate(-90,481.083,369.81)">
+<text xml:space="preserve" x="481.083" y="369.81" fill="black" font-size="5.29463" font-family="Helvetica">sigma-Inelastic</text>
+</g>
+<g transform="rotate(-90,490.172,370.947)">
+<text xml:space="preserve" x="490.172" y="370.947" fill="black" font-size="5.29463" font-family="Helvetica">anti_xi-Inelastic</text>
+</g>
+<g transform="rotate(-90,499.261,361.289)">
+<text xml:space="preserve" x="499.261" y="361.289" fill="black" font-size="5.29463" font-family="Helvetica">ionInelastic</text>
+</g>
+<g transform="rotate(-90,508.35,357.881)">
+<text xml:space="preserve" x="508.35" y="357.881" fill="black" font-size="5.29463" font-family="Helvetica">muBrems</text>
+</g>
+<path d="M57.1929,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M66.0859,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M74.9789,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M83.8719,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M92.7649,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M101.658,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M110.551,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M119.444,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M128.337,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M137.23,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M146.123,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M155.016,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M163.909,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M172.802,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M181.695,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M190.588,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M199.481,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M208.374,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M217.267,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M226.16,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M235.053,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M243.946,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M252.839,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M261.732,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M270.625,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M279.518,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M288.411,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M297.304,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M306.197,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M315.09,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M323.983,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M332.876,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M341.769,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M350.662,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M359.555,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M368.448,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M377.341,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M386.234,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M395.127,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M404.02,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M412.913,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M421.806,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M430.699,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M439.592,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M448.485,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M457.378,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M466.271,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M475.164,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M484.057,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M492.95,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M501.843,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M510.736,323.763v 9.40716" fill="none" stroke="black"/>
+<path d="M57.1929,39.1965h 453.543" fill="none" stroke="black"/>
+<path d="M57.1929,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M66.0859,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M74.9789,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M83.8719,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M92.7649,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M101.658,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M110.551,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M119.444,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M128.337,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M137.23,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M146.123,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M155.016,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M163.909,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M172.802,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M181.695,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M190.588,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M199.481,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M208.374,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M217.267,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M226.16,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M235.053,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M243.946,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M252.839,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M261.732,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M270.625,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M279.518,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M288.411,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M297.304,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M306.197,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M315.09,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M323.983,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M332.876,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M341.769,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M350.662,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M359.555,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M368.448,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M377.341,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M386.234,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M395.127,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M404.02,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M412.913,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M421.806,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M430.699,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M439.592,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M448.485,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M457.378,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M466.271,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M475.164,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M484.057,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M492.95,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M501.843,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M510.736,48.6037v -9.40716" fill="none" stroke="black"/>
+<path d="M57.1929,333.17v -293.974" fill="none" stroke="black"/>
+<path d="M69.9488,333.17h -12.7559" fill="none" stroke="black"/>
+<path d="M63.5709,313.572h -6.37795" fill="none" stroke="black"/>
+<path d="M63.5709,293.974h -6.37795" fill="none" stroke="black"/>
+<path d="M63.5709,274.376h -6.37795" fill="none" stroke="black"/>
+<path d="M63.5709,254.777h -6.37795" fill="none" stroke="black"/>
+<path d="M69.9488,235.179h -12.7559" fill="none" stroke="black"/>
+<path d="M63.5709,215.581h -6.37795" fill="none" stroke="black"/>
+<path d="M63.5709,195.983h -6.37795" fill="none" stroke="black"/>
+<path d="M63.5709,176.384h -6.37795" fill="none" stroke="black"/>
+<path d="M63.5709,156.786h -6.37795" fill="none" stroke="black"/>
+<path d="M69.9488,137.188h -12.7559" fill="none" stroke="black"/>
+<path d="M63.5709,117.59h -6.37795" fill="none" stroke="black"/>
+<path d="M63.5709,97.9913h -6.37795" fill="none" stroke="black"/>
+<path d="M63.5709,78.393h -6.37795" fill="none" stroke="black"/>
+<path d="M63.5709,58.7948h -6.37795" fill="none" stroke="black"/>
+<path d="M69.9488,39.1965h -12.7559" fill="none" stroke="black"/>
+<path d="M69.9488,39.1965h -12.7559" fill="none" stroke="black"/>
+<text xml:space="preserve" x="45.9452" y="338.567" fill="black" font-size="14.884" font-family="Helvetica">0</text>
+<text xml:space="preserve" x="25.4949" y="240.86" fill="black" font-size="14.884" font-family="Helvetica">0.05</text>
+<text xml:space="preserve" x="36.2881" y="142.584" fill="black" font-size="14.884" font-family="Helvetica">0.1</text>
+<text xml:space="preserve" x="25.4949" y="44.8772" fill="black" font-size="14.884" font-family="Helvetica">0.15</text>
+<path d="M510.736,333.17v -293.974" fill="none" stroke="black"/>
+<path d="M497.98,333.17h 12.7559" fill="none" stroke="black"/>
+<path d="M504.358,313.572h 6.37795" fill="none" stroke="black"/>
+<path d="M504.358,293.974h 6.37795" fill="none" stroke="black"/>
+<path d="M504.358,274.376h 6.37795" fill="none" stroke="black"/>
+<path d="M504.358,254.777h 6.37795" fill="none" stroke="black"/>
+<path d="M497.98,235.179h 12.7559" fill="none" stroke="black"/>
+<path d="M504.358,215.581h 6.37795" fill="none" stroke="black"/>
+<path d="M504.358,195.983h 6.37795" fill="none" stroke="black"/>
+<path d="M504.358,176.384h 6.37795" fill="none" stroke="black"/>
+<path d="M504.358,156.786h 6.37795" fill="none" stroke="black"/>
+<path d="M497.98,137.188h 12.7559" fill="none" stroke="black"/>
+<path d="M504.358,117.59h 6.37795" fill="none" stroke="black"/>
+<path d="M504.358,97.9913h 6.37795" fill="none" stroke="black"/>
+<path d="M504.358,78.393h 6.37795" fill="none" stroke="black"/>
+<path d="M504.358,58.7948h 6.37795" fill="none" stroke="black"/>
+<path d="M497.98,39.1965h 12.7559" fill="none" stroke="black"/>
+<path d="M497.98,39.1965h 12.7559" fill="none" stroke="black"/>
+<text xml:space="preserve" x="388.489" y="26.131" fill="#7c99d1" font-size="24.4734" font-family="Helvetica">Preliminary</text>
+<text xml:space="preserve" x="56.7385" y="26.131" fill="black" font-size="24.4734" font-family="Helvetica">CMS Pythia 8</text></svg>
