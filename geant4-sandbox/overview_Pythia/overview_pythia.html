@@ -370,17 +370,18 @@ using Pythia + Geant4 with the cms2018.gdml geometry. The lack of magnetic field
 is the important caveat when it comes to compare to real CMS simulations. This
 brief data analysis provides a few insights on both EM (G4EmStandardPhysics) and
 full (FTFP_BERT) Geant4 physics lists. The analysis presents the number of
-secondaries that are to be expected, the number of steps that each track should
-undergo, and which physics processes are more relevant.</p>
+tracks per event, the number of steps that each track should undergo, and which
+physics processes are more relevant.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="the-geant4-sandbox">
 <h1>The Geant4-Sandbox</h1>
 <p>The Geant4-Sandbox is being developed as a package of the Celeritas Project on
-GitHub. It loads a specified gdml file and uses the G4ParticleGun to simulate
-events. The current output is a ROOT file with 4 TTrees: <em>run</em>, <em>event</em>, <em>track</em>,
-and <em>step</em>. For more information, visit:</p>
+GitHub:</p>
 <p><a class="reference external" href="https://github.com/celeritas-project/geant4-sandbox">https://github.com/celeritas-project/geant4-sandbox</a></p>
+<p>It uses either the G4ParticleGun or a HEPEVT input file to transport particles
+through a gdml geometry file. The current output is a ROOT file with 4 TTrees:
+<em>run</em>, <em>event</em>, <em>track</em>, and <em>step</em>.</p>
 </div>
 <div class="section" id="the-purpose-of-the-analysis">
 <h1>The purpose of the analysis</h1>
@@ -448,13 +449,13 @@ produces, and which physics processes are more relevant.</li>
 <div class="section" id="tracks-per-event">
 <h2>Tracks per event</h2>
 <p><strong>Set 1</strong> is used to verify the number of tracks per simulated event for both
-EM (G4EmStandardPhysics) and Full (FTFP_BERT) physics lists. The total number
-of tracks differs only by a factor of 3.</p>
+G4EmStandardPhysics and FTFP_BERT physics lists. The total number of tracks
+differs only by a factor of 3.</p>
 <div class="figure">
 <object data="figures/tracksPerEvent.svg" type="image/svg+xml">
 figures/tracksPerEvent.svg</object>
-<p class="caption">Number of tracks per event for full (FTFP_BERT) and EM (G4EmStandardPhysics)
-physics lists. Dashed lines represent their mean values.</p>
+<p class="caption">Number of tracks per event for FTFP_BERT and G4EmStandardPhysics physics
+lists. Dashed lines represent their mean values.</p>
 </div>
 </div>
 <div class="section" id="daughters-per-track">
@@ -464,7 +465,7 @@ information available on <strong>Set 2</strong>. Since each track ID is reshuffl
 define different particles in different events, a cumulative histogram is
 meaningless. Therefore, the plot below only shows a single event of each sample.</p>
 <div class="figure">
-<img alt="figures/daughtersPerTrackID.png" src="figures/daughtersPerTrackID.png" style="width: 572.75px; height: 442.5px;" />
+<img alt="figures/daughtersPerTrackID.png" src="figures/daughtersPerTrackID.png" style="width: 598.8px; height: 414.0px;" />
 <p class="caption">Number of daughters produced by each track ID.</p>
 </div>
 </div>
@@ -491,17 +492,17 @@ particle type implies that in each row the fractions add up to 1.</p>
 <div class="figure">
 <object data="figures/processesHist_EM.svg" type="image/svg+xml">
 figures/processesHist_EM.svg</object>
-<p class="caption">Overall contribution of each physics process for the EM physics list
-(G4EmStandardPhysics).</p>
+<p class="caption">Overall contribution of each physics process for G4EmStandardPhysics.</p>
 </div>
 <div class="figure">
 <object data="figures/particleVsProcess_EM_noIonIoni.svg" type="image/svg+xml">
 figures/particleVsProcess_EM_noIonIoni.svg</object>
+<p class="caption">Relevance of each physics process for any given particle for EM physics
+(G4EmStandardPhysics). Ion ionization was left out of this plot, since too
+many ions are produced and are both not the focus of this overview nor very
+relevant for the overall simulation (see 1D histogram). The numbers in each
+row add up to 1.</p>
 </div>
-<p>Relevance of each physics process for any given particle for EM physics
-(G4EmStandardPhysics). Ion ionization was left out of this plot, since too many
-ions are produced and are both not the focus of this overview nor very relevant
-for the overall simulation (see 1D histogram). The numbers in each row add up to 1.</p>
 </div>
 </div>
 <div class="section" id="preliminary-conclusions">
@@ -609,6 +610,14 @@ particle and the fraction of steps they encompass.</p>
 </ul>
 </li>
 </ul>
+</div>
+<div class="section" id="appendix-extra-plots">
+<h1>Appendix: <strong>Extra plots</strong></h1>
+<div class="figure">
+<object data="figures/ElossVsProcessName.svg" type="image/svg+xml">
+figures/ElossVsProcessName.svg</object>
+<p class="caption">E_loss per step according to different physics processes.</p>
+</div>
 </div>
 </div>
 </body>

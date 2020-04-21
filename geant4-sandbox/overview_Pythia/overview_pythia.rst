@@ -6,8 +6,8 @@ using Pythia + Geant4 with the cms2018.gdml geometry. The lack of magnetic field
 is the important caveat when it comes to compare to real CMS simulations. This
 brief data analysis provides a few insights on both EM (G4EmStandardPhysics) and
 full (FTFP_BERT) Geant4 physics lists. The analysis presents the number of
-secondaries that are to be expected, the number of steps that each track should
-undergo, and which physics processes are more relevant.
+tracks per event, the number of steps that each track should undergo, and which
+physics processes are more relevant.
 
 
 
@@ -19,11 +19,15 @@ The Geant4-Sandbox
 ==================
 
 The Geant4-Sandbox is being developed as a package of the Celeritas Project on
-GitHub. It loads a specified gdml file and uses the G4ParticleGun to simulate
-events. The current output is a ROOT file with 4 TTrees: *run*, *event*, *track*,
-and *step*. For more information, visit:
+GitHub:
 
 https://github.com/celeritas-project/geant4-sandbox
+
+It uses either the G4ParticleGun or a HEPEVT input file to transport particles
+through a gdml geometry file. The current output is a ROOT file with 4 TTrees:
+*run*, *event*, *track*, and *step*.
+
+
 
 
 
@@ -84,15 +88,15 @@ Tracks per event
 ----------------
 
 **Set 1** is used to verify the number of tracks per simulated event for both
-EM (G4EmStandardPhysics) and Full (FTFP_BERT) physics lists. The total number
-of tracks differs only by a factor of 3.
+G4EmStandardPhysics and FTFP_BERT physics lists. The total number of tracks
+differs only by a factor of 3.
 
 
 
 .. figure:: figures/tracksPerEvent.svg
 
-   Number of tracks per event for full (FTFP_BERT) and EM (G4EmStandardPhysics)
-   physics lists. Dashed lines represent their mean values.
+   Number of tracks per event for FTFP_BERT and G4EmStandardPhysics physics
+   lists. Dashed lines represent their mean values.
 
 
 Daughters per track
@@ -105,7 +109,7 @@ meaningless. Therefore, the plot below only shows a single event of each sample.
 
 
 .. figure:: figures/daughtersPerTrackID.png
-   :scale: 25%
+   :scale: 30%
 
    Number of daughters produced by each track ID.
 
@@ -137,16 +141,16 @@ particle type implies that in each row the fractions add up to 1.
 
 .. figure:: figures/processesHist_EM.svg
 
-   Overall contribution of each physics process for the EM physics list
-   (G4EmStandardPhysics).
+   Overall contribution of each physics process for G4EmStandardPhysics.
 
 
 .. figure:: figures/particleVsProcess_EM_noIonIoni.svg
 
-Relevance of each physics process for any given particle for EM physics
-(G4EmStandardPhysics). Ion ionization was left out of this plot, since too many
-ions are produced and are both not the focus of this overview nor very relevant
-for the overall simulation (see 1D histogram). The numbers in each row add up to 1.
+   Relevance of each physics process for any given particle for EM physics
+   (G4EmStandardPhysics). Ion ionization was left out of this plot, since too
+   many ions are produced and are both not the focus of this overview nor very
+   relevant for the overall simulation (see 1D histogram). The numbers in each
+   row add up to 1.
 
 
 
@@ -249,9 +253,9 @@ Appendix: **G4EmStandardPhysics**
 
 
 
-  Appendix: **Extra plots**
-  =========================
+Appendix: **Extra plots**
+=========================
 
-  .. figure:: figures/ElossVsProcessName.svg
+.. figure:: figures/ElossVsProcessName.svg
 
-     E_loss per step according to different physics processes.
+   E_loss per step according to different physics processes.
