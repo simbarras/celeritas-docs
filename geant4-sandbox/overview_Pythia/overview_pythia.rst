@@ -246,3 +246,12 @@ Appendix: **G4EmStandardPhysics**
     - pbar with E < 2 MeV
 
   - BetheBloch: Ionization, E above the aforementioned thresholds
+
+
+
+  Appendix: **Extra plots**
+  =========================
+
+  .. figure:: figures/ElossVsProcessName.svg
+
+     E_loss per step according to different physics processes.
