@@ -74,7 +74,8 @@ since VecGeom does not handles the materials and specified energy cuts.
 # Wed Apr 15, 2020
 
 - Guilherme is trying to compile `vecGeom-test` and is running into an error
-where headers are searched as `"root/TRootHeader.h"` instead of simply `TRootHeader`.
+where headers are searched as `"root/TRootHeader.h"` instead of simply
+`TRootHeader`.
 - Seth is having a null pointer issue when using the CUDA NavigationPool.
 - Discussion about the implications of having all the physics code connected to
 the transport loop. The larger the code, the more is the usage of on device
@@ -85,3 +86,10 @@ the ones who could not make it. The highlights are:
   - Community is aware of the challenges and agrees that tackling only part of
   the physics is valuable.
   - Being able to simulate EM showers in the calorimeter is a good milestone.
+
+
+# Wed Apr 22, 2020
+
+- Guilherme was able to help Seth fix the null pointer issue from last week. Details on Slack (#vecgeom).
+- Seth is not sure how to use `vgdml::Frontend::Load(gdml_filename)`. P. Canal will look into that.
+- Infrastructure build for the transport loop will start soon.
