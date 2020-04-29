@@ -5,7 +5,8 @@ Meeting minutes
 # Fri Mar 20, 2020
 
 Tom presented current budget situation.
-FWP is in process and the current document is on Celeritas' General Slack channel.
+FWP is in process and the current document is on Celeritas' General Slack
+channel.
 
 Seth described the two milestones for current FWP:
 
@@ -90,6 +91,27 @@ the ones who could not make it. The highlights are:
 
 # Wed Apr 22, 2020
 
-- Guilherme was able to help Seth fix the null pointer issue from last week. Details on Slack (#vecgeom).
-- Seth is not sure how to use `vgdml::Frontend::Load(gdml_filename)`. P. Canal will look into that.
+- Guilherme was able to help Seth fix the null pointer issue from last week.
+Details on Slack (#vecgeom).
+- Seth is not sure how to use `vgdml::Frontend::Load(gdml_filename)`. P. Canal
+will look into that.
 - Infrastructure build for the transport loop will start soon.
+
+
+# Wed Apr 29, 2020
+
+- Seth briefly mentioned about his meeting with Amanda, Stefano, and Tom this
+morning, which addressed the first steps of the project. Issues were opened in
+<https://github.com/celeritas-project/celeritas>.
+- Seth asked about the geantino (a non-interacting particle used to
+test the transporting mechanism), and if setting all materials to vacuum should produce the same results (a similar approach is used in Shift).
+  - Guilherme: Yes.
+- Discussion regarding continuous energy processes in the case of large steps,
+which would cause a considerable discrepancy with the correct cross-section
+value at the end of the step.
+  - Philippe: There is nothing in the code to prevent that to happen, although
+  it is believed that this is not an issue in any currently used model.
+- Seth asked if particles have different weights in Geant4.
+  - Not by default. Biasing exists, but weighting is set to 1 for every particle
+  as a standard. CMS has implemented biasing, but this question will need to be
+  followed up by CMS people – which were not present in the meeting.
