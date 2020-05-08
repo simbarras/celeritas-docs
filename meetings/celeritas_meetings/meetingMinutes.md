@@ -1,6 +1,7 @@
 
-Meeting minutes
-===============
+Celeritas Meeting minutes
+=========================
+
 
 # Fri Mar 20, 2020
 
@@ -104,7 +105,8 @@ will look into that.
 morning, which addressed the first steps of the project. Issues were opened in
 <https://github.com/celeritas-project/celeritas>.
 - Seth asked about the geantino (a non-interacting particle used to
-test the transporting mechanism), and if setting all materials to vacuum should produce the same results (a similar approach is used in Shift).
+test the transporting mechanism), and if setting all materials to vacuum should
+produce the same results (a similar approach is used in Shift).
   - Guilherme: Yes.
 - Discussion regarding continuous energy processes in the case of large steps,
 which would cause a considerable discrepancy with the correct cross-section
@@ -115,3 +117,7 @@ value at the end of the step.
   - Not by default. Biasing exists, but weighting is set to 1 for every particle
   as a standard. CMS has implemented biasing, but this question will need to be
   followed up by CMS people – which were not present in the meeting.
+
+
+# Wed May 6, 2020
+**Meeting adjourned.**
