@@ -121,3 +121,15 @@ value at the end of the step.
 
 # Wed May 6, 2020
 **Meeting adjourned.**
+
+
+# Wed May 13, 2020
+
+- FWP was signed by Nichols and Marcel. DOE status is TBD. Tom will look into it.  
+- Celeritas Startup branch now has initial infrastructure, compiling with CUDA
+and Google test (albeit with no tests yet).  
+- Seth, Amanda, and Stefano should start working on infrastructure tasks on
+Thursday.
+- Philippe: What is the plan to converge?
+  - A clearer big picture still needs to be defined. For example, Seth prefers
+  to use Thrust, which is not used in GeantX.
