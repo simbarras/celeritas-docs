@@ -133,3 +133,7 @@ Thursday.
 - Philippe: What is the plan to converge?
   - A clearer big picture still needs to be defined. For example, Seth prefers
   to use Thrust, which is not used in GeantX.
+
+
+# Wed May 20, 2020
+**Meeting adjourned.**
