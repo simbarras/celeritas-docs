@@ -137,3 +137,23 @@ Thursday.
 
 # Wed May 20, 2020
 **Meeting adjourned.**
+
+
+# Fri May 29, 2020
+
+- Soon briefly updated the team on the HSF simulation workgroup meeting. More at
+<https://indico.cern.ch/event/921244/>.
+- Amanda worked on the random number generator and will push the update.
+- Stefano is implementing a test physics process and will also push the update
+soon. A header with constants and units was also created. The team prefers to
+add new information as needed, instead of just include CLHEP data.
+- Seth will merge celeritas startup branch into master.
+- Long discussion regarding the system of units to be used by the Celeritas
+internal code. There is not a fully agreed path forward, but an internally
+consistent system of units (CGS), with input/output conversion from/to different
+applications is preferred by Seth and Tom. Team will revisit the topic as coding
+evolves.
+- A Slack Poll will be sent to choose a new Celeritas meeting date. The team
+also may start a weekly coding meeting on top of the existing Celeritas meeting.
+The coding one will probably gather less people and will focus on coding and
+technical discussions.
