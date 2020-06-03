@@ -157,3 +157,10 @@ evolves.
 also may start a weekly coding meeting on top of the existing Celeritas meeting.
 The coding one will probably gather less people and will focus on coding and
 technical discussions.
+
+
+# Wed Jun 3, 2020
+
+- Seth suggests new meeting schedules. Coding meetings will happen on Mondays
+and Thursdays at 1 pm (CT) / 2 pm (ET), with biweekly Celeritas meetings taking
+place every other Friday at 1 pm (CT) / 2 pm (ET) for more general discussions.
