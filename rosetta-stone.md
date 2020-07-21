@@ -29,6 +29,13 @@ internal clock.
 | [Unique cell]            | Touchable history (?)   |
 | kd-tree acceleration     | Voxelization            |
 
+
+|  VecGeom                 |  Geant                  | 
+| ------------------------ | ----------------------- |
+| Unplaced volume          | Logical Volume          |
+| Placed volume            | Physical Volume         |
+
+
 ## Physics
 
 |  Shift                   |  Geant               |  

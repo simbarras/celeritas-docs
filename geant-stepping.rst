@@ -4,40 +4,40 @@ Stepping overview
 For each track, and hence for each particle we repeat the following
 steps until the track is marked as stopped or killed.
 
-  1. Select process (AlongStep or PostStep) with shortest ‘proposed
-     physics interaction length’ -> [ Process, Type, Length ]
+1. Select process (AlongStep or PostStep) with shortest ‘proposed
+   physics interaction length’ -> [ Process, Type, Length ]
 
-  2. Find next Geometry boundary
+2. Find next Geometry boundary
 
-  3. MSC preparation
+3. MSC preparation
 
-  4. Integrate Equation of Motion
+4. Integrate Equation of Motion
 
-  5. While did-not-reach-physics-length and did-not-cross-boundary
+5. While did-not-reach-physics-length and did-not-cross-boundary
 
-     - Find next Geometry boundary
+   - Find next Geometry boundary
 
-     - Integrate Equation of Motion
+   - Integrate Equation of Motion
 
-  6. Increase track time, decrease current interaction length. Delayed
-     updates from MSC AlongStep.
+6. Increase track time, decrease current interaction length. Delayed
+   updates from MSC AlongStep.
 
-  7. For each along process
+7. For each along process
 
-     - if Track not stopped then do AlongStep actions
+   - if Track not stopped then do AlongStep actions
 
-  8. If Track not stopped and Type == Post then do (single) Process
-     PostStep action
+8. If Track not stopped and Type == Post then do (single) Process
+   PostStep action
 
-  9. If Track stopped then
+9. If Track stopped then
 
-     - Select AtRest Process [0, 1 or more if some are forced]
+   - Select AtRest Process [0, 1 or more if some are forced]
 
-     - Do AtRest action for selected processed
+   - Do AtRest action for selected processed
 
-  10. Sensitive Hit recording
+10. Sensitive Hit recording
 
-  11. UserAction(s)
+11. UserAction(s)
 
 .. note::
 
@@ -83,8 +83,7 @@ InnerFunc(ProcessFunc):
 
 a. Integrate Equation of Motion
 
-b. ::
-     if !alive **return**
+b. Return if not alive
 
 c. while did not reach physics length and did not cross a geometrical
    boundary::
