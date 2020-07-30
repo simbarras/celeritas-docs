@@ -1,5 +1,5 @@
-CMSSW How To
-============
+CMS analysis software setup
+===========================
 
 
 # Main links
