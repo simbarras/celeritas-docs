@@ -218,3 +218,22 @@ coding meeting with Guilherme on Tuesdays at 2 pm (ET).
   stack allocator returns a null pointer and the physics process exits. In that
   case, the remaining particles will be moved to a queue so they can be
   transported by the next kernel launch.
+
+
+# Fri Jul 31, 2020
+
+- Tom's funding update:
+  - Expected to receive funding for the next FY before September.
+
+- Project's update:
+  - Added new code design to Celeritas wiki, everyone is encouraged to provide
+  feedback.
+  - Seth wrote a new test harness for the KNInteractor.
+  - Guilherme is working on vecgeom's magfield propagator.
+  - Stefano is working on code to export Geant4 particle and physics table data
+  and import it into Celeritas.
+  - Amanda is working on random number generators.
+
+- Upcoming HEP update in September. We plan to present a few micro examples on
+how the current code is performing.
+- Soon suggests a step-by-step installation process sketched up.
