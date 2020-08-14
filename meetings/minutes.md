@@ -237,3 +237,21 @@ coding meeting with Guilherme on Tuesdays at 2 pm (ET).
 - Upcoming HEP update in September. We plan to present a few micro examples on
 how the current code is performing.
 - Soon suggests a step-by-step installation process sketched up.
+
+
+# Fri Aug 14, 2020
+
+- Beginning of Sept. Seth and Tom will provide an update to DOE's HEP office.
+  - Plan is to have a small demonstration working that includes a small
+  straight line propagator by Sept 1.
+
+- New merge requests to be reviewed, which include
+  - Particle interactor: changes the particle state and produce secondaries.
+  - Importer for Geant data. This MR focuses only on particles.
+
+- Apart from management and consulting:
+  - Amanda has been working on infrastructure to generate events on device.
+  - Guilherme is working with the vecgeom propagator.
+
+- Project is moving towards a deterministic way of allocating stack memory for  
+new particles, which provides simulation reproducibility.
