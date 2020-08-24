@@ -25,7 +25,7 @@
 \author[2]{V.D.~Elvira}
 \author[3]{P.~Calafiura}
 
-\author[2]{P.~Canal}
+\author[2]{Ph.~Canal}
 \author[2]{K.L.~Genser}
 \author[2]{S.Y.~Jun}
 \author[2]{G.~Lima}
@@ -84,11 +84,11 @@
 %%%%%%%%%%%%%%%%%%%%
 \section*{Objective}
 
-The objective of this work is to utilize GPU-accelerated, \ac{mc}
+The objective of this work is to utilize GPU-accelerated, leveraging \ac{mc}
 transport elements developed in the \ac{ecp}
-ExaSMR project to enable particle event simulations on advanced
+ExaSMR project, to enable particle event simulations on advanced
 accelerator architectures to satisfy HEP programmatic needs for detector
-response in particle physics experiments. We propose, as a first step,
+response simulation in particle physics experiments. We propose, as a first step,
 to develop a new GPU-accelerated application code, \emph{Celeritas},
 that is capable of performing event-based simulations for \ac{lhc} detectors
 (e.g.~CMS, ALICE, ATLAS, or other configurations). Our workplan lays out
@@ -102,8 +102,8 @@ be a unique product. Furthermore, while Geant4 provides a toolkit
 capable of addressing many modeling and simulation transport problems,
 Celeritas is focused on the most computationally intensive calculation
 currently performed in experimental detector simulations: time-
-and energy-dependent detector response.
-(We need to make clear that Celeritas is not a unique product in the sense that it will utilize Geant components and then evolve independently diverging and competing with Geant4. What I understood is that Celeritas would be built on top of each Geant4 release, adapting each improved version of G4 (including updated physics) to run on GPUs. Even if we still do not know the adaptation/validation/support model, we should not give the impression that Celeritas is an attempt to replace Geant4.)
+and energy-dependent detector response.  Celeritas is planned to be a complement to Geant4 that both leveraging and feeding back into Geant4 physics algorithm while extending Geant4 by providing acceleration of a subset of use cases for HPC environments.
+%(We need to make clear that Celeritas is not a unique product in the sense that it will utilize Geant components and then evolve independently diverging and competing with Geant4. What I understood is that Celeritas would be built on top of each Geant4 release, adapting each improved version of G4 (including updated physics) to run on GPUs. Even if we still do not know the adaptation/validation/support model, we should not give the impression that Celeritas is an attempt to replace Geant4.)%
 
 %%%%%%%%%%%%%%%%%%%%%
 \section*{Background}
@@ -120,12 +120,12 @@ as Summit at the \ac{olcf}. These architectures are becoming increasingly
 available on institutional-scale computing clusters as well. However,
 porting and optimizing \ac{mc} algorithms to work efficiently on GPU
 architectures is a difficult task, particularly in CPU-only codes such
-as Geant4 that rely on extensive runtime polymorphism. GPU coding
-environments are highly sensitive to memory access patterns, device
+as Geant4 that rely on extensive runtime polymorphism, random walks and branching.
+GPU coding environments are highly sensitive to memory access patterns, device
 occupancy, and thread divergence. Furthermore, common \C++ language
 idioms that are heavily used in Geant4 transport and physics routines,
-including inheritance and dynamic memory allocation, cannot be used in a
-performant manner in device code.
+including inheritance and dynamic memory allocation, cannot be used in an
+efficient manner in device code.
 
 Recent work in the \emph{ExaSMR: Coupled Monte Carlo Neutronics and
 Fluid Flow Simulation of Small Modular Reactors} project within the DOE
@@ -158,7 +158,7 @@ architectures.
 
 \subsubsection*{Geometry}
 
-As part of the GeantV and \ac{ecp} Geant pilot proxy projects, the navigation
+As part of the GeantV and \ac{ecp} Geant exascale pilot projects, the navigation
 (geometry tracking) capabilities of Geant4 have been extracted into a
 stand-alone library called \emph{VecGeom} \cite{apostolakis_towards_2015}.
 Since VecGeom is written to support both \C++/CPU and CUDA/GPU targets
@@ -190,8 +190,8 @@ The current proposal will focus on the development of a transport code
 for electromagnetic interactions of photons and charged leptons. This particular
 choice as a first step towards full Standard Model \ac{mc} transport is due
 to simplicity and usefulness. Strong interactions present high-stakes
-challenges to implement, and weak interactions not just encompass a vast
-list of particles with different branching ratios but entail following
+challenges to implement, and weak interactions does not just encompass a vast
+list of particles with different branching ratios but also entail following
 the produced hadrons that depend on strong interaction processes in
 order to achieve a direct comparison with Geant4. Conversely,
 electromagnetic interactions can be limited to ionization energy loss,
@@ -200,11 +200,12 @@ interactions. As for usefulness, a proof-of-concept should provide a
 clear form of comparison between Celeritas and Geant4. In this scenario,
 leptons such as electrons and muons constitute perfect probes, as these
 particles are widely used for detector calibration purposes 
-\cite{atlas_calibration_e,atlas_calibration_mu}.
+\cite{atlas_calibration_e,atlas_calibration_mu}.  Finally, electromagnetic interactions processing, due to the large cardinality of particles, takes most of 
+the run-time of a simulation, thus accelerating them provides the biggest benefits.
 
 In \ac{lhc} detector response modeling applications, the desired outputs are
 time- and particle-dependent energy depositions in user-identified cells
-(scoring regions) correlated to each generating event
+(sensitive detectors) correlated to each generating event
 (e.g.~proton-proton collision). The basic neutral particle GPU transport
 algorithm developed within ExaSMR must be extended to treat
 continuous processes such as multiple scattering, generation of massive secondary
@@ -222,7 +223,7 @@ year one activities:
  \parskip0pt%
  \partopsep0pt
 \item
-  Port Geant4 photon, electron, and (time-permitting) muon physics processes to
+  Adapt Geant4 photon, electron, and (time-permitting) muon physics processes to
   GPU;
 \item
   Develop a hadronic secondary proxy physics that captures the
@@ -236,8 +237,7 @@ year one activities:
 
 \subsubsection*{Performance Measurement}
 
-In order to provide an integrated performance demonstration at the end
-of year 1, a basic driver must be developed. Using this driver we can
+In order to provide an integrated performance demonstration, a basic driver must be developed. Using this driver we can
 simulate \ac{em} particles through \texttt{GDML} models of increasing
 complexity to measure and analyze performance. For performance
 measurements, we propose the \ac{fom} metric, 
