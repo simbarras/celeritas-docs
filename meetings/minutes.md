@@ -29,7 +29,6 @@ For documentation we will use GitHub, at least for now.
 Slides for the CERN Geant4 R&D meeting will be shared soon.
 
 
-
 # Fri Mar 27, 2020
 
 Discussed extension of celeritas requirement list:
@@ -255,3 +254,12 @@ how the current code is performing.
 
 - Project is moving towards a deterministic way of allocating stack memory for  
 new particles, which provides simulation reproducibility.
+
+
+# Fri Aug 28, 2020
+
+- Tom wants to get the LOI ready and sent by Monday, COB. Has to be roughly 2
+pages. Document is in the celeritas-doc repository.
+- The Celeritas demo app should be merged soon.
+- Team agreed with an in depth project briefing on October 14. Seth will sketch
+out the schedule. DOE presentation should happen around that same time.
