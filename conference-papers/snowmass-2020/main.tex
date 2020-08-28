@@ -48,6 +48,8 @@
 
 \newacronym{mc}{MC}{Monte Carlo}
 \newacronym{lhc}{LHC}{Large Hadron Collider}
+\newacronym{hpc}{HPC}{high performance computing}
+\newacronym{hep}{HEP}{high energy physics}
 \newacronym{olcf}{OLCF}{Oak Ridge Leadership Computing Facility}
 \newacronym{ecp}{ECP}{Exascale Computing Project}
 \newacronym{ornl}{ORNL}{Oak Ridge National Laboratory}
@@ -71,7 +73,7 @@
   per-mode=symbol,
   group-minimum-digits=3,
   range-units=single}
- 
+
 % Bib files
 \addbibresource{references.bib}
 \DeclareFieldFormat*{citetitle}{\em #1}
@@ -84,25 +86,32 @@
 %%%%%%%%%%%%%%%%%%%%
 \section*{Objective}
 
-The objective of this work is to utilize GPU-accelerated, leveraging \ac{mc}
-transport elements developed in the \ac{ecp}
-ExaSMR project, to enable particle event simulations on advanced
-accelerator architectures to satisfy HEP programmatic needs for detector
-response simulation in particle physics experiments. We propose, as a first step,
-to develop a new GPU-accelerated application code, \emph{Celeritas},
-that is capable of performing event-based simulations for \ac{lhc} detectors
-(e.g.~CMS, ALICE, ATLAS, or other configurations). Our workplan lays out
-a series of first-year milestones that will provide the groundwork for
-an application that i) is highly optimized for advanced accelerator
-architectures that will form the backbone of HPC over the next decade
-and ii) will eventually satisfy the detector response requirements as
+Upgrades to the \ac{lhc} and its detectors (including CMS, ALICE, and
+ATLAS) demand a commensurate increase in modeling and simulation
+capacity that is out of reach of traditional CPU-based software.
+This proposal is to develop a new detector modeling code, \emph{Celeritas},
+with the objective of performing fast and accurate \ac{mc} particle event
+simulation on GPUs
+and similar advanced accelerator hardware at the scale needed to satisfy HEP
+programmatic needs for detector response simulation in particle physics
+experiments. Our work plan defines a series of first-year milestones that will
+provide the groundwork for an application that \textsl{(i)} is highly optimized
+for the advanced architectures that will form the backbone of \ac{hpc}
+over the next decade and \textsl{(ii)} will eventually satisfy the detector
+response requirements as
 defined in \citetitle{the_hep_software_foundation_roadmap_2019} \cite{the_hep_software_foundation_roadmap_2019}. While Celeritas will
-utilize both ExaSMR and Geant-related architectural components, it will
-be a unique product. Furthermore, while Geant4 provides a toolkit
-capable of addressing many modeling and simulation transport problems,
-Celeritas is focused on the most computationally intensive calculation
-currently performed in experimental detector simulations: time-
-and energy-dependent detector response.  Celeritas is planned to be a complement to Geant4 that both leveraging and feeding back into Geant4 physics algorithm while extending Geant4 by providing acceleration of a subset of use cases for HPC environments.
+leverage architectural techniques implemented in ExaSMR and models implemented
+in Geant4, it will be a unique product that can run independently of either
+code.
+It should be noted that Geant4 is a
+highly generalized \emph{toolkit} capable of addressing many modeling and
+simulation transport problems, where in contrast
+Celeritas will begin life as a highly specialized \emph{application} focused on
+the most computationally intensive calculation currently performed in
+experimental detector simulations: time- and energy-dependent detector response.
+
+% Celeritas is planned to complement Geant4 that both leveraging and feeding back into Geant4 physics algorithm while extending Geant4 by providing acceleration of a subset of use cases for HPC environments.
+
 %(We need to make clear that Celeritas is not a unique product in the sense that it will utilize Geant components and then evolve independently diverging and competing with Geant4. What I understood is that Celeritas would be built on top of each Geant4 release, adapting each improved version of G4 (including updated physics) to run on GPUs. Even if we still do not know the adaptation/validation/support model, we should not give the impression that Celeritas is an attempt to replace Geant4.)%
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -132,8 +141,8 @@ Fluid Flow Simulation of Small Modular Reactors} project within the DOE
 \ac{ecp} \cite{ecp2019} has
 demonstrated significant performance for neutron MC transport on GPU
 architectures \cite{hamilton_continuous-energy_2019}. These architectural
-advancements are implemented in the \ac{ornl} \ac{mc} application Shift 
-\cite{pandya_implementation_2016}. 
+advancements are implemented in the \ac{ornl} \ac{mc} application Shift
+\cite{pandya_implementation_2016}.
 
 Celeritas will leverage the GPU-optimized transport techniques demonstrated
 in Shift and the physics models implemented in Geant4
@@ -167,7 +176,7 @@ as the initial production geometry capability. For benchmarking
 purposes, we will construct a series of models of varying levels of
 complexity in \texttt{GDML} format. The VecGeom engine can then be
 tested using existing versions of Celeritas' GPU transport kernels for both
-verification and performance analysis. 
+verification and performance analysis.
 
 \subsubsection*{Transport and Physics}
 
@@ -199,8 +208,8 @@ bremsstrahlung, pair production, Cherenkov radiation, and photonuclear
 interactions. As for usefulness, a proof-of-concept should provide a
 clear form of comparison between Celeritas and Geant4. In this scenario,
 leptons such as electrons and muons constitute perfect probes, as these
-particles are widely used for detector calibration purposes 
-\cite{atlas_calibration_e,atlas_calibration_mu}.  Finally, electromagnetic interactions processing, due to the large cardinality of particles, takes most of 
+particles are widely used for detector calibration purposes
+\cite{atlas_calibration_e,atlas_calibration_mu}.  Finally, electromagnetic interactions processing, due to the large cardinality of particles, takes most of
 the run-time of a simulation, thus accelerating them provides the biggest benefits.
 
 In \ac{lhc} detector response modeling applications, the desired outputs are
@@ -240,7 +249,7 @@ year one activities:
 In order to provide an integrated performance demonstration, a basic driver must be developed. Using this driver we can
 simulate \ac{em} particles through \texttt{GDML} models of increasing
 complexity to measure and analyze performance. For performance
-measurements, we propose the \ac{fom} metric, 
+measurements, we propose the \ac{fom} metric,
 \begin{equation}
   \textrm{FOM} = \frac{N_\textrm{e}}{t_{\textrm{wc}}}\,
   \left[\frac{\textrm{events}}{\textrm{second}}\right]\:,
