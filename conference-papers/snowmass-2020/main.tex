@@ -40,7 +40,7 @@
 \affil[3]{Lawrence Berkeley National Laboratory}
 \affil[4]{Argonne National Laboratory}
 
-\title{Celeritas - a nascent GPU detector simulation code}
+\title{Celeritas---a nascent GPU detector simulation code}
 \date{\today}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -94,12 +94,11 @@ of reach of traditional software but can be alleviated through the use of
 advanced \ac{hpc} hardware that use GPUs for improved performance at low power
 consumption.  Our objective is to provide the needed modeling capacity using a
 new application \emph{Celeritas} that performs fast and accurate \ac{mc}
-particle transport simulations on GPUs. Celeritas is designed to eventually
+particle transport simulations on GPUs. Celeritas is designed to complement, not replace, Geant4 and ultimately
 satisfy the detector response requirements as defined in
 \citetitle{the_hep_software_foundation_roadmap_2019}
 \cite{the_hep_software_foundation_roadmap_2019} using  the advanced
 architectures that will form the backbone of \ac{hpc} over the next decade.
-
 
 % Celeritas is planned to complement Geant4 that both leveraging and feeding back into Geant4 physics algorithm while extending Geant4 by providing acceleration of a subset of use cases for HPC environments.
 
@@ -153,22 +152,23 @@ The current work focuses on the development of a transport code for \ac{em}
 interactions of photons and charged leptons. This particular choice as a first
 step towards full Standard Model \ac{mc} transport is due to simplicity and
 usefulness. Strong interactions present high-stakes challenges to implement, and
-weak interactions does not just encompass a vast list of particles with
-different branching ratios but also entail following the produced hadrons that
-depend on strong interaction processes in order to achieve a direct comparison
-with Geant4. Conversely, \ac{em} interactions can be limited to ionization
-energy loss, bremsstrahlung, pair production, Cherenkov radiation, and
-photonuclear interactions. As for usefulness, a proof-of-concept should provide
-a clear form of comparison between Celeritas and Geant4. In this scenario,
-leptons such as electrons and muons constitute perfect probes, as these
-particles are widely used for detector calibration purposes
-\cite{atlas_calibration_e,atlas_calibration_mu}.
-Finally, since processing \ac{em}
-interactions takes the most runtime in a simulation due to the cardinality of particles, accelerating \ac{em} physics provides the greatest opportunity for immediate performance gains.
+weak interactions do not just encompass a vast list of particles with different
+branching ratios but also entail following the produced hadrons that depend on
+strong interaction processes in order to achieve a direct comparison with
+Geant4. Conversely, \ac{em} interactions can be limited to ionization energy
+loss, bremsstrahlung, pair production, Cherenkov radiation, and photonuclear
+interactions. As for usefulness, a proof-of-concept should provide a clear form
+of comparison between Celeritas and Geant4. In this scenario, leptons such as
+electrons and muons constitute perfect probes, as these particles are widely
+used for detector calibration purposes
+\cite{atlas_calibration_e,atlas_calibration_mu}. Finally, since processing
+\ac{em} interactions takes the most runtime in a simulation due to the
+cardinality of particles, accelerating \ac{em} physics provides the greatest
+opportunity for immediate performance gains.
 
 In \ac{lhc} detector response modeling applications, the desired outputs are
 time- and particle-dependent energy depositions in user-identified cells
-(sensitive detectors) correlated to each generating event (e.g.~proton-proton
+(sensitive detectors) correlated to each generating event (e.g.,~proton-proton
 collision). The basic neutral particle GPU transport algorithm developed within
 ExaSMR must be extended to treat continuous processes such as multiple
 scattering, generation of massive secondary particle showers, as well as
@@ -188,16 +188,16 @@ definitions, it provides a production geometry capability for transport on GPUs.
 \section*{Outlook}
 
 We have presented Celeritas, an application for demonstrating \ac{mc} \ac{em}
-particle physics simulations on GPUs. It leverages architectural
-techniques and algorithms from the \ac{ecp} project \emph{ExaSMR} and models
-from the Geant4 detector simulation toolkit. The experiences gained through the
-\ac{ecp} \emph{ExaSMR} project provide a proof-of-principal that \ac{mc}
-transport applications can realize significant performance improvements on GPUs.
+particle physics simulations on GPUs. It leverages architectural techniques and
+algorithms from the \ac{ecp} project \emph{ExaSMR} and models from the Geant4
+detector simulation toolkit. The experiences gained through the \ac{ecp}
+\emph{ExaSMR} project provide a proof-of-principle that \ac{mc} transport
+applications can realize significant performance improvements on GPUs.
 Charged-particle and \ac{em} physics transport simulations require additional
 algorithmic changes due to the presence of large secondary particle showers and
-modified transport paths.  Nonetheless, we are addressing these challenges
-within Celeritas and have confidence that these complexities can be solved in a
-manner that does not impact overall computational performance.
+modified transport paths. We are addressing these challenges within Celeritas
+and have confidence that these complexities can be solved in a manner that does
+not impact overall computational performance.
 
 While the current focus on Celeritas is on \ac{em} physics, we intend to expand
 Celeritas capabilities to include weak and strong physics. Celeritas is planned
@@ -205,9 +205,6 @@ to complement Geant4 by providing a pathway for the acceleration of a subset of
 charged particle transport modeling use cases on HPC architectures. The long
 term goal is to re-incorporate these methodologies back into the Geant framework
 for broader application use.
-
-
-
 
 %Celeritas is leveraging the GPU-optimized transport techniques demonstrated in
 %Shift and the physics models implemented in Geant4 to provide a charged-particle
