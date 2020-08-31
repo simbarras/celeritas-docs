@@ -131,51 +131,40 @@ Simulation of Small Modular Reactors} project within the DOE \ac{ecp}
 \cite{ecp2019} has demonstrated significant performance for neutron MC transport
 on GPU architectures \cite{hamilton_continuous-energy_2019}. These architectural
 advancements are implemented in the \ac{ornl} \ac{mc} application Shift
-\cite{pandya_implementation_2016}.
-
-Celeritas is leveraging the GPU-optimized transport techniques demonstrated in
-Shift and the physics models implemented in Geant4 to provide a charged-particle
-transport application that achieves optimal performance on current and future
-leadership-class computing architectures. The objective is to create an
-application that addresses the most compute-intensive component of the HEP
-detector simulation workflow: the simulation of the \ac{em} processes in the
-\ac{em} calorimeter. In this sense, Celeritas will be an application that
-complements standard Geant4 by targeting only one of the the computational
-bottlenecks of large detector simulations.
+\cite{pandya_implementation_2016}. Shift has achieved greater than $60\times$
+speed up per-node on Summit versus running on CPU cores alone. However, there
+are several distinctions between that work and the necessary capabilities
+required for particle physics detector modeling. The reactor and nuclear
+technology applications that algorithm targets are not characterized by large
+showers of secondary particles, and because the particles are neutral, there are
+no \ac{em} field interactions.
 
 %%%%%%%%%%%%%%%%%%%
 \section*{Approach}
 
-The transport solver within this new application must be performant on
-accelerator architectures for the detector models and physics necessary to model
-particle physics experiments. Ultimately this requires the ability to transport
-the complete standard model of particle types including \ac{em}, strong, and
-weak interaction physics. In \textcite{hamilton_continuous-energy_2019} we
-developed a GPU-performant \ac{mc} transport algorithm for neutrons that
-achieves greater than $60\times$ speed up per-node on Summit versus running on
-CPU cores alone. However, there are several distinctions between that work and
-the necessary capabilities required for particle physics detector modeling. The
-reactor and nuclear technology applications that algorithm targets are not
-characterized by large showers of secondary particles, and because the particles
-are neutral, there are no \ac{em} field interactions.
+Whereas Geant4 is a fully general toolkit capable of addressing many modeling
+and simulation transport problems,  Celeritas is a highly specialized
+\emph{application} focused on the most computationally intensive calculations
+currently performed in experimental detector simulations: time- and
+energy-dependent detector response. Celeritas is designed to complement, not
+replace, the simulation capabilities and workflows currently using Geant4.
 
-The current work focuses on the development of a transport code for
-\ac{em} interactions of photons and charged leptons. This particular
-choice as a first step towards full Standard Model \ac{mc} transport is due to
-simplicity and usefulness. Strong interactions present high-stakes challenges to
-implement, and weak interactions does not just encompass a vast list of
-particles with different branching ratios but also entail following the produced
-hadrons that depend on strong interaction processes in order to achieve a direct
-comparison with Geant4. Conversely, \ac{em} interactions can be limited
-to ionization energy loss, bremsstrahlung, pair production, Cherenkov radiation,
-and photonuclear interactions. As for usefulness, a proof-of-concept should
-provide a clear form of comparison between Celeritas and Geant4. In this
-scenario, leptons such as electrons and muons constitute perfect probes, as
-these particles are widely used for detector calibration purposes
-\cite{atlas_calibration_e,atlas_calibration_mu}.  Finally, \ac{em}
-interactions processing, due to the large cardinality of particles, takes most
-of the run-time of a simulation, thus accelerating them provides the biggest
-benefits.
+The current work focuses on the development of a transport code for \ac{em}
+interactions of photons and charged leptons. This particular choice as a first
+step towards full Standard Model \ac{mc} transport is due to simplicity and
+usefulness. Strong interactions present high-stakes challenges to implement, and
+weak interactions does not just encompass a vast list of particles with
+different branching ratios but also entail following the produced hadrons that
+depend on strong interaction processes in order to achieve a direct comparison
+with Geant4. Conversely, \ac{em} interactions can be limited to ionization
+energy loss, bremsstrahlung, pair production, Cherenkov radiation, and
+photonuclear interactions. As for usefulness, a proof-of-concept should provide
+a clear form of comparison between Celeritas and Geant4. In this scenario,
+leptons such as electrons and muons constitute perfect probes, as these
+particles are widely used for detector calibration purposes
+\cite{atlas_calibration_e,atlas_calibration_mu}.
+Finally, since processing \ac{em}
+interactions takes the most runtime in a simulation due to the cardinality of particles, accelerating \ac{em} physics provides the greatest opportunity for immediate performance gains.
 
 In \ac{lhc} detector response modeling applications, the desired outputs are
 time- and particle-dependent energy depositions in user-identified cells
@@ -183,7 +172,7 @@ time- and particle-dependent energy depositions in user-identified cells
 collision). The basic neutral particle GPU transport algorithm developed within
 ExaSMR must be extended to treat continuous processes such as multiple
 scattering, generation of massive secondary particle showers, as well as
-tracking in the (electro-)magnetic field. To ensure that progress can be made
+tracking in the \ac{em} field. To ensure that progress can be made
 towards a fully featured application that meets these transport requirements, we
 must address these potential bottlenecks in a systematic way early in the GPU
 transport algorithm development.
@@ -198,17 +187,37 @@ definitions, it provides a production geometry capability for transport on GPUs.
 %%%%%%%%%%%%%%%%%%
 \section*{Outlook}
 
-Celeritas leverages architectural techniques and algorithms from the \ac{ecp}
-project \emph{ExaSMR} and models from the Geant4 detector simulation toolkit. We
-note that Geant4 is a fully general toolkit capable of addressing many
-modeling  and simulation transport problems, whereas Celeritas is a highly
-specialized \emph{application} focused on the most computationally intensive
-calculations currently performed in experimental detector simulations: time- and
-energy-dependent detector response.  Celeritas is planned to complement Geant4
-by providing a pathway for the acceleration of a subset of charged particle
-transport modeling use cases on HPC architectures. The long term goal is to
-re-incorporate these methodologies back into the Geant framework for broader
-application use.
+We have presented Celeritas, an application for demonstrating \ac{mc} \ac{em}
+particle physics simulations on GPUs. It leverages architectural
+techniques and algorithms from the \ac{ecp} project \emph{ExaSMR} and models
+from the Geant4 detector simulation toolkit. The experiences gained through the
+\ac{ecp} \emph{ExaSMR} project provide a proof-of-principal that \ac{mc}
+transport applications can realize significant performance improvements on GPUs.
+Charged-particle and \ac{em} physics transport simulations require additional
+algorithmic changes due to the presence of large secondary particle showers and
+modified transport paths.  Nonetheless, we are addressing these challenges
+within Celeritas and have confidence that these complexities can be solved in a
+manner that does not impact overall computational performance.
+
+While the current focus on Celeritas is on \ac{em} physics, we intend to expand
+Celeritas capabilities to include weak and strong physics. Celeritas is planned
+to complement Geant4 by providing a pathway for the acceleration of a subset of
+charged particle transport modeling use cases on HPC architectures. The long
+term goal is to re-incorporate these methodologies back into the Geant framework
+for broader application use.
+
+
+
+
+%Celeritas is leveraging the GPU-optimized transport techniques demonstrated in
+%Shift and the physics models implemented in Geant4 to provide a charged-particle
+%transport application that achieves optimal performance on current and future
+%leadership-class computing architectures. The objective is to create an
+%application that addresses the most compute-intensive component of the HEP
+%detector simulation workflow: the simulation of the \ac{em} processes in the
+%\ac{em} calorimeter. In this sense, Celeritas will be an application that
+%complements standard Geant4 by targeting only one of the the computational
+%bottlenecks of large detector simulations.
 
 % References
 \pagebreak
