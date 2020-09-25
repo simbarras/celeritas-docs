@@ -5,28 +5,20 @@ Celeritas Meeting minutes
 
 # Fri Mar 20, 2020
 
-Tom presented current budget situation.
-FWP is in process and the current document is on Celeritas' General Slack
-channel.
+- Tom presented current budget situation. FWP is in process and the current
+document is on Celeritas' General Slack channel.
+- Seth described the two milestones for current FWP:
+  - VecGeom GPU verification
+  - GPU performance demonstration of EM physics using a gdml geometry
 
-Seth described the two milestones for current FWP:
-
-- VecGeom GPU verification
-- GPU performance demonstration of EM physics using a gdml geometry
-
-Seth started a Rosetta Stone for nomenclature between Nuclear and HEP physics to
-avoid confusion as we move forward. File is available on GitHub.
-
-Krzysztof suggested talking to Soon Yung about CMS MC. Stefano will work on it.
-
-FNAL has funding for Guilherme and Soon Yung to work full time on the project.
-
-Philippe asked about the computing environment. Seth suggested keeping it open
+- Seth started a Rosetta Stone for nomenclature between Nuclear and HEP physics
+to avoid confusion as we move forward. File is available on GitHub.
+- Krzysztof suggested talking to Soon Yung about CMS MC. Stefano will work on it.
+- FNAL has funding for Guilherme and Soon Yung to work full time on the project.
+- Philippe asked about the computing environment. Seth suggested keeping it open
 and use spack.
-
-For documentation we will use GitHub, at least for now.
-
-Slides for the CERN Geant4 R&D meeting will be shared soon.
+- For documentation we will use GitHub, at least for now.
+- Slides for the CERN Geant4 R&D meeting will be shared soon.
 
 
 # Fri Mar 27, 2020
@@ -263,3 +255,19 @@ pages. Document is in the celeritas-doc repository.
 - The Celeritas demo app should be merged soon.
 - Team agreed with an in depth project briefing on October 14. Seth will sketch
 out the schedule. DOE presentation should happen around that same time.
+
+
+# Fri Sep 11, 2020
+**Meeting adjourned.**
+
+
+# Fri Sep 25, 2020
+
+- Vincent started working on the Bethe Heitler pair production physics model.
+For that, he needs material/element data. So now we are in the process of
+adding material and volume information to the geant-exporter app and
+GeantImporter class.
+- Amanda just created a PR for reading data from HepMC/HEPEVT input files and
+create events.
+- Guilherme is working on the propagator.
+- DOE presentation date is not defined still.
