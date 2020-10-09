@@ -271,3 +271,14 @@ GeantImporter class.
 create events.
 - Guilherme is working on the propagator.
 - DOE presentation date is not defined still.
+
+
+# Fri Oct 9, 2020
+
+- Tom: meeting with DOE is most likely to be scheduled at the end of the month.
+More information will be provided closer to the real date.
+- Philippe: Nov. 19-24: HEP Software Foundation Workshop. There will be a
+session on detector simulation, and we are invited to report on Celeritas.
+Link: https://indico.cern.ch/event/941278/
+- Tom, Seth, and Stefano will schedule a meeting to discuss details and get a
+final comparison between the Celeritas KN demo app (both GPU and CPU) and Geant.
