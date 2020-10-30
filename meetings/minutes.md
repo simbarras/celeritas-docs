@@ -282,3 +282,39 @@ session on detector simulation, and we are invited to report on Celeritas.
 Link: https://indico.cern.ch/event/941278/
 - Tom, Seth, and Stefano will schedule a meeting to discuss details and get a
 final comparison between the Celeritas KN demo app (both GPU and CPU) and Geant.
+
+
+# Fri Oct 23, 2020
+**Meeting adjourned**
+
+
+# Fri Oct 30, 2020
+
+- Material properties are almost fully working. That, with tables will provide
+a fully working material / XS lookup in Celeritas.
+- Discussed possible scenarios in which processes would be selected for each
+particle.
+- Currently implemented physics vectors are mostly used by EM physics, not
+being used by hadronic models, which have their own data structures.
+- As soon as Guilherme finishes the propagator, Seth is going to include it in
+the demo app, which currently has its own stepping method.
+- Event management (production of secondaries) still ongoing work.
+- DOE HEP meeting is scheduled to Nov 19th. Slides will be sent beforehand for
+everyone's appraisal, and a preview of the presentation will take place on
+Nov. 10th.
+- New Celeritas Collocation to take place on Nov. 11th.
+- We now have a working Klein-Nishina interactor running on both CPU and GPU,
+along with a small Geant4 app that runs the same physics process. A rough
+summary of the numbers is given below:
+  - `Celeritas CPU vs. GPU`: `~100x` improvement from a single Nvidia V100 GPU
+  to a single Haswell CPU.
+  - `Celeritas GPU vs. Geant4` on a single Haswell CPU:  `~300x` improvement.
+  - This is a good time/opportunity to evaluate current design choices, test
+  variations, and how they affect the simulation execution.
+  - These testings could lay ground for a prospect paper.
+  - Philippe: it's important to be careful about the caveats in this comparison.
+  Still to be implemented infrastructure, such as stepping management and
+  geometry navigation will pay a toll that cannot be quantified at the moment.
+  Managing expectations is important to not present future lower (and more
+    realistic) numbers which may be interpreted as a failure to achieve the
+  standards created by the original improvement factors.
