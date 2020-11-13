@@ -318,3 +318,21 @@ summary of the numbers is given below:
   Managing expectations is important to not present future lower (and more
     realistic) numbers which may be interpreted as a failure to achieve the
   standards created by the original improvement factors.
+
+
+# Fri Nov 13, 2020
+
+- Brief discussion on the DOE HEP presentation. Team is happy with the result.
+- Wednesday's hackathon helped pinpointing information that will need to be
+implemented for physics interactors to work properly.
+  - Soon finished implementation of `e+ -> gamma + gamma` interactor.
+- Guilherme: Current raytracing issue is being caused by the fact that VecGeom
+has some CPU classes that are not available on GPU.
+- Soon started working on the magnetic field propagator.
+- Seth: we should start thinking about a backup/contingency plan in case we
+continue having compatibility issues with VecGeom.
+- Possible future meetings:
+  - **25th International Conference on Computing in High Energy & Nuclear
+  Physics**, to be held in May 2021. **Paper submission** will open on
+  **1 December 2020** and close on **28 February 2021**.
+  Link: http://cern.ch/vchep2021
