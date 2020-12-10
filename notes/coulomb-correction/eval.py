@@ -47,5 +47,7 @@ for atomic_num in [1, 13, 32, 53, 74, 92, 117]:
     err = val / actual - 1
     print(f"   G4: {val:.16f} ({err:.3g} error)")
 
-print("First 16 components of the zeta array:")
-print(fz_components[:16].tolist())
+print("First 16 components of the zeta array: ",
+      "{",
+      ", ".join("{:.16e}".format(v) for v in fz_components[:16].tolist()),
+      "}")
