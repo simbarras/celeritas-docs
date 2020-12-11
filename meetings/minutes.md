@@ -336,3 +336,50 @@ continue having compatibility issues with VecGeom.
   Physics**, to be held in May 2021. **Paper submission** will open on
   **1 December 2020** and close on **28 February 2021**.
   Link: http://cern.ch/vchep2021
+
+
+# Fri Nov 27, 2020
+**Thanksgiving**
+
+
+# Fri Dec 11, 2020
+
+- DOE presentation on Nov. 19th went well with an overall enthusiastic feeling, 
+including the fact that the team is also collaborating with the U.K. 
+- Geant4 10.7 has a new tasking implementation which should provide coupling 
+between Celeritas EM physics while running the rest in Geant4. The Acceleritas 
+repo is being developed with this purpose.
+- HSF-WLCG presentation was based on the DOE one and also went really well. 
+There is an apparent acceptance in developing a new code for GPU particle 
+transport as opposed to try and port Geant4.
+- GPU-based software have been developed in many HEP fronts, such as triggering 
+and production, but detector modeling has mostly been limited to GeantX and 
+GeantV.
+- Current Geant4 collaboration chair is still not a believer that GPUs can be a
+solution for detector simulation, but the overall opposition to the idea seems 
+to be diminishing.
+- Geant4 is open to accept any proved GPU integration into its release, altough
+with no internal planned efforts on this front.
+- Philippe: Celeritas effort has been distinctive in the fact that the team is 
+large enough, with significant time devoted to the project and a clear set of
+objectives in place.
+
+- New FY scheduled times devoted to Celeritas:
+  - Seth: 90%
+  - Stefano: 100%
+  - Amanda: 90%
+  - Guilherme: 100%
+  - Soon: 50%
+  - Philippe: 45%
+
+- Current focus areas:
+  - Amanda: Mostly finished implementing the mechanics for events/track states.
+  - Stefano: physics and Geant4 data import.
+  - Guilherme: Restling with VecGeom's issues with initialization and gdml.
+  - Soon: Working in the magnetic field propagation.
+  - Everyone has been working with different physics interactors.
+
+- Next intermediate step is to use multi-physics with single element materials.
+
+- Possible future conference abstract/full submission: 
+https://indico.cern.ch/event/948465/abstracts/
