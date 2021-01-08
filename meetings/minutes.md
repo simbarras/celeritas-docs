@@ -383,3 +383,24 @@ objectives in place.
 
 - Possible future conference abstract/full submission: 
 https://indico.cern.ch/event/948465/abstracts/
+
+
+# Fri Dec 25, 2020
+**Happy holidays!**
+
+
+# Fri Jan 8, 2021
+
+- Next DOE meeting should take place in February. The plan is to present a 
+second example app with multiple material support and possibly Acceleritas, 
+which uses Celeritas along with the Geant4 tasking manager to offload EM 
+physics to GPU. 
+- Round table on current tasks:
+  - Amanda: Event infrastructure and photoelectric effect.
+  - Guilherme: linear propagator and Rayleigh scattering.
+  - Stefano: eBremSB tables import and Moller-Bhabha scattering.
+  - Tom: Multiple scattering process.
+  - Soon: Magnetic field propagation.
+  - Vincent: Bethe-Heitler interactor.
+- New hackathon scheduled to January 20th.
+- vCHEP paper is due on Feb 28 [http://cern.ch/vchep2021].
