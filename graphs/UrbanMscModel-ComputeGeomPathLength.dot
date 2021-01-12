@@ -1,0 +1,59 @@
+//---------------------------------*-dot-*-----------------------------------//
+/*!
+ * \file   notes/charged-particle/UrbanMscModel-ComputeGeomPathLength.dot
+ * \author Tom Evans
+ * \date   Wed Nov 11 15:40:40 2020
+ *
+ * dot -Tpdf UrbanMscModel-ComputeGeomPathLength.dot -o UrbanMscModel-ComputeGeomPathLength.pdf
+ * open UrbanMscModel-ComputeTruePathlengthlimit.pdf
+ */
+//---------------------------------------------------------------------------//
+
+digraph compute_geom_pathlength
+{
+    /* graph attributes */
+    center = 1;
+    size="8,14";
+    ranksep=1.25;
+
+    /* NODES */
+
+    /* UrbanMscModel */
+    node [fillcolor=gold, shape=box, style="filled,rounded"];
+    ComputeGeomPathLength [label="UrbanMscModel::\nComputeGeomPathLength"];
+
+    /* MscModel */
+    node [fillcolor=cadetblue1, shape=box, style="filled,rounded"];
+    GetEnergy [label="MscModel::\nGetEnergy"];
+    GetTransMFP [label="MscModel::\nGetTransportMeanFreePath"];
+
+    /* EmModel */
+    node [fillcolor=cornsilk, shape=box, style="filled,rounded"];
+    XSPerVolume [label="EmModel::\nCrossSectionPerVolume\n{uses tables}"];
+    SetupForMat [label="EmModel::\nSetupForMaterial\n{empty}"];
+    ComputeXSPerAtom [label="EmModel::\nComputeCrossSectionPerAtom\n{0.0}"];
+
+    /* CLASSES */
+
+    EmModel [label="G4VEmModel", shape=box, style="filled,bold", fillcolor=cornsilk, fontname="times-italic"];
+    MscModel [label="G4VMscModel", shape=box, style="filled,bold", fillcolor=cadetblue1, fontname="times-italic"];
+    UrbanModel [label="G4UrbanMscModel", shape=box, style="filled,bold", fillcolor=gold];
+
+    /* LEVEL DEPENDENCIES */
+
+    ComputeGeomPathLength -> {GetEnergy GetTransMFP};
+    GetTransMFP -> {XSPerVolume};
+    XSPerVolume -> {SetupForMat ComputeXSPerAtom};
+
+    /* classes */
+    EmModel -> MscModel -> UrbanModel [dir=both, arrowhead=none, arrowtail=empty];
+
+    /* LEVELS */
+
+    /*
+    {rank=same; SetCurrentCouple GetRange ConvertTrueToGeom};
+    */
+
+} // end digraph
+
+//---------------------------------------------------------------------------//

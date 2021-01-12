@@ -1,0 +1,65 @@
+//---------------------------------*-dot-*-----------------------------------//
+/*!
+ * \file   notes/charged-particle/UrbanMscModel-SampleScattering.dot
+ * \author Tom Evans
+ * \date   Wed Nov 11 15:40:40 2020
+ *
+ * dot -Tpdf:quartz UrbanMscModel-SampleScattering.dot -o UrbanMscModel-SampleScattering.pdf
+ * open UrbanMscModel-SimpleScattering.pdf
+ */
+//---------------------------------------------------------------------------//
+
+digraph sample_scattering
+{
+    /* graph attributes */
+    center = 1;
+    size="8,14";
+    ranksep=1.25;
+
+    /* NODES */
+
+    /* UrbanMscModel */
+    node [fillcolor=gold, shape=box, style="filled,rounded"];
+    SampleScattering [label="UrbanMscModel::\nSampleScattering"];
+    SampleCosineTheta [label="UrbanMscModel::\nSampleCosineTheta"];
+    SampleDisp [label="UrbanMscModel::\nSampleDisplacement"];
+    SampleDispNew [label="UrbanMscModel::\nSampleDisplacementNew"];
+    SimpleScattering [label="UrbanMscModel::\nSimpleScattering"];
+    ComputeTheta0 [label="UrbanMscModel::\nComputeTheta0"];
+
+    /* MscModel */
+    node [fillcolor=cadetblue1, shape=box, style="filled,rounded"];
+    GetEnergy [label="MscModel::\nGetEnergy"];
+    GetDEDX   [label="MscModel::\nGetDEDX"];
+    GetTransMFP [label="MscModel::\nGetTransportMeanFreePath"];
+
+    /* EmModel */
+    node [fillcolor=cornsilk, shape=box, style="filled,rounded"];
+    XSPerVolume [label="EmModel::\nCrossSectionPerVolume\n{uses tables}"];
+    SetupForMat [label="EmModel::\nSetupForMaterial\n{empty}"];
+    ComputeXSPerAtom [label="EmModel::\nComputeCrossSectionPerAtom\n{0.0}"];
+
+    /* CLASSES */
+
+    EmModel [label="G4VEmModel", shape=box, style="filled,bold", fillcolor=cornsilk, fontname="times-italic"];
+    MscModel [label="G4VMscModel", shape=box, style="filled,bold", fillcolor=cadetblue1, fontname="times-italic"];
+    UrbanModel [label="G4UrbanMscModel", shape=box, style="filled,bold", fillcolor=gold];
+
+    /* LEVEL DEPENDENCIES */
+
+    SampleScattering -> {GetEnergy GetDEDX SampleCosineTheta SampleDisp SampleDispNew};
+    SampleCosineTheta -> {GetTransMFP SimpleScattering ComputeTheta0};
+    GetTransMFP -> {XSPerVolume};
+    XSPerVolume -> {SetupForMat ComputeXSPerAtom};
+
+    /* classes */
+    EmModel -> MscModel -> UrbanModel [dir=both, arrowhead=none, arrowtail=empty];
+
+    /* LEVELS */
+
+    {rank=same; GetEnergy GetDEDX SampleCosineTheta SampleDisp SampleDispNew};
+    {rank=same; GetTransMFP SimpleScattering ComputeTheta0};
+
+} // end digraph
+
+//---------------------------------------------------------------------------//
