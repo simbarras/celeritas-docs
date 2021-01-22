@@ -404,3 +404,22 @@ physics to GPU.
   - Vincent: Bethe-Heitler interactor.
 - New hackathon scheduled to January 20th.
 - vCHEP paper is due on Feb 28 [http://cern.ch/vchep2021].
+
+
+# Fri Jan 22, 2021
+
+- Round table:
+  - Stefano: Working on Moller-Bhabha interactor and importing eBremSB data from
+  z and ascii files.
+  - Amanda: validating the Livermore interactor against G4 and working with 
+  process/model testing harnesses.
+  - Guilherme: working with cms rasterizer.
+  - Soon: working on and validating the magnetic field propagator.
+  - Tom: No clear update yet regarding DOE.
+  - Ben: Got started with google docs for the physics data and how we can move 
+  forward with that.
+  - Philippe: Fix root autoload and provide scripts to view data from the 
+  geant-exporter-data.root using both root .C macro and .py script. PR merged.
+  - Vincent: Finished with Bethe-Heitler. PR is merged. Will start working with 
+  the next interactor.
+- Celeritas stepping algorithm is on its way.
