@@ -423,3 +423,24 @@ physics to GPU.
   - Vincent: Finished with Bethe-Heitler. PR is merged. Will start working with 
   the next interactor.
 - Celeritas stepping algorithm is on its way.
+
+
+# Fri Feb 5, 2021
+
+- Team has been pushing forward in the physics side:
+  - Substantial progress on physics models by Amanda, Vincent, and Stefano.
+  - Soon is making progress on the magnetic field propagator.
+  - Work on integration of stepping loop + physics models.
+- Today's merged PR provides a new piece of code, namely the Pie class. This is 
+a portable data container that has the same interface on both host/device, 
+eliminating the complexity for shuffling pointers around. 
+- Geometry: Guilherme is now running CMS rasterizer (almost) succesfully. 
+Some views can't still be produced (as if the rasterizer ends up in an infinite 
+loop). These issues are being studied.
+- vCHEP paper will most likely present a demo with 2 physics processes and plans 
+for the overall code architecture.
+- Paul mentioned the discrepancies between the Geant4 Moller-Bhabha sampler and 
+documentation, agreeing with our current understanding. Work on covering these 
+discrepancies will be done while validating the Celeritas implementation. 
+Stefano followed the code implementation due to the high likelihood that 
+extensive MC validations were performed over the years.
