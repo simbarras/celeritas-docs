@@ -122,16 +122,49 @@ heterogeneous devices is critical to code performance, particularly for random
 access algorithms such as \ac{mc}.  Improvements to the VecGeom geometry package to enable \ac{mc} transport on GPUs are discussed in Sec.~\ref{sec:vecgeom}.  Finally, we show some preliminary performance results on a mini-application (mini-app) in Sec.~\ref{sec:miniapp}.
 
 %%---------------------------------------------------------------------------%%
-\section{Code Architecture}
-\label{sec:code-arch}
+\include{code-arch}
 
 %%-------------------%%
 \subsection{Data Model}
 \label{sec:data-model}
 
+\include{code-arch.tex}
+
 %%-----------------------%%
 \subsection{Physics Models}
 \label{sec:physics-models}
+
+This section describes the current physics models implemented on GPU. The
+implementation has focused on sampling secondaries rather than calculating
+on-the-fly atomic cross sections, because for the majority of models those data
+can be precalculated in Geant4 and exported as tabular data.
+
+%%------------------------------------%%
+\subsubsection{Klein--Nishina}
+
+% Seth
+Had to figure out how to allocate storage for secondaries.
+
+%%------------------------------------%%
+\subsubsection{Bethe--Heitler}
+
+% Vince
+
+%%------------------------------------%%
+\subsubsection{Positron annihilation}
+
+$\textrm{e}^+ \to (\gamma, \gamma)$
+% Soon
+
+%%------------------------------------%%
+\subsubsection{Moller/Bhabha scattering}
+
+% Stefano
+
+%%------------------------------------%%
+\subsubsection{Livermore photoelectric}
+
+% Amanda
 
 %%---------------------------------------------------------------------------%%
 \section{VecGeom Geometry Package}
