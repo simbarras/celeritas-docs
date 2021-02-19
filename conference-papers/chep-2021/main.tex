@@ -160,6 +160,21 @@ $\textrm{e}^+ \to (\gamma, \gamma)$
 \subsubsection{Moller/Bhabha scattering}
 
 % Stefano
+In Geant4, both Moller and Bhabha scatterings are sampled by a single 
+class method, which defines the criteria based on the incident particle, 
+performs the interaction (Moller for electrons and Bhabha for positrons), and 
+calculates the final incident and secondary particle states. Celeritas 
+follows a similar structure, where a MollerBhabha interactor class is 
+responsible for performing the interaction and calculating the final particle 
+states. However, in Celeritas, the sampling algorithms for each scattering 
+process are broken down into two separate classes, each of which responsible 
+solely for executing the sampling loop and returning the fraction of the energy 
+transferred during the scattering process to the main MollerBhabha interactor, 
+which then proceeds to calculate the final particle states. This higher 
+compartmentalization improves code testing and maintainability, and provides
+an oportunity to test code performance in the future by splitting the current 
+mechanism into two different models and templating the interactor by particle 
+type.
 
 %%------------------------------------%%
 \subsubsection{Livermore photoelectric}

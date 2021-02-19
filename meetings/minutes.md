@@ -444,3 +444,19 @@ documentation, agreeing with our current understanding. Work on covering these
 discrepancies will be done while validating the Celeritas implementation. 
 Stefano followed the code implementation due to the high likelihood that 
 extensive MC validations were performed over the years.
+
+
+# Fri Feb 19, 2021
+
+- DOE-HEP postponed all budget meetings. Despite no new meeting date, we
+should still proceed with a self-imposed deadline, as if there were no changes.  
+- vCHEP paper due end of Feb. KN demo app tests showed that smaller kernels 
+improve occupancy and decrease performance. Due to no divergence in the current 
+demo, the effects of breaking the code down into smaller kernels should become 
+more prominent after multi-physics is implemented.  
+- Physics: we are making good progress on different model implementations and 
+stepping loop. Should be able to have multi-physics running on Summit by June.  
+- Philippe solved VecGeom issue regarding reloading the geometry. 
+- Printed debug statements from VecGeom are an issue. Seth created a wrapper to 
+suppress the output, at least while VecGeom main repository does not remove 
+these spurious printouts.
