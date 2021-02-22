@@ -7,6 +7,7 @@
 \usepackage[varg]{txfonts}   % Web of Conferences font
 \usepackage{hyperref}
 \usepackage{color}
+\usepackage{xspace}
 
 \usepackage[
     shortcuts,
@@ -49,15 +50,29 @@
   per-mode=symbol,
   group-minimum-digits=3,
   range-units=single}
+
+% Commands
+\newcommand{\Cpp}{C\texttt{++}\xspace}
+
 %%---------------------------------------------------------------------------%%
 \begin{document}
 
 %%---------------------------------------------------------------------------%%
 \title{Celeritas: Toward GPU-based particle transport for detector simulations
     in LHC experiments}
-\author{
-    \firstname{Seth} \lastname{Johnson}\inst{1}\fnsep
-    \thanks{\email{johnsonsr@ornl.gov}}
+    %%
+    \author{\firstname{Seth}
+    \lastname{Johnson}\inst{1}\fnsep \thanks{This manuscript has been authored
+    by UT-Battelle, LLC, under contract DE-AC05-00OR22725 with the US Department
+    of Energy. The United States Government retains and the publisher, by
+    accepting the article for publication, acknowledges that the United States
+    Government retains a nonexclusive, paid-up, irrevocable, worldwide license
+    to publish or reproduce the published form of this manuscript, or allow
+    others to do so, for United States Government purposes. DOE will provide
+    access to these results of federally sponsored research in accordance with
+    the DOE Public Access Plan
+    (http://energy.gov/downloads/doe-public-access-plan).}\fnsep\thanks{
+    \email{johnsonsr@ornl.gov}}
     %%
     \and
     \firstname{Philippe} \lastname{Canal}\inst{2}
@@ -122,13 +137,41 @@ heterogeneous devices is critical to code performance, particularly for random
 access algorithms such as \ac{mc}.  Improvements to the VecGeom geometry package to enable \ac{mc} transport on GPUs are discussed in Sec.~\ref{sec:vecgeom}.  Finally, we show some preliminary performance results on a mini-application (mini-app) in Sec.~\ref{sec:miniapp}.
 
 %%---------------------------------------------------------------------------%%
-\include{code-arch}
+\section{Code Architecture}
+\label{sec:code-arch}
+
+%%-----------------%%
+\subsection{Overview}
+\label{sec:overview}
+
+In the short term, Celeritas is designed as a standalone application
+that transport particles exclusively on device. To support robust and
+rapid unit testing, its components are designed to run natively in \Cpp
+on traditional CPUs regardless of whether CUDA is available for
+on-device execution.
+
+Like other GPU-enabled \ac{mc} transport codes such as
+Shift~\cite{pandya_implementation_2016,hamilton_continuous-energy_2019}, the
+low-level component code used by transport kernels is designed so that each
+particle track corresponds to a single thread, since particle tracks once
+created are independent of each other. There is therefore essentially no
+cooperation between individual threads, facilitating the dual host/device
+annotation of most of Celeritas. The allocation of secondary particles and the
+initialization of new tracks from these secondaries both require CUDA-specific
+programming, but those components are encapsulated so that both host and device
+code can safely construct secondaries.
+
+To support parallelizing our initial development over several team
+members, and to facilitate refactoring and performance testing of code,
+Celeritas uses a highly modular programming approach based on
+composition rather than inheritance. As much as possible, each major
+code component is built of numerous smaller components and interfaces
+with as few other components as possible. The interfaces with other
+components are furthermore
 
 %%-------------------%%
 \subsection{Data Model}
 \label{sec:data-model}
-
-\include{code-arch.tex}
 
 %%-----------------------%%
 \subsection{Physics Models}
@@ -160,20 +203,20 @@ $\textrm{e}^+ \to (\gamma, \gamma)$
 \subsubsection{Moller/Bhabha scattering}
 
 % Stefano
-In Geant4, both Moller and Bhabha scatterings are sampled by a single 
-class method, which defines the criteria based on the incident particle, 
-performs the interaction (Moller for electrons and Bhabha for positrons), and 
-calculates the final incident and secondary particle states. Celeritas 
-follows a similar structure, where a MollerBhabha interactor class is 
-responsible for performing the interaction and calculating the final particle 
-states. However, in Celeritas, the sampling algorithms for each scattering 
-process are broken down into two separate classes, each of which responsible 
-solely for executing the sampling loop and returning the fraction of the energy 
-transferred during the scattering process to the main MollerBhabha interactor, 
-which then proceeds to calculate the final particle states. This higher 
+In Geant4, both Moller and Bhabha scatterings are sampled by a single
+class method, which defines the criteria based on the incident particle,
+performs the interaction (Moller for electrons and Bhabha for positrons), and
+calculates the final incident and secondary particle states. Celeritas
+follows a similar structure, where a MollerBhabha interactor class is
+responsible for performing the interaction and calculating the final particle
+states. However, in Celeritas, the sampling algorithms for each scattering
+process are broken down into two separate classes, each of which responsible
+solely for executing the sampling loop and returning the fraction of the energy
+transferred during the scattering process to the main MollerBhabha interactor,
+which then proceeds to calculate the final particle states. This higher
 compartmentalization improves code testing and maintainability, and provides
-an oportunity to test code performance in the future by splitting the current 
-mechanism into two different models and templating the interactor by particle 
+an opportunity to test code performance in the future by splitting the current
+mechanism into two different models and templating the interactor by particle
 type.
 
 %%------------------------------------%%
@@ -188,6 +231,19 @@ type.
 %%---------------------------------------------------------------------------%%
 \section{Mini-App Results}
 \label{sec:miniapp}
+
+%%---------------------------------------------------------------------------%%
+\section{Acknowledgements}
+
+Work for this paper was supported by Oak Ridge National Laboratory (ORNL), which is managed and operated by UT-Battelle, LLC, for the U.S. Department of Energy (DOE) under Contract No. DEAC05-00OR22725.
+%%
+This research was supported by the Exascale Computing
+Project (ECP), project number 17-SC-20-SC. The ECP is a collaborative effort of
+two DOE organizations, the Office of Science and the National Nuclear Security
+Administration, that are responsible for the planning and preparation of a
+capable exascale ecosystem---including software, applications, hardware,
+advanced system engineering, and early testbed platforms---to support the
+nation's exascale computing imperative.
 
 %%---------------------------------------------------------------------------%%
 \bibliography{references}
