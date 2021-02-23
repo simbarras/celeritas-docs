@@ -244,6 +244,21 @@ calculation has also been implemented in Celeritas for both of these processes.
 \section{VecGeom Geometry Package}
 \label{sec:vecgeom}
 
+\hspace*{0.35cm} VecGeom is a geometry modeller library, written in C++ and based on the SIMD concept, it 
+was designed for use in particle transport simulation\cite{VecGeom21}. VecGeom has been 
+successfully integrated with Geant4 since version 10.6. Tested within the official CMS 
+simulation software, VecGeom has shown performance improvements between 7\% to 13\%\cite{Pedro:2019mkq}.
+
+VecGeom also provides navigation tools which optimize the geometry calculations in the complex,
+multi-level, hierarchical geometry of realistic HEP detectors\cite{Wenzel:2020zyn}. Eventually, its 
+parallel navigation algorithms are expected to be also integrated into the Geant4 toolkit.
+
+Most of VecGeom functionality also compiles and runs on GPU devices, hence it is being 
+integrated into the Celeritas application. Realistic geometries like CMS2018 can be parsed 
+from GDML format and transferred into GPU memory. Validation of the navigation algorithms
+on the GPU is currently underway. 
+
+
 %%---------------------------------------------------------------------------%%
 \section{Mini-App Results}
 \label{sec:miniapp}
