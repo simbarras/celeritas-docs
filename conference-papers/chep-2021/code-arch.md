@@ -26,4 +26,46 @@ to facilitate refactoring and performance testing of code, Celeritas uses a
 highly modular programming approach based on composition rather than
 inheritance. As much as possible, each major code component is built of
 numerous smaller components and interfaces with as few other components as
-possible. The interfaces with other components are furthermore
+possible.
+
+## Data model
+
+Software for heterogeneous architectures must manage independent
+*memory spaces*. _Host_ allocations use `malloc` or
+standard C++ library memory management, and the allocated data is accessible
+only on the CPU. _Device_ memory is allocated with `cudaMalloc` and is
+generally available only on the GPU. The CUDA Unified Virtual Memory
+feature allows CUDA-allocated memory to be automatically paged between host and
+device with a concomitant loss in performance. The Kokkos performance
+portability layer [cite] manages the allocation of memory and transfer of data
+between host and device using a class `Kokkos::View<T, MemorySpace>` which can
+act like a `std::shared_pointer` (it is reference counted), a `std::vector` (it
+allocates and manages memory), and a `std::span` (it can also provide a
+non-owning view to stored data). A similar class has been developed for
+Celeritas but with the design goal of supporting the deeply hierarchical data
+needed for tabulated physics data (in contrast to Kokkos' focus on dense linear
+algebraic data).
+
+The `celeritas::Pie` (XXX please rename this) class manages data allocation and
+transfer between CPU and GPU with primary design goal of constructing deeply
+hierarchical data on host at setup time and seamlessly copying to device.
+
+ String  | Particle | Description
+----- | ----- | -----
+`std::vector<char>` | `Pie<ParticleState, value>` | Manages/owns data
+`std::span<char>` | `Pie<ParticleState, reference>` | Low level access to the raw data
+`std::span<const char>` | `Pie<ParticleState, const_reference>` | Low level access to the raw data
+`std::string_view` | `ParticleView` | High level operation on the data
+
+The Celeritas data model separates persistent data from state data.
+Calculating the Lorentz factor $\gamma$ of a particle requires both the rest
+mass $mc^2$---which is constant for all particles of the same type but is not a
+fundamental constant nor the same for all particles---and the kinetic energy
+$K$. It is a parameterized expression $\gamma(m;K) = 1 + \frac{K}{mc^2}$.
+Celeritas differentiates from shared data such as $m$ (parameters, shortened to
+`Params`) from state data particular to a single track such as energy or
+particle type (`State`).
+
+In Celeritas, a particle track is not a single object nor a struct of arrays.
+Instead, sets of classes (Params plus State) define aspects of a track
+
