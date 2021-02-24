@@ -8,6 +8,7 @@
 \usepackage{hyperref}
 \usepackage{color}
 \usepackage{xspace}
+\usepackage{booktabs}
 
 \usepackage[
     shortcuts,
@@ -19,6 +20,47 @@
 \usepackage[
     detect-none,
     binary-units]{siunitx}
+
+% >>> from pandoc
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+% <<< from pandoc
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setacronymstyle{long-short}
 \makeglossaries
@@ -135,41 +177,7 @@ heterogeneous devices is critical to code performance, particularly for random
 access algorithms such as \ac{mc}.  Improvements to the VecGeom geometry package to enable \ac{mc} transport on GPUs are discussed in Sec.~\ref{sec:vecgeom}.  Finally, we show some preliminary performance results on a mini-application (mini-app) in Sec.~\ref{sec:miniapp}.
 
 %%---------------------------------------------------------------------------%%
-\section{Code Architecture}
-\label{sec:code-arch}
-
-%%-----------------%%
-\subsection{Overview}
-\label{sec:overview}
-
-In the short term, Celeritas is designed as a standalone application
-that transport particles exclusively on device. To support robust and
-rapid unit testing, its components are designed to run natively in \Cpp
-on traditional CPUs regardless of whether CUDA is available for
-on-device execution.
-
-Like other GPU-enabled \ac{mc} transport codes such as
-Shift~\cite{pandya_implementation_2016,hamilton_continuous-energy_2019}, the
-low-level component code used by transport kernels is designed so that each
-particle track corresponds to a single thread, since particle tracks once
-created are independent of each other. There is therefore essentially no
-cooperation between individual threads, facilitating the dual host/device
-annotation of most of Celeritas. The allocation of secondary particles and the
-initialization of new tracks from these secondaries both require CUDA-specific
-programming, but those components are encapsulated so that both host and device
-code can safely construct secondaries.
-
-To support parallelizing our initial development over several team
-members, and to facilitate refactoring and performance testing of code,
-Celeritas uses a highly modular programming approach based on
-composition rather than inheritance. As much as possible, each major
-code component is built of numerous smaller components and interfaces
-with as few other components as possible. The interfaces with other
-components are furthermore
-
-%%-------------------%%
-\subsection{Data Model}
-\label{sec:data-model}
+\input{code-arch.tex}
 
 %%-----------------------%%
 \subsection{Physics Models}
@@ -178,7 +186,8 @@ components are furthermore
 This section describes the current physics models implemented on GPU. The
 implementation has focused on sampling secondaries rather than calculating
 on-the-fly atomic cross sections, because for the majority of models those data
-can be precalculated in Geant4 and exported as tabular data.
+can be precalculated in Geant4 and exported as tabular data. Allocation of
+secondaries is performed through a carefully constructed
 
 %%------------------------------------%%
 \subsubsection{Klein--Nishina}
@@ -244,24 +253,133 @@ calculation has also been implemented in Celeritas for both of these processes.
 \section{VecGeom Geometry Package}
 \label{sec:vecgeom}
 
-\hspace*{0.35cm} VecGeom is a geometry modeller library, written in C++ and based on the SIMD concept, it 
-was designed for use in particle transport simulation\cite{VecGeom21}. VecGeom has been 
-successfully integrated with Geant4 since version 10.6. Tested within the official CMS 
-simulation software, VecGeom has shown performance improvements between 7\% to 13\%\cite{Pedro:2019mkq}.
+VecGeom is a geometry modeller library, written in \Cpp\ and based on the SIMD
+concept, it was designed for use in particle transport
+simulation \cite{VecGeom:web}. VecGeom has been successfully integrated with Geant4
+since version 10.6. Tested within the official CMS simulation software, VecGeom
+has shown performance improvements between 7\% to 13\% \cite{Pedro:2019mkq}.
 
-VecGeom also provides navigation tools which optimize the geometry calculations in the complex,
-multi-level, hierarchical geometry of realistic HEP detectors\cite{Wenzel:2020zyn}. Eventually, its 
-parallel navigation algorithms are expected to be also integrated into the Geant4 toolkit.
+VecGeom also provides navigation tools which optimize the geometry calculations
+in the complex, multi-level, hierarchical geometry of realistic HEP
+detectors \cite{Wenzel:2020zyn}. Eventually, its parallel navigation algorithms
+are expected to be also integrated into the Geant4 toolkit.
 
-Most of VecGeom functionality also compiles and runs on GPU devices, hence it is being 
-integrated into the Celeritas application. Realistic geometries like CMS2018 can be parsed 
-from GDML format and transferred into GPU memory. Validation of the navigation algorithms
-on the GPU is currently underway. 
+Most of VecGeom functionality also compiles and runs on GPU devices, hence it is
+being integrated into the Celeritas application. Realistic geometries like
+CMS2018 can be parsed from GDML format and transferred into GPU memory.
+Validation of the navigation algorithms on the GPU is currently underway.
 
 
 %%---------------------------------------------------------------------------%%
 \section{Mini-App Results}
 \label{sec:miniapp}
+
+Using the Celeritas components, we constructed a demonstration app to verify a
+simple test problem against Geant4 results. It is the simplest physical
+simulation we can run, with photon-only transport a single
+Compton scattering process using the Klein--Nishina model.  It has a single
+infinite material (aluminum) and a 100 MeV monodirectional point source.
+
+The stepping kernel is parallel over particle tracks, with one launch per step,
+and ``dead'' tracks ignored. Interaction lengths are sampling with
+uniform-in-log-energy cross section calculations with linear interpolation. The
+particle states include position and directions that are updated with each step.
+Secondaries are allocated and constructed as part of each interaction, but they
+are immediately killed and their energy deposited locally. Each energy
+deposition event, whether from an absorbed electron or a cutoff photon,
+allocates a detector hit and writes out the deposited energy, position,
+direction, time, and track ID.
+
+An additional kernel processes the allocated vector of detector hits into
+uniformly spaced detector bins. A final kernel performs a reduction on the
+``alive'' state of particles to determine whether the simulation should
+terminate.
+
+The same code components were used to build GPU and CPU versions of the same
+stepping process, although the CPU version steps through one track at a time
+rather than many tracks in parallel.  Figure~\ref{fig:baseline} gives the
+baseline performance of the two versions. The host code uses a single core of an
+Intel "Cascade Lake" Xeon processor running at 2.3 GHz, compiled with GCC 8.3
+and \texttt{-O3 -march=skylake-avx512 -mtune=skylake-avx512}. The device code
+uses a single Nvidia Tesla V100 running at 1.53 GHz, compiled with CUDA 10.1 and
+\texttt{-O3 --use\_fast\_math}.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics{fig/cpu-gpu-comparison}
+  \caption{Performance comparison of the CPU and GPU versions of the Celeritas
+  code.}
+  \label{fig:baseline}
+\end{figure}
+
+Although this mini-app is far simpler than one that supports the full range of
+physics needed for EM shower simulation, it may be instructive to see how
+standard recommendations for performance enhancement affect the total runtime.
+
+\begin{itemize}
+  \item \emph{Removing the ``grid striding'' wherein a single GPU thread can
+    transport multiple tracks sequentially.} Preliminary studies showed
+    decreased performance by transporting multiple tracks per thread, so in all
+    the results shown here only one track is used per thread. Removing the grid
+    striding should reduce the register pressure for the kernel by eliminating
+    an unused runtime variable.
+  \item \emph{Copying track states into local variables.} Operating on the
+    position, direction, and time locally (rather than as pointers to global
+    memory) should remove potential aliasing issues and improve potential
+    compiler optimizations.
+  \item \emph{Copying the random number generator state into a thread-local
+    variable.}
+    Like with the other track states, the RNG state (XORWOW) is accessed
+    directly through global memory. The CURAND documentation notes
+    that to increase performance, the generator state can be operated on locally
+    but stored in global memory between kernel launches.
+  \item \emph{Using a struct-of-arrays rather than array-of-structs for particle
+    data.} For the sake of expediency, the \texttt{ParticleTrackState} data is a
+    struct with a particle type ID (\texttt{unsigned int}) and an energy
+    (\texttt{double}). Conventional CUDA kernels obtain higher memory
+    bandwidth when data accesses are ``coalesced,'' which will be more likely
+    when each component is a contiguous array. We should note that the
+    \texttt{ParticleTrackView} abstraction completely hides this implementation
+    change from the tracking kernel and the physics code.
+  \item \emph{Preallocating one secondary per interaction.} Rather than using
+    the dynamic \texttt{SecondaryAllocator} and its atomic add, preallocate a
+    single \texttt{Secondary} as part of the \texttt{Interaction} result.
+    Physics kernels that allocate more than one secondary per interaction will
+    still need the dynamic allocation, but simpler kernels will no longer need
+    the atomic, at the cost of slightly increased memory pressure.
+  \item \emph{Splitting the single step kernel into two kernels, one for movement
+    and one for interaction.} Smaller kernels tend to have lower register usage
+    and therefore higher kernel occupancy.
+\end{itemize}
+Figure~\ref{fig:speedup} shows the performance of each separate change in the
+list above, as well as a combination of all changes.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics{fig/speedups}
+  \caption{Incremental (thin colored lines) and cumulative (thick gray line)
+  speed up for changes to the mini-app and data structures.}
+  \label{fig:speedup}
+\end{figure}
+
+The performance results are intriguing. TODO: elaborate
+
+To explore the performance implications of higher occupancy, we recompiled the
+``set of combined optimization'' changes with the \verb|--maxrregcount N| NVCC
+compiler option \cite{nvcc} to constrain kernel register usage,
+which is the limiting factor for the CUDA [SM] occupancy for the demo
+interactor kernels. Figure~\ref{fig:occupancy} demonstrates that a higher
+kernel occupancy does not always translate to improved performance. TODO:
+commentary about memory bound MC codes.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics{fig/occupancy}
+  \caption{Performance ramifications of forcing the register size to be smaller
+  for higher occupancy. The blue line is total solve time, the dark red line is
+the register usage,}
+  \label{fig:occupancy}
+\end{figure}
 
 %%---------------------------------------------------------------------------%%
 \section{Acknowledgements}

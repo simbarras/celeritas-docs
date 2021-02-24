@@ -1,5 +1,5 @@
 \hypertarget{code-architecture}{%
-\subsection{Code architecture}\label{code-architecture}}
+\section{Code Architecture}\label{code-architecture}}
 
 In the short term, Celeritas is designed as a standalone application
 that transport particles exclusively on device. To support robust and
@@ -7,9 +7,10 @@ rapid unit testing, its components are designed to run natively in C++
 on traditional CPUs regardless of whether CUDA is available for
 on-device execution.
 
-Like other GPU-enabled Monte Carlo transport codes such as Shift, the
-low-level component code used by transport kernels is designed so that
-each particle track corresponds to a single thread, since particle
+Like other GPU-enabled {[}MC{]} transport codes such as Shift
+{[}pandya\_implementation\_2016,hamilton\_continuous-energy\_2019{]},
+the low-level component code used by transport kernels is designed so
+that each particle track corresponds to a single thread, since particle
 tracks once created are independent of each other. There is therefore
 essentially no cooperation between individual threads, facilitating the
 dual host/device annotation of most of Celeritas. The allocation of
@@ -35,53 +36,197 @@ accessible only on the CPU. \emph{Device} memory is allocated with
 \texttt{cudaMalloc} and is generally available only on the GPU. The CUDA
 Unified Virtual Memory feature allows CUDA-allocated memory to be
 automatically paged between host and device with a concomitant loss in
-performance. The Kokkos performance portability layer {[}cite{]} manages
-the allocation of memory and transfer of data between host and device
-using a class
-\texttt{Kokkos::View\textless{}T,\ MemorySpace\textgreater{}} which can
-act like a \texttt{std::shared\_pointer} (it is reference counted), a
-\texttt{std::vector} (it allocates and manages memory), and a
+performance. Another solution to memory space management is a
+portability layer such as Kokkos {[}cite{]}, which manages the
+allocation of memory and transfer of data between host and device using
+a class
+\texttt{Kokkos::View\textless{}class,\ MemorySpace\textgreater{}} which
+can act like a \texttt{std::shared\_pointer} (it is reference counted),
+a \texttt{std::vector} (it allocates and manages memory), and a
 \texttt{std::span} (it can also provide a non-owning view to stored
 data). A similar class has been developed for Celeritas but with the
 design goal of supporting the deeply hierarchical data needed for
 tabulated physics data (in contrast to Kokkos' focus on dense linear
 algebraic data).
 
-The \texttt{celeritas::Pie} (XXX please rename this) class manages data
-allocation and transfer between CPU and GPU with primary design goal of
-constructing deeply hierarchical data on host at setup time and
-seamlessly copying to device.
+The
+\texttt{celeritas::Collection\textless{}class,\ Ownership,\ MemSpace\textgreater{}}
+class manages data allocation and transfer between CPU and GPU with the
+primary design goal of constructing deeply hierarchical data on host at
+setup time and seamlessly copying to device. The templated
+\texttt{class} must be trivially copyable -\/- either a fundamental data
+type or a struct of such types. An individual item in a collection can
+be accessed \texttt{ItemId\textless{}class\textgreater{}}, which is a
+trivially copyable but type-safe index; and a range of items (returned
+as a \texttt{Span\textless{}class\textgreater{}}) can be accessed with a
+trivially copyable \texttt{ItemRange\textless{}class\textgreater{}},
+which is a container-like slice object containing start and stop
+indices. Since \texttt{ItemRange} is trivially copyable and
+\texttt{Collection}s have the same data layout on host and device, a set
+of Collections that reference data in each other provide an effective,
+efficient, and type-safe means of managing complex hierarchical data on
+host and device.
 
-\begin{longtable}[]{@{}lll@{}}
-\toprule
-String & Particle & Description\tabularnewline
-\midrule
-\endhead
-\texttt{std::vector\textless{}char\textgreater{}} &
-\texttt{Pie\textless{}ParticleState,\ value\textgreater{}} &
-Manages/owns data\tabularnewline
-\texttt{std::span\textless{}char\textgreater{}} &
-\texttt{Pie\textless{}ParticleState,\ reference\textgreater{}} & Low
-level access to the raw data\tabularnewline
-\texttt{std::span\textless{}const\ char\textgreater{}} &
-\texttt{Pie\textless{}ParticleState,\ const\_reference\textgreater{}} &
-Low level access to the raw data\tabularnewline
-\texttt{std::string\_view} & \texttt{ParticleView} & High level
-operation on the data\tabularnewline
-\bottomrule
-\end{longtable}
+As an example, consider material definitions (omitting isotopics for
+simplicity), which contain three levels of indirection: an array of
+materials has an array of pointers to elements and their fractions in
+that material. In a traditional C++ code this could be represented as
+\texttt{vector\textless{}vector\textless{}pair\textless{}Element*,\ double\textgreater{}\textgreater{}\textgreater{}}
+with a separately allocated
+\texttt{vector\textless{}Element\textgreater{}}. With helper libraries
+such as Thrust {[}cite{]} there is no direct CUDA analog to this
+structure because device memory management is limited to host code.
+Celeritas chooses not to use in-kernel \texttt{cudaMalloc} calls for
+performance and portability considerations. Instead, Celeritas
+represents the nested hierarchy as a set of \texttt{Collection} objects
+bound together as a \texttt{MaterialParamsData} struct.
 
-The Celeritas data model separates persistent data from state data.
-Calculating the Lorentz factor \$\textbackslash gamma\$ of a particle
-requires both the rest mass \$mc\^{}2\$-\/-\/-which is constant for all
-particles of the same type but is not a fundamental constant nor the
-same for all particles-\/-\/-and the kinetic energy \$K\$. It is a
-parameterized expression \$\textbackslash gamma(m;K) = 1 +
-\textbackslash frac\{K\}\{mc\^{}2\}\$. Celeritas differentiates from
-shared data such as \$m\$ (parameters, shortened to \texttt{Params})
-from state data particular to a single track such as energy or particle
-type (\texttt{State}).
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{struct}\NormalTok{ Element}
+\NormalTok{\{}
+    \DataTypeTok{int}\NormalTok{            atomic\_number;}
+\NormalTok{    units::AmuMass atomic\_mass;}
+\NormalTok{\};}
+
+\KeywordTok{struct}\NormalTok{ MatElementComponent}
+\NormalTok{\{}
+\NormalTok{    ItemId\textless{}Element\textgreater{} element;  }\CommentTok{//!\textless{} Index in MaterialParams elements}
+    \DataTypeTok{real\_type}\NormalTok{       fraction; }\CommentTok{//!\textless{} Fraction of number density}
+\NormalTok{\};}
+
+\KeywordTok{struct}\NormalTok{ Material}
+\NormalTok{\{}
+    \DataTypeTok{real\_type}\NormalTok{   number\_density; }\CommentTok{//!\textless{} Atomic number density}
+    \DataTypeTok{real\_type}\NormalTok{   temperature;    }\CommentTok{//!\textless{} Temperature}
+\NormalTok{    MatterState matter\_state;   }\CommentTok{//!\textless{} Solid, liquid, gas}
+\NormalTok{    ItemRange\textless{}MatElementComponent\textgreater{} elements; }\CommentTok{//!\textless{} Constituents}
+\NormalTok{\};}
+
+\KeywordTok{template}\NormalTok{\textless{}Ownership W, MemSpace M\textgreater{}}
+\KeywordTok{struct}\NormalTok{ MaterialParamsData}
+\NormalTok{\{}
+    \KeywordTok{template}\NormalTok{\textless{}}\KeywordTok{class}\NormalTok{ T\textgreater{}}
+    \KeywordTok{using}\NormalTok{ Items = celeritas::Collection\textless{}T, W, M\textgreater{};}
+
+\NormalTok{    Items\textless{}Element\textgreater{}             elements;}
+\NormalTok{    Items\textless{}MatElementComponent\textgreater{} elcomponents;}
+\NormalTok{    Items\textless{}Material\textgreater{}            materials;}
+    \DataTypeTok{unsigned} \DataTypeTok{int}\NormalTok{               max\_elcomponents;}
+
+    \KeywordTok{template}\NormalTok{\textless{}Ownership W2, MemSpace M2\textgreater{}}
+\NormalTok{    MaterialParamsData\& }\KeywordTok{operator}\NormalTok{=(}\AttributeTok{const}\NormalTok{ MaterialParamsData\textless{}W2, M2\textgreater{}\& other);}
+\NormalTok{\};}
+\end{Highlighting}
+\end{Shaded}
+
+A
+\texttt{MaterialParamsData\textless{}Ownership::value,\ MemSpace::host\textgreater{}}
+is constructed incrementally on the host (each
+\texttt{Items\textless{}class\textgreater{}} in that template
+instantiation is a thin wrapper to a \texttt{std::vector}), then copied
+to a
+\texttt{MaterialParamsData\textless{}Ownership::value,\ MemSpace::device\textgreater{}}
+(where each \texttt{Items\textless{}class\textgreater{}} is a separately
+managed \texttt{cudaMalloc} allocation) using the templated assignment
+operator. The definition of that operator simply assigns each element
+from the \texttt{other} instance. For primitive data such as
+\texttt{max\_elcomponents}, the value is simply copied; for
+\texttt{Items} the templated \texttt{Collection::operator=} performs a
+host-to-device transfer under the hood.
+
+To access the data on device, a
+\texttt{MaterialParamsData\textless{}Ownership::const\_reference,\ MemSpace::device\textgreater{}}
+(where each \texttt{Items\textless{}class\textgreater{}} is a
+\texttt{Span\textless{}class\textgreater{}} pointing to device memory)
+is constructed using the sample assignment operator from the
+\texttt{\textless{}value,\ device\textgreater{}} instance of the data.
+The \texttt{const\_reference} and \texttt{reference} instances of a
+Collection are trivially copyable and can be passed as kernel arguments
+or saved to global memory.
+
+The first material in a
+\texttt{MaterialParamsData\textless{}Ownership::const\_reference,\ MemSpace::device\textgreater{}\ data}
+instance can be accessed as:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{const}\NormalTok{ Material\& m = data.materials[ItemId\textless{}Material\textgreater{}(}\DecValTok{1}\NormalTok{)];}
+\end{Highlighting}
+\end{Shaded}
+
+A view of its elemental component data is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Span\textless{}}\AttributeTok{const}\NormalTok{ MatElementComponent\textgreater{} els = data.elcomponents[material.elements];}
+\end{Highlighting}
+\end{Shaded}
+
+And the elemental properties of the first constituent of the material
+are:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{const}\NormalTok{ Element\& el = data.elements[data.element];}
+\end{Highlighting}
+\end{Shaded}
+
+In practice, the \texttt{MaterialParamsData} itself is an implementation
+detail constructed by the host-only class \texttt{MaterialParams} and
+used by the device-compatible class \texttt{MaterialView} and
+\texttt{ElementView}, which encapsulate access to the material and
+element data. In Celeritas, \texttt{View} objects are to
+\texttt{Collection} as \texttt{std::string\_view} is to
+\texttt{std::vector\textless{}char\textgreater{}}.
+
+\hypertarget{states-and-parameters}{%
+\subsection{States and parameters}\label{states-and-parameters}}
+
+The Celeritas data model is careful to separate persistent shared
+"parameter" data from dynamic local "state" data, as there will
+generally one independent state per GPU thread. To illustrate the
+difference between parameters and states, consider the calculation of
+the Lorentz factor \(\gamma\) of a particle, which is a function of both
+the rest mass \(mc^2\)---which is constant for all particles of the same
+type but is not a fundamental constant nor the same for all
+particles---and the kinetic energy \(K\). It is a parameterized
+expression \(\gamma(m;K) = 1 + \frac{K}{mc^2}\). Celeritas
+differentiates from shared data such as \(m\) (parameters, shortened to
+\texttt{Params}) from state data particular to a single track such as
+kinetic energy \(K\) or particle type (\texttt{State}). Inside transport
+kernels, the \texttt{ParticleTrackView} class combines the parameter and
+state data with the local GPU thread ID to encapsulate the fundamental
+properties of a track's particle properties -\/- its rest mass, charge,
+and kinetic energy, as well as derivative properties such the magnitude
+of its relativistic momentum.
 
 In Celeritas, a particle track is not a single object nor a struct of
 arrays. Instead, sets of classes (Params plus State) define aspects of a
-track
+track, each of which is accessed through a \texttt{TrackView} class.
+Table XXX shows the current track attributes independently implemented
+in Celeritas.
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+Module & State & Params\tabularnewline
+\midrule
+\endhead
+Particle & Kinetic energy and particle ID & Properties for each particle
+type\tabularnewline
+Material & Current material ID & Material densities, elements,
+etc.\tabularnewline
+Geometry & Position, direction, volume ID & Geometry
+description\tabularnewline
+Sim & Track ID, Event ID, time & ---\tabularnewline
+Physics & Distance to interaction, & Models, processes,\tabularnewline
+& cached cross sections & cross section tables\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{on-device-allocation}{%
+\subsection{On-device allocation}\label{on-device-allocation}}
+
+One requirement for transporting particles in electromagnetic showers is
+the efficient allocation and construction of secondary particles. TODO:
+elaborate
