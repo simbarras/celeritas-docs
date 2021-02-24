@@ -220,7 +220,24 @@ type.
 %%------------------------------------%%
 \subsubsection{Livermore photoelectric}
 
-% Amanda
+The photoelectric effect is simulated in Celeritas using the Livermore
+photoelectric model, which combines parameterized and tabulated partial cross
+sections, tabulated total cross sections, and atomic shell data to sample the
+ionized shell and determine the energy of the emitted photoelectron. The
+subsequent deexcitation of the atom from its excited state to the ground state
+through a cascade of radiative and non-radiative transitions is implemented as
+a separate class that can be used by any process that produces a vacancy in an
+atomic shell. The atomic relaxation implementation uses transition energies and
+probabilities from the Evaluated Atomic Data Library to simulate both
+fluorescence and Auger electron emission. The data required to simulate the
+photoelectric effect and atomic deexcitation is loaded directly from the
+G4EMLOW data files into memory by separate specialized reader classes.
+
+While macroscopic cross sections for most processes can be interpolated from
+tabulated data exported from Geant4, Geant4 calculates these cross sections on
+the fly for the photoelectric effect below 200 keV and for positron
+annihilation at all energies. Therefore, on-the-fly macroscopic cross section
+calculation has also been implemented in Celeritas for both of these processes.
 
 %%---------------------------------------------------------------------------%%
 \section{VecGeom Geometry Package}
