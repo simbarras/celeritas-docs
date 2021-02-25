@@ -166,26 +166,46 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Upgrades to the \ac{lhc} and its detectors (including CMS, ALICE, and ATLAS)
-demand a commensurate increase in modeling and simulation capacity that is out
-of reach of traditional software but can be alleviated through the use of
-advanced \ac{hpc} hardware that use GPUs for improved performance at low power
-consumption.  Our objective is to provide the needed modeling capacity using a
-new application \emph{Celeritas} that performs fast and accurate \ac{mc}
+The new High Luminosity Large Hadron Collider (HL-LHC) Era of the LHC, along with the 
+upgrades in the detectors of its main experiments (CMS, ATLAS, ALICE, and LHCb), will 
+result in a steep rise in computing resource usage, far beyond the expected 
+availability within current funding scenarios \cite{the_hep_software_foundation_roadmap_2019}.
+\ac{mc} simulations are a large component of that expected increase, whose demand can be 
+alleviated through the use of advanced \ac{hpc} hardware that use GPUs for improved performance 
+at low power consumption. Our objective is to provide the needed modeling capacity
+using a new application, \emph{Celeritas}, that performs fast and accurate \ac{mc}
 particle transport simulations on GPUs. Celeritas is designed to complement, not
 replace, Geant4 and ultimately satisfy the detector response requirements as
-defined in Ref.~\cite{the_hep_software_foundation_roadmap_2019} using  the
+defined in Ref.~\cite{the_hep_software_foundation_roadmap_2019} using the
 advanced architectures that will form the backbone of \ac{hpc} over the next
 decade.
 
 %% Need the basic project plan here
 
-In this paper we will focus primarily on the components of the Celeritas
+Celeritas' short term goal entails the implementation of \ac{em} physics for photons and
+charged leptons (see Sec.~\ref{TBD}) on geometry models currently used by the \ac{hep}
+community. More specifically, on the CMS geometry. This choice provides us the opportunity 
+to simulate \ac{em} showers, which are the most computationally intensive part of an
+event, as a proof-of-principle. In order to achieve such compatibility with current geometry 
+model files, Celeritas uses the VecGeom \cite{VecGeom:web} package. This is a GPU 
+compatible library that provides navigation tools aimed towards optimizing calculations 
+performed in the complex, multi-level, hierarchical geometries of \ac{hep} detectors \cite{Wenzel:2020zyn},
+being both successfully integrated with Geant4 and tested within the CMS simulation software.
+% NOTE: Should we add that validation of the navigation algs are underway?
+
+
+%%%%%%%%%%%%%
+
+
+In this scenario, this paper focuses primarily on the components of the Celeritas
 software architecture (Sec.~\ref{code-architecture}) that will enable high
 performance on GPU hardware.  Particular attention is paid to the construction
 of the Celeritas data model (Sec.~\ref{data-model}), as memory management on
 heterogeneous devices is critical to code performance, particularly for random
-access algorithms such as \ac{mc}.  Improvements to the VecGeom geometry package to enable \ac{mc} transport on GPUs are discussed in Sec.~\ref{sec:vecgeom}.  Finally, we show some preliminary performance results on a mini-application (mini-app) in Sec.~\ref{sec:miniapp}.
+access algorithms such as \ac{mc}.  Improvements to the VecGeom geometry 
+package to enable \ac{mc} transport on GPUs are discussed in Sec.~\ref{sec:vecgeom}. 
+Finally, we show some preliminary performance results on a mini-application (mini-app)
+in Sec.~\ref{sec:miniapp}.
 
 %%---------------------------------------------------------------------------%%
 \input{code-arch.tex}
