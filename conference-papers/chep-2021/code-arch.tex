@@ -26,17 +26,48 @@ composition rather than inheritance. As much as possible, each major
 code component is built of numerous smaller components and interfaces
 with as few other components as possible.
 
+\subsection{Physics Interactor classes}
+
 As an example of the granularity of classes, consider the sampling of
 secondaries from a model. In contrast to the virtual
 \texttt{G4VModel::sample\_secondaries} member function in Geant4, each
 model in Celeritas defines an independent function-like object for
 sampling secondaries. Each \texttt{Interactor} class is analogous a C++
 standard library "distribution": the distribution parameters (including
-particle properties, incident particle energy, and incident direction)
+particle properties, incident particle energy, incident direction, and
+interacting element properties)
 are class construction arguments, and the function-like
 \texttt{Interactor::operator()} takes as its sole input a random number
 generator and returns an \texttt{Interaction} object, which encodes the
 change in state to the particle and the secondaries produced.
+
+Table~\ref{tab:interactor} summarizes the models that are implemented in
+Celeritas on device, as well as key challenges that were first encountered while
+implementing each model. Future work will elaborate on the models and the novel
+aspects of implementing them on GPU in Celeritas.
+
+\begin{table}[htb]
+  \centering
+  \begin{tabular}{ll}
+    \toprule %--------------------------------------------
+    Model & Challenges \\
+    \midrule %--------------------------------------------
+    Klein--Nishina & Allocating secondaries \\
+    Bethe--Heitler & Accessing element properties \\
+    \(\textrm{e}^+ \to (\gamma, \gamma)\) & --- \\
+    Moller/Bhabha scattering & Multiple energy distributions \\
+    Livermore photoelectric & Accessing shell data \\
+                            & Calculating cross sections on the fly \\
+    \dots with atomic relaxation & Cascading electron vacancies \\
+                                 & Dynamic number of secondaries \\
+    \bottomrule %-----------------------------------------
+  \end{tabular}
+  \caption{Fully implemented model interactors in Celeritas.}
+  \label{tab:interactor}
+\end{table}
+
+The mini-app and performance analysis in the results section will focus on the
+first interactor implemented, Klein--Nishina.
 
 \hypertarget{data-model}{%
 \subsection{Data model}\label{data-model}}
@@ -215,25 +246,29 @@ of its relativistic momentum.
 In Celeritas, a particle track is not a single object nor a struct of
 arrays. Instead, sets of classes (Params plus State) define aspects of a
 track, each of which is accessed through a \texttt{TrackView} class.
-Table XXX shows the current track attributes independently implemented
+Table~\ref{tab:modules} shows the current track attributes independently implemented
 in Celeritas.
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{table}[htb]
+  \centering
+  \begin{tabular}{@{}lll@{}}
 \toprule
 Module & State & Params\tabularnewline
 \midrule
-\endhead
 Particle & Kinetic energy and particle ID & Properties for each particle
-type\tabularnewline
+type \\
 Material & Current material ID & Material densities, elements,
-etc.\tabularnewline
-Geometry & Position, direction, volume ID & Geometry
-description\tabularnewline
-Sim & Track ID, Event ID, time & ---\tabularnewline
-Physics & Distance to interaction, & Models, processes,\tabularnewline
-& cached cross sections & cross section tables\tabularnewline
+etc. \\
+Geometry & Position, direction, volume ID, VGNavState & Geometry
+description \\
+Sim & Track ID, Event ID, time & --- \\
+Physics & Distance to interaction, & Models, processes, \\
+& cached cross sections & cross section tables \\
 \bottomrule
-\end{longtable}
+  \end{tabular}
+  \caption{Different key modules in Celeritas.}
+  \label{tab:modules}
+\end{table}
 
 \hypertarget{on-device-allocation}{%
 \subsection{On-device allocation}\label{on-device-allocation}}

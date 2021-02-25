@@ -104,8 +104,11 @@
 %%---------------------------------------------------------------------------%%
 % TODO: new title? novel features and performance analysis for GPU EM
 % particle transport in the Celeritas code?
-\title{Celeritas: Toward GPU-based particle transport for detector simulations
-    in LHC experiments\footnote{This manuscript has been authored by
+\title{Novel features and GPU performance analysis for EM particle transport in
+  the Celeritas code%
+  %
+  \footnote{%
+    This manuscript has been authored by
     UT-Battelle, LLC, under contract DE-AC05-00OR22725 with the US Department of
     Energy. The United States Government retains and the publisher, by accepting
     the article for publication, acknowledges that the United States Government
@@ -113,46 +116,50 @@
     or reproduce the published form of this manuscript, or allow others to do
     so, for United States Government purposes. DOE will provide access to these
     results of federally sponsored research in accordance with the DOE Public
-    Access Plan (http://energy.gov/downloads/doe-public-access-plan).}}
-    %%
-    \author{\firstname{Seth R.}
-    \lastname{Johnson}\inst{1}\fnsep\thanks{\email{johnsonsr@ornl.gov}}
-    %%
-    \and
-    \firstname{Philippe} \lastname{Canal}\inst{2}
-    %%
-    \and
-    \firstname{Thomas} \lastname{Evans}\inst{1}
-    %%
-    \and
-    \firstname{Soon Yung} \lastname{Jun}\inst{2}
-    %%
-    \and
-    \firstname{Guilherme} \lastname{Lima}\inst{2}
-    %%
-    \and
-    \firstname{Amanda} \lastname{Lund}\inst{3}
-    %%
-    \and
-    \firstname{Vincent R.} \lastname{Pascuzzi}\inst{4}
-    %%
-    \and
-    \firstname{Stefano} \lastname{Tognini}\inst{1}
-}
-
-\institute{Oak Ridge National Laboratory
-    \and
-    Fermi National Accelerator Laboratory
-    \and
-    Argonne National Laboratory
-    \and
-    Lawrence Berkeley National Laboratory
-}
-
-\abstract{
-    Celeritas is awesome.
-}
-
+    Access Plan (http://energy.gov/downloads/doe-public-access-plan).%
+  }%
+}%
+%%
+\author{%
+  \firstname{Seth R.} \lastname{Johnson}\inst{1}%
+  \fnsep\thanks{\email{johnsonsr@ornl.gov}}
+  %%
+  \and
+  \firstname{Philippe} \lastname{Canal}\inst{2}
+  %%
+  \and
+  \firstname{Thomas} \lastname{Evans}\inst{1}
+  %%
+  \and
+  \firstname{Soon Yung} \lastname{Jun}\inst{2}
+  %%
+  \and
+  \firstname{Guilherme} \lastname{Lima}\inst{2}
+  %%
+  \and
+  \firstname{Amanda} \lastname{Lund}\inst{3}
+  %%
+  \and
+  \firstname{Vincent R.} \lastname{Pascuzzi}\inst{4}
+  %%
+  \and
+  \firstname{Stefano} \lastname{Tognini}\inst{1}
+}%
+%%
+\institute{%
+  Oak Ridge National Laboratory
+  \and
+  Fermi National Accelerator Laboratory
+  \and
+  Argonne National Laboratory
+  \and
+  Lawrence Berkeley National Laboratory
+}%
+%%
+\abstract{%
+  Celeritas is awesome.
+}%
+%%
 \maketitle
 
 %%---------------------------------------------------------------------------%%
@@ -182,95 +189,6 @@ access algorithms such as \ac{mc}.  Improvements to the VecGeom geometry package
 
 %%---------------------------------------------------------------------------%%
 \input{code-arch.tex}
-
-%%-----------------------%%
-\subsection{Physics Models}
-\label{sec:physics-models}
-
-This section describes the current physics models implemented on GPU. The
-implementation has focused on sampling secondaries rather than calculating
-on-the-fly atomic cross sections, because for the majority of models those data
-can be precalculated in Geant4 and exported as tabular data. Allocation of
-secondaries is performed through a carefully constructed
-
-%%------------------------------------%%
-\subsubsection{Klein--Nishina}
-
-% Seth
-Had to figure out how to allocate storage for secondaries.
-
-%%------------------------------------%%
-\subsubsection{Bethe--Heitler}
-
-% Vince
-The Bethe--Heitler model~\cite{Bethe:1934za} describes the stopping power of
-matter for highly-energetic particles.
-As such, it is used in Geant4 for a range of electromagnetic
-physics processes, \textit{e.g.} photon conversions to electron-positon or muon-
-antimuon pairs and nuclear scattering.
-Several variants of Bethe--Heitler are implemented for cross-section
-calculations of such processes, each having different energy thresholds on the
-incident particle to describe different energy regimes, and may also take into
-account additional effects.
-For instance, \texttt{G4BetheHeitlerModel} is applicable below
-$\sim100$~MeV while \texttt{G4BetheHeitler5DModel} is used for incident photon
-energies $>100$~MeV;
-the latter is the only photon conversion variant of the model that takes into
-account recoil momentum.
-Celeritas currently has implemented a Bethe--Heitler model for energies
-$< 100$~MeV to describe photon conversions to electron-positron pairs.
-These codes follow closely \texttt{G4BetheHeitlerModel} to calculate
-the impact parameter of the incident photon and apply Coulomb corrections for
-sampling of the final-state kinematics.
-Since recoil effects are not considered, energy is conserved exactly but
-momentum is not.
-%%------------------------------------%%
-\subsubsection{Positron annihilation}
-
-$\textrm{e}^+ \to (\gamma, \gamma)$
-% Soon
-
-%%------------------------------------%%
-\subsubsection{Moller/Bhabha scattering}
-
-% Stefano
-In Geant4, both Moller and Bhabha scatterings are sampled by a single
-class method, which defines the criteria based on the incident particle,
-performs the interaction (Moller for electrons and Bhabha for positrons), and
-calculates the final incident and secondary particle states. Celeritas
-follows a similar structure, where a MollerBhabha interactor class is
-responsible for performing the interaction and calculating the final particle
-states. However, in Celeritas, the sampling algorithms for each scattering
-process are broken down into two separate classes, each of which responsible
-solely for executing the sampling loop and returning the fraction of the energy
-transferred during the scattering process to the main MollerBhabha interactor,
-which then proceeds to calculate the final particle states. This higher
-compartmentalization improves code testing and maintainability, and provides
-an opportunity to test code performance in the future by splitting the current
-mechanism into two different models and templating the interactor by particle
-type.
-
-%%------------------------------------%%
-\subsubsection{Livermore photoelectric}
-
-The photoelectric effect is simulated in Celeritas using the Livermore
-photoelectric model, which combines parameterized and tabulated partial cross
-sections, tabulated total cross sections, and atomic shell data to sample the
-ionized shell and determine the energy of the emitted photoelectron. The
-subsequent deexcitation of the atom from its excited state to the ground state
-through a cascade of radiative and non-radiative transitions is implemented as
-a separate class that can be used by any process that produces a vacancy in an
-atomic shell. The atomic relaxation implementation uses transition energies and
-probabilities from the Evaluated Atomic Data Library to simulate both
-fluorescence and Auger electron emission. The data required to simulate the
-photoelectric effect and atomic deexcitation is loaded directly from the
-G4EMLOW data files into memory by separate specialized reader classes.
-
-While macroscopic cross sections for most processes can be interpolated from
-tabulated data exported from Geant4, Geant4 calculates these cross sections on
-the fly for the photoelectric effect below 200 keV and for positron
-annihilation at all energies. Therefore, on-the-fly macroscopic cross section
-calculation has also been implemented in Celeritas for both of these processes.
 
 %%---------------------------------------------------------------------------%%
 \section{VecGeom Geometry Package}
@@ -310,8 +228,9 @@ particle states include position and directions that are updated with each step.
 Secondaries are allocated and constructed as part of each interaction, but they
 are immediately killed and their energy deposited locally. Each energy
 deposition event, whether from an absorbed electron or a cutoff photon,
-allocates a detector hit and writes out the deposited energy, position,
-direction, time, and track ID.
+allocates (using a \texttt{StackAllocator<Hit>} instance) a detector hit and
+writes the deposited energy, position, direction, time, and track ID to global
+memory.
 
 An additional kernel processes the allocated vector of detector hits into
 uniformly spaced detector bins. A final kernel performs a reduction on the
@@ -329,7 +248,7 @@ uses a single Nvidia Tesla V100 running at 1.53 GHz, compiled with CUDA 10.1 and
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=4in]{fig/cpu-gpu-comparison}
+  \includegraphics[width=3.5in]{fig/cpu-gpu-comparison}
   \caption{Performance comparison of the CPU and GPU versions of the Celeritas
   code. The ``total'' GPU plot includes the extra kernel launches for processing
   detector hits and the number of living tracks.}
@@ -342,7 +261,7 @@ please add a couple of sentences.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=4in]{fig/roofline}
+  \includegraphics[width=3.5in]{fig/roofline}
   \caption{Roofline plot showing the interaction kernel performance
     plotted against the theoretical memory bandwidth and arithmetic performance
     limitations. The 1/2/4 points are the number of particle tracks processed by
@@ -399,23 +318,14 @@ standard recommendations for performance enhancement affect the total runtime.
 \end{itemize}
 Figure~\ref{fig:speedup} shows the performance of each separate change in the
 list above, as well as a combination of all changes.
-% Figure~\ref{fig:occupancy_changes} shows the occupancy of the kernel that
-% performs the interaction.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=4in]{fig/speedups}
+  \includegraphics[width=3.5in]{fig/speedups}
   \caption{Incremental (thin colored lines) and cumulative (thick gray line)
   speed up for changes to the mini-app and data structures.}
   \label{fig:speedup}
 \end{figure}
-
-% \begin{figure}[htb]
-%   \centering
-%   \includegraphics[width=4in]{fig/occupancy-bar}
-%   \caption{SM occupancy for the interaction kernel}
-%   \label{fig:occupancy_changes}
-% \end{figure}
 
 Aggregating the speedup values for cases with more than $10^6$ tracks (mean and
 $1\sigma$ given for $\mbox{speedup}=\mbox{original}/\mbox{adjusted} - 1$, in
@@ -474,7 +384,7 @@ kernel occupancy does not always translate to improved performance.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=4in]{fig/occupancy}
+  \includegraphics[width=3.5in]{fig/occupancy}
   \caption{Performance ramifications of forcing the register size to be smaller
   for higher occupancy. The blue line is total solve time, the dark red line is
 the register usage, and the light red line is local memory usage including
