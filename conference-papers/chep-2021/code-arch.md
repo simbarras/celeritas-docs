@@ -29,6 +29,17 @@ inheritance. As much as possible, each major code component is built of
 numerous smaller components and interfaces with as few other components as
 possible.
 
+As an example of the granularity of classes, consider the sampling of
+secondaries from a model. In contrast to the virtual
+`G4VModel::sample_secondaries` member function in Geant4, each model in
+Celeritas defines an independent function-like object for sampling secondaries.
+Each `Interactor` class is analogous a C++ standard library "distribution": the
+distribution parameters (including particle properties, incident particle
+energy, and incident direction) are class construction arguments, and the
+function-like `Interactor::operator()` takes as its sole input a random number
+generator and returns an `Interaction` object, which encodes the change in
+state to the particle and the secondaries produced.
+
 ## Data model
 
 Software for heterogeneous architectures must manage independent
@@ -83,16 +94,16 @@ struct Element
 
 struct MatElementComponent
 {
-    ItemId<Element> element;  //!< Index in MaterialParams elements
-    real_type       fraction; //!< Fraction of number density
+    ItemId<Element> element;
+    real_type       fraction;
 };
 
 struct Material
 {
-    real_type   number_density; //!< Atomic number density
-    real_type   temperature;    //!< Temperature
-    MatterState matter_state;   //!< Solid, liquid, gas
-    ItemRange<MatElementComponent> elements; //!< Constituents
+    real_type   number_density;
+    real_type   temperature;
+    MatterState matter_state;
+    ItemRange<MatElementComponent> components;
 };
 
 template<Ownership W, MemSpace M>
@@ -134,7 +145,7 @@ const Material& m = data.materials[ItemId<Material>(1)];
 ```
 A view of its elemental component data is:
 ```c++
-Span<const MatElementComponent> els = data.elcomponents[material.elements];
+Span<const MatElementComponent> els = data.elcomponents[material.components];
 ```
 And the elemental properties of the first constituent of the material are:
 ```c++
@@ -184,6 +195,87 @@ Physics | Distance to interaction,  | Models, processes,
 ## On-device allocation
 
 One requirement for transporting particles in electromagnetic showers is
-the efficient allocation and construction of secondary particles. TODO:
-elaborate
+the efficient allocation and construction of secondary particles. The number of
+secondaries produced during an interaction varies according to the physics
+process, random number generation, and other properties. This implies a
+large variance in the number of secondaries produced from potentially millions
+of tracks undergoing interactions in parallel on the GPU.
 
+To enable runtime dynamic allocation of secondary particles, we have authored a
+function-like `StackAllocator<class>` templated class that uses a large
+on-device allocated array with a fixed capacity along with an atomic addition
+to unambiguously reserve one or more items in the array. The call argument to a
+`StackAllocator` takes as an argument the number of elements to
+allocate, and if allocation is successful, it uses placement new to
+default-initialize each element and returns a pointer to the first element. If
+the capacity is exceeded during the allocation (or by a parallel thread also in
+the process of allocating), a null pointer is returned.
+
+```c++
+template<class T>
+CELER_FUNCTION auto StackAllocator<T>::operator()(size_type count)
+    -> result_type
+{
+    // Atomic add 'count' to the size pointer which resides in global memory
+    size_type start = atomic_add(data_.size, count);
+    if (CELER_UNLIKELY(start + count > data_.storage.size()))
+    {
+        // Out of memory: restore the old value so that another thread can
+        // potentially use it. Multiple threads are likely to exceed the
+        // capacity simultaneously. Only one has a "start" value less than or
+        // equal to the total capacity: the remainder are (arbitrarily) higher
+        // than that.
+        if (start <= data_.storage.size())
+        {
+            // We were the first thread to exceed capacity, even though other
+            // threads might have failed (and might still be failing) to
+            // allocate. Restore the actual allocated size to the start value.
+            // This might allow another thread with a smaller allocation to
+            // succeed, but it also guarantees that at the end of the kernel,
+            // the size reflects the actual capacity.
+            *data_.size = start;
+        }
+
+        // Return null pointer, indicating failure to allocate.
+        return nullptr;
+    }
+
+    // Initialize the data at the newly "allocated" address
+    value_type* result = new (data_.storage.data() + start) value_type;
+    for (size_type i = 1; i < count; ++i)
+    {
+        // Initialize remaining values
+        new (data_.storage.data() + start + i) value_type;
+    }
+    return result;
+}
+```
+In the above code, `CELER_FUNCTION` is preprocessed to `__host__ __device__`
+when run through CUDA, and `CELER_UNLIKELY` is a compiler optimization hint
+that the enclosed condition is possible but rare.
+
+To accommodate large numbers of secondaries on potentially limited GPU memory,
+we define a `Secondary` class that carries the minimal amount of information
+needed to reconstruct it from the parent track, rather than as a full-fledged
+track:
+```c++
+struct Secondary
+{
+    ParticleId       particle_id{};
+    units::MevEnergy energy{zero_quantity()};
+    Real3            direction;
+
+    explicit inline CELER_FUNCTION operator bool() const;
+};
+```
+
+The final aspect of GPU-based secondary allocation is how to gracefully handle
+an out-of-memory condition without crashing the simulation *or* invalidating
+its reproducibility. This can be accomplished by ensuring that no random
+numbers are sampled before allocating storage for the secondaries, and by
+adding a external loop over the interaction kernel to reallocate extra
+secondary space or process secondaries so that all interactions can
+successfully complete in the exceptional case where the secondary storage space
+is exceeded.
+
+[FIG: interaction-secondaries]

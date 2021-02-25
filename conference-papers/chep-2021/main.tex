@@ -390,6 +390,10 @@ standard recommendations for performance enhancement affect the total runtime.
   \item \emph{Splitting the single step kernel into two kernels, one for movement
     and one for interaction.} Smaller kernels tend to have lower register usage
     and therefore higher occupancy.
+  \item \emph{Using a 32-bit instead of 64-bit integer for the stack allocator.}
+    Smaller data reduces memory bandwidth, and CUDA operations tend to be
+    inherently faster for 32-bit types such as the native unsigned int and
+    single-precision floats.
 \end{itemize}
 Figure~\ref{fig:speedup} shows the performance of each separate change in the
 list above, as well as a combination of all changes.
@@ -411,9 +415,9 @@ list above, as well as a combination of all changes.
 %   \label{fig:occupancy_changes}
 % \end{figure}
 
-The effects of each tweak are generally negligible. Aggregating the speedup
-values for cases with more than $10^6$ tracks (mean and $1\sigma$ given
-for $\mbox{speedup}=\mbox{original}/\mbox{adjusted} - 1$, in percent):
+Aggregating the speedup values for cases with more than $10^6$ tracks (mean and
+$1\sigma$ given for $\mbox{speedup}=\mbox{original}/\mbox{adjusted} - 1$, in
+percent):
 \begin{itemize}
   \item \emph{Removing the ``grid striding''} had a slightly negative impact
     ($-1.3\% \pm 0.3\%$). Diagnostics showed
@@ -435,8 +439,9 @@ for $\mbox{speedup}=\mbox{original}/\mbox{adjusted} - 1$, in percent):
     data} had zero significant effect. Coalescing memory access in this case
     appears to be unimportant.
   \item \emph{Preallocating one secondary per interaction} improved performance
-    more than any other change ($+13.4\% \pm 0.3\%$). There was one fewer atomic
-    operation (the detector ``hits'' still remained) and a decrease in global
+    more than any other change thus far ($+13.4\% \pm 0.3\%$). There was one
+    fewer atomic operation (the detector ``hits'' still remained) and a decrease
+    in global
     memory accesses from loading the allocated secondary to process.
   \item \emph{Splitting the single step kernel into two kernels} had the most
     negative effect ($-7.7\% \pm 0.9\%$). This is not unexpected because each
@@ -444,7 +449,15 @@ for $\mbox{speedup}=\mbox{original}/\mbox{adjusted} - 1$, in percent):
     reload data from global memory that might otherwise be stored in registered.
     Still, a 10\% drop in performance might provide a substantial gain in code
     flexibility and extensibility.
+  \item \emph{Using a 32-bit instead of 64-bit allocation size} had the most
+    positive individual change ($+28.0\% \pm 0.1\%$). In conjunction with the
+    secondary preallocation result, this suggests that the atomic operations may
+    be the single most expensive aspect of this simple demonstration kernel.
 \end{itemize}
+
+The overall speedup of $+37.7\%$ suggests that the faster and fewer atomic
+operations negate the performance drop of the atomic-heavy interaction split
+kernel.
 
 Loosely stated, occupancy measures the ratio of threads that can be
 \emph{active} to the maximum number of threads on a \ac{sm},
