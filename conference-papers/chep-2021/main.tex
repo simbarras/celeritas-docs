@@ -102,6 +102,8 @@
 \begin{document}
 
 %%---------------------------------------------------------------------------%%
+% TODO: new title? novel features and performance analysis for GPU EM
+% particle transport in the Celeritas code?
 \title{Celeritas: Toward GPU-based particle transport for detector simulations
     in LHC experiments\footnote{This manuscript has been authored by
     UT-Battelle, LLC, under contract DE-AC05-00OR22725 with the US Department of
@@ -113,7 +115,7 @@
     results of federally sponsored research in accordance with the DOE Public
     Access Plan (http://energy.gov/downloads/doe-public-access-plan).}}
     %%
-    \author{\firstname{Seth}
+    \author{\firstname{Seth R.}
     \lastname{Johnson}\inst{1}\fnsep\thanks{\email{johnsonsr@ornl.gov}}
     %%
     \and
@@ -465,7 +467,7 @@ which is the core hardware computational component of a CUDA card. Higher
 occupancy can hide latency to improve overall kernel performance.
 To explore the performance implications of higher occupancy, we recompiled the
 ``set of combined optimization'' changes with the \verb|--maxrregcount N| NVCC
-compiler option \cite{nvcc} to constrain kernel register usage,
+compiler option to constrain kernel register usage,
 which is the limiting factor for the CUDA \ac{sm} occupancy for the demo
 interactor kernels. Figure~\ref{fig:occupancy} demonstrates that a higher
 kernel occupancy does not always translate to improved performance.

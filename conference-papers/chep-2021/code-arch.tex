@@ -7,8 +7,8 @@ rapid unit testing, its components are designed to run natively in C++
 on traditional CPUs regardless of whether CUDA is available for
 on-device execution.
 
-Like other GPU-enabled {[}MC{]} transport codes such as Shift
-{[}pandya\_implementation\_2016,hamilton\_continuous-energy\_2019{]},
+Like other GPU-enabled \ac{mc} transport codes such as
+Shift \cite{pandya_implementation_2016,hamilton_continuous-energy_2019},
 the low-level component code used by transport kernels is designed so
 that each particle track corresponds to a single thread, since particle
 tracks once created are independent of each other. There is therefore
@@ -49,7 +49,7 @@ accessible only on the CPU. \emph{Device} memory is allocated with
 Unified Virtual Memory feature allows CUDA-allocated memory to be
 automatically paged between host and device with a concomitant loss in
 performance. Another solution to memory space management is a
-portability layer such as Kokkos {[}cite{]}, which manages the
+portability layer such as Kokkos \cite{kokkos}, which manages the
 allocation of memory and transfer of data between host and device using
 a class
 \texttt{Kokkos::View\textless{}class,\ MemorySpace\textgreater{}} which
@@ -86,7 +86,7 @@ that material. In a traditional C++ code this could be represented as
 \texttt{vector\textless{}vector\textless{}pair\textless{}Element*,\ double\textgreater{}\textgreater{}\textgreater{}}
 with a separately allocated
 \texttt{vector\textless{}Element\textgreater{}}. With helper libraries
-such as Thrust {[}cite{]} there is no direct CUDA analog to this
+such as Thrust \cite{thrust} there is no direct CUDA analog to this
 structure because device memory management is limited to host code.
 Celeritas chooses not to use in-kernel \texttt{cudaMalloc} calls for
 performance and portability considerations. Instead, Celeritas
@@ -160,24 +160,23 @@ or saved to global memory.
 The first material in a
 \texttt{MaterialParamsData\textless{}Ownership::const\_reference,\ MemSpace::device\textgreater{}\ data}
 instance can be accessed as:
-
 \begin{Shaded}
 \begin{Highlighting}[]
 \AttributeTok{const}\NormalTok{ Material\& m = data.materials[ItemId\textless{}Material\textgreater{}(}\DecValTok{1}\NormalTok{)];}
 \end{Highlighting}
 \end{Shaded}
-
+%
 A view of its elemental component data is:
-
+%
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{Span\textless{}}\AttributeTok{const}\NormalTok{ MatElementComponent\textgreater{} els = data.elcomponents[material.components];}
 \end{Highlighting}
 \end{Shaded}
-
+%
 And the elemental properties of the first constituent of the material
 are:
-
+%
 \begin{Shaded}
 \begin{Highlighting}[]
 \AttributeTok{const}\NormalTok{ Element\& el = data.elements[data.element];}
@@ -328,9 +327,17 @@ The final aspect of GPU-based secondary allocation is how to gracefully
 handle an out-of-memory condition without crashing the simulation
 \emph{or} invalidating its reproducibility. This can be accomplished by
 ensuring that no random numbers are sampled before allocating storage
-for the secondaries, and by adding a external loop over the interaction
-kernel to reallocate extra secondary space or process secondaries so
+for the secondaries, and by adding a external loop
+over the interaction
+kernel (Fig.~\ref{fig:interaction}) to reallocate extra secondary space or
+process secondaries so
 that all interactions can successfully complete in the exceptional case
 where the secondary storage space is exceeded.
 
-{[}FIG: interaction-secondaries{]}
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=3in]{fig/interaction-secondaries}
+  \caption{Flowchart for an interaction kernel wrapped in a host-side loop for
+  processing secondaries.}
+  \label{fig:interaction}
+\end{figure}
