@@ -201,8 +201,27 @@ Had to figure out how to allocate storage for secondaries.
 \subsubsection{Bethe--Heitler}
 
 % Vince
-TODO: February 24
-
+The Bethe--Heitler model~\cite{Bethe:1934za} describes the stopping power of
+matter for highly-energetic particles.
+As such, it is used in Geant4 for a range of electromagnetic
+physics processes, \textit{e.g.} photon conversions to electron-positon or muon-
+antimuon pairs and nuclear scattering.
+Several variants of Bethe--Heitler are implemented for cross-section
+calculations of such processes, each having different energy thresholds on the
+incident particle to describe different energy regimes, and may also take into
+account additional effects.
+For instance, \texttt{G4BetheHeitlerModel} is applicable below
+$\sim100$~MeV while \texttt{G4BetheHeitler5DModel} is used for incident photon
+energies $>100$~MeV;
+the latter is the only photon conversion variant of the model that takes into
+account recoil momentum.
+Celeritas currently has implemented a Bethe--Heitler model for energies
+$< 100$~MeV to describe photon conversions to electron-positron pairs.
+These codes follow closely \texttt{G4BetheHeitlerModel} to calculate
+the impact parameter of the incident photon and apply Coulomb corrections for
+sampling of the final-state kinematics.
+Since recoil effects are not considered, energy is conserved exactly but
+momentum is not.
 %%------------------------------------%%
 \subsubsection{Positron annihilation}
 
