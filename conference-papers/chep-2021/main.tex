@@ -25,8 +25,8 @@
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
 \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\small}
+% Add '' for more characters per line
 \newenvironment{Shaded}{}{}
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
 \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
@@ -372,11 +372,10 @@ standard recommendations for performance enhancement affect the total runtime.
     and one for interaction.} Smaller kernels tend to have lower register usage
     and therefore higher occupancy.
 \end{itemize}
-
 Figure~\ref{fig:speedup} shows the performance of each separate change in the
 list above, as well as a combination of all changes.
-Figure~\ref{fig:occupancy_changes} shows the occupancy of the kernel that
-performs the interaction.
+% Figure~\ref{fig:occupancy_changes} shows the occupancy of the kernel that
+% performs the interaction.
 
 \begin{figure}[htb]
   \centering
@@ -386,21 +385,21 @@ performs the interaction.
   \label{fig:speedup}
 \end{figure}
 
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=4in]{fig/occupancy-bar}
-  \caption{GPU}
-  \label{fig:occupancy_changes}
-\end{figure}
+% \begin{figure}[htb]
+%   \centering
+%   \includegraphics[width=4in]{fig/occupancy-bar}
+%   \caption{SM occupancy for the interaction kernel}
+%   \label{fig:occupancy_changes}
+% \end{figure}
 
 The effects of each tweak are generally negligible. Aggregating the speedup
 values for cases with more than $10^6$ tracks (mean and $1\sigma$ given
 for $\mbox{speedup}=\mbox{original}/\mbox{adjusted} - 1$, in percent):
 \begin{itemize}
   \item \emph{Removing the ``grid striding''} had a slightly negative impact
-    ($-1.3\% \pm 0.3\%$). Diagnostics (Fig.~\ref{fig:occupancy_changes}) showed
-    that removing grid striding did in fact increase occupancy, but this did not
-    translate to improved performance.
+    ($-1.3\% \pm 0.3\%$). Diagnostics showed
+    that removing grid striding did in fact increase occupancy from 37.5\% to
+    50\%, but this did not translate to improved performance.
   \item \emph{Copying track states into local variables} had a small positive
     effect ($+3.1\% \pm 0.6\%$). Analysis of the PTX assembly code showed that
     with the cost of a few extra arithmetic operations, the improved kernel
