@@ -260,8 +260,7 @@ uses a single Nvidia Tesla V100 running at 1.53 GHz, compiled with CUDA 10.1 and
 \end{figure}
 
 A roofline analysis (Fig.~\ref{fig:roofline}) shows that the interaction kernel
-is not limited by raw memory bandwidth or floating point performance. XXX @tme
-please add a couple of sentences.
+is not limited by raw memory bandwidth or floating point performance.  Similar behavior has been observed in other GPU Monte Carlo particle transport algorithms \cite{hamilton_continuous-energy_2019}, and it is characteristic of the method in general.  Due to a combination of both high-latency and random-access data patterns and low arithmetic intensity, Monte Carlo particle transport will generally never achieve full memory or floating-point bounded performance on a given architecture.
 
 \begin{figure}[htb]
   \centering
