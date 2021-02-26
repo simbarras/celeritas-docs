@@ -322,12 +322,12 @@ independently making each of the following changes:
 Figure~\ref{fig:speedup} shows the performance of each separate change in the
 list above, as well as a combination of all changes.
 %
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=3.5in]{fig/speedups}
+\begin{figure}[htb]%
+  \centering%
+  \includegraphics[width=3.5in]{fig/speedups}%
   \caption{Incremental (thin colored lines) and cumulative (thick gray line)
-  speed up for changes to the mini-app and data structures.}
-  \label{fig:speedup}
+  speed up for changes to the mini-app and data structures.}%
+  \label{fig:speedup}%
 \end{figure}
 
 Aggregating the speedup values for cases with more than $10^6$ tracks (mean and
@@ -392,12 +392,12 @@ interactor kernels. Figure~\ref{fig:occupancy} demonstrates that a higher
 kernel occupancy does not always translate to improved performance.
 %
 \begin{figure}[htb]
-  \centering
-  \includegraphics[width=3.5in]{fig/occupancy}
+  \centering%
+  \includegraphics[width=3.5in]{fig/occupancy}%
   \caption{Performance ramifications of forcing the register size to be smaller
   for higher occupancy. The blue line is total solve time, the dark red line is
 the register usage, and the light red line is local memory usage including
-memory spills.}
+memory spills.}%
   \label{fig:occupancy}
 \end{figure}
 
@@ -412,7 +412,9 @@ nontrivial GPU physics simulation showed an ``unoptimized'' factor of about
 $160\times$ performance improvement over a single-CPU version of the same
 simulation with identical underpinning components. A set of potential
 optimizations was independently examined, and their cumulative effect boosted
-the speedup to about $220\times$ relative to the CPU version. The ease of
+the speedup to about $220\times$ relative to the CPU version. Since adding
+additional kernels increased the overall runtime, we expect a complete EM
+physics app to have a smaller speedup than this mini-app.  The ease of
 implementing and testing each change promises that the infrastructure in place
 will enable similar optimizations in the future full-featured physics
 application.
