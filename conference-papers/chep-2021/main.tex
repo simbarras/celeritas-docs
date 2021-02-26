@@ -203,7 +203,7 @@ This choice provides us the opportunity to verify the
 performance gain of simulating \ac{em} showers, which are the most
 computationally intensive part of a CMS event, on GPUs. Celeritas relies on the
 CUDA-compatible VecGeom \cite{VecGeom:web} library to load and navigate existing
-Geant4-compatible geometry definitions.
+Geant4 \cite{geant4}-compatible geometry definitions.
 
 This paper describes in \S\ref{code-architecture} some key software architecture
 developments in Celeritas for enabling rapid implementation of high
@@ -220,7 +220,7 @@ Celeritas components effect run time performance on a contemporary GPU.
 \label{sec:miniapp}
 
 Using the Celeritas components, we constructed a demonstration app to verify a
-simple test problem against Geant4 results. It is the simplest physical
+simple test problem against Geant4 \cite{geant4} results. It is the simplest physical
 simulation we can run, with photon-only transport and a single
 Compton scattering process using the Klein--Nishina model.  It has a single
 infinite material (aluminum) and a 100 MeV monodirectional point source.
