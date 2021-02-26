@@ -143,7 +143,7 @@
   \firstname{Vincent R.} \lastname{Pascuzzi}\inst{4}
   %%
   \and
-  \firstname{Stefano} \lastname{Tognini}\inst{1}
+  \firstname{Stefano} \lastname{C. Tognini}\inst{1}
 }%
 %%
 \institute{%
@@ -177,70 +177,51 @@
 \section{Introduction}
 \label{sec:introduction}
 
-The new High Luminosity Large Hadron Collider (HL-LHC) Era of the LHC, along with the
-upgrades in the detectors of its main experiments (CMS, ATLAS, ALICE, and LHCb), will
-result in a steep rise in computing resource usage, far beyond the expected
-availability within current funding scenarios \cite{the_hep_software_foundation_roadmap_2019}.
-\ac{mc} simulations are a large component of that expected increase, whose demand can be
-alleviated through the use of advanced \ac{hpc} hardware that use GPUs for improved performance
-at low power consumption. Our objective is to provide the needed modeling capacity
-using a new application, \emph{Celeritas}, that performs fast and accurate \ac{mc}
-particle transport simulations on GPUs. Celeritas is designed to complement, not
-replace, Geant4 and ultimately satisfy the detector response requirements as
-defined in Ref.~\cite{the_hep_software_foundation_roadmap_2019} using the
-advanced architectures that will form the backbone of \ac{hpc} over the next
-decade.
+The new High Luminosity Large Hadron Collider (HL-LHC) Era of the LHC, along 
+with the upgrades in the detectors of its main experiments (CMS, ATLAS, ALICE, 
+and LHCb), will result in a steep rise in computing resource usage, far beyond
+the expected availability within current funding scenarios 
+\cite{the_hep_software_foundation_roadmap_2019}. \ac{mc} simulations are a 
+large component of that expected increase, whose demand can be alleviated 
+through the use of \ac{hpc} hardware designed to use GPUs for better 
+performance at low power consumption, such as Summit at \ac{olcf} 
+{\color{red}[summit]}. 
+Our objective is to provide this needed capacity by developing a new software, 
+\emph{Celeritas}, that performs fast and accurate \ac{mc} particle transport  
+simulations on GPUs. Given the inherent trade-offs that come with a high
+performant GPU code, Celeritas is designed to complement, not replace Geant4, 
+satisfying the detector simulation requirements defined in Ref.
+~\cite{the_hep_software_foundation_roadmap_2019} while still benefiting from 
+the advanced architectures that will form the backbone of \ac{hpc} over the 
+next decade.
 
-%% Need the basic project plan here
-
-Celeritas' short term goal entails the implementation of \ac{em} physics for photons and
-charged leptons (see Sec.~\ref{TBD}) on geometry models currently used by the \ac{hep}
-community. More specifically, on the CMS geometry. This choice provides us the opportunity
-to simulate \ac{em} showers, which are the most computationally intensive part of an
-event, as a proof-of-principle. In order to achieve such compatibility with current geometry
-model files, Celeritas uses the VecGeom \cite{VecGeom:web} package. This is a GPU
-compatible library that provides navigation tools aimed towards optimizing calculations
-performed in the complex, multi-level, hierarchical geometries of \ac{hep} detectors \cite{Wenzel:2020zyn},
-being both successfully integrated with Geant4 and tested within the CMS simulation software.
+Celeritas' short term goal focuses on delivering a proof-of-concept capable of 
+transporting and simulating \ac{em} physics for photons and charged leptons on 
+geometry models currently used by the \ac{hep} community, more specifically, 
+using the CMS geometry. This choice provides us the opportunity to verify the 
+performance gain of simulating \ac{em} showers, which are the most 
+computationally intensive part of a CMS event, on GPUs. To achieve such 
+compatibility with current geometry model files, Celeritas uses the VecGeom 
+\cite{VecGeom:web} package. This is a GPU compatible library that provides 
+navigation tools aimed towards optimizing calculations performed in the 
+complex, multi-level, hierarchical geometries of \ac{hep} detectors 
+\cite{Wenzel:2020zyn}, being both successfully integrated with Geant4 and 
+tested within the CMS simulation software.
 % NOTE: Should we add that validation of the navigation algs are underway?
 
-
-%%%%%%%%%%%%%
-
-
-In this scenario, this paper focuses primarily on the components of the Celeritas
-software architecture (Sec.~\ref{code-architecture}) that will enable high
-performance on GPU hardware.  Particular attention is paid to the construction
-of the Celeritas data model (Sec.~\ref{data-model}), as memory management on
-heterogeneous devices is critical to code performance, particularly for random
-access algorithms such as \ac{mc}.  Improvements to the VecGeom geometry
-package to enable \ac{mc} transport on GPUs are discussed in Sec.~\ref{sec:vecgeom}.
-Finally, we show some preliminary performance results on a mini-application (mini-app)
-in Sec.~\ref{sec:miniapp}.
+In this scenario, this paper focuses primarily on the components of the 
+Celeritas software architecture (Sec.~\ref{code-architecture}) that will enable
+high performance on GPU hardware.  Particular attention is paid to the 
+construction of the Celeritas data model (Sec.~\ref{data-model}), as memory 
+management on heterogeneous devices is critical to code performance, 
+particularly for random access algorithms such as \ac{mc}. {\color{red}
+Improvements to the VecGeom geometry package to enable \ac{mc} transport on 
+GPUs are discussed in Sec.~\ref{sec:vecgeom}.} Finally, we show some 
+preliminary performance results on a mini-application (mini-app) in 
+Sec.~\ref{sec:miniapp}.
 
 %%---------------------------------------------------------------------------%%
 \input{code-arch.tex}
-
-%%---------------------------------------------------------------------------%%
-\section{VecGeom Geometry Package}
-\label{sec:vecgeom}
-
-VecGeom is a geometry modeller library, written in \Cpp\ and based on the SIMD
-concept, it was designed for use in particle transport
-simulation \cite{VecGeom:web}. VecGeom has been successfully integrated with Geant4
-since version 10.6. Tested within the official CMS simulation software, VecGeom
-has shown performance improvements between 7\% to 13\% \cite{Pedro:2019mkq}.
-
-VecGeom also provides navigation tools which optimize the geometry calculations
-in the complex, multi-level, hierarchical geometry of realistic HEP
-detectors \cite{Wenzel:2020zyn}. Eventually, its parallel navigation algorithms
-are expected to be also integrated into the Geant4 toolkit.
-
-Most of VecGeom functionality also compiles and runs on GPU devices, hence it is
-being integrated into the Celeritas application. Realistic geometries like
-CMS2018 can be parsed from GDML format and transferred into GPU memory.
-Validation of the navigation algorithms on the GPU is currently underway.
-
 
 %%---------------------------------------------------------------------------%%
 \section{Mini-App Results}
@@ -431,8 +412,8 @@ memory spills.}
 %%---------------------------------------------------------------------------%%
 \section{Conclusion}
 
-Although the Celeritas project is nascent and still a work in progress, its
-early developmental phase has established a foundation of core classes and
+The Celeritas project is nascent and a work in progress, with its
+early developmental phase establishing a foundation of core classes and
 design patterns to facilitate development of an efficient, GPU-enabled particle
 transport code for high energy physics. The initial results from a simple but
 nontrivial GPU physics simulation showed an ``unoptimized'' factor of about
@@ -442,7 +423,7 @@ optimizations was independently examined, and their cumulative effect boosted
 the speedup to about $220\times$ relative to the CPU version. The ease of
 implementing and testing each change promises that the infrastructure in place
 will enable similar optimizations in the future full-featured physics
-application.
+application. {\color{red} Should we mention immediate/medium term next steps?}
 
 %%---------------------------------------------------------------------------%%
 \section{Acknowledgements}
