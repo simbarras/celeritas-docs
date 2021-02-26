@@ -148,8 +148,7 @@ bound together as a \texttt{MaterialParamsData} struct.
 \KeywordTok{template}\NormalTok{\textless{}Ownership W, MemSpace M\textgreater{}}
 \KeywordTok{struct}\NormalTok{ MaterialParamsData}
 \NormalTok{\{}
-    \KeywordTok{template}\NormalTok{\textless{}}\KeywordTok{class}\NormalTok{ T\textgreater{}}
-    \KeywordTok{using}\NormalTok{ Items = celeritas::Collection\textless{}T, W, M\textgreater{};}
+    \KeywordTok{template}\NormalTok{\textless{}}\KeywordTok{class}\NormalTok{ T\textgreater{}} \KeywordTok{using}\NormalTok{ Items = celeritas::Collection\textless{}T, W, M\textgreater{};}
 
 \NormalTok{    Items\textless{}Element\textgreater{}             elements;}
 \NormalTok{    Items\textless{}MatElementComponent\textgreater{} elcomponents;}
@@ -268,7 +267,7 @@ Physics & Distance to interaction, & Models, processes, \\
   \label{tab:modules}
 \end{table}
 
-.In addition to the per-track attributes, each hardware thread
+In addition to the per-track attributes, each hardware thread
 (which may correspond to numerous tracks in different events over the lifetime
 of the situation) has a persistent random number state initialized at the start
 of the program.

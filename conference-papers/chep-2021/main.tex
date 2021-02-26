@@ -7,6 +7,9 @@
 \usepackage[varg]{txfonts}   % Web of Conferences font
 \usepackage{hyperref}
 \usepackage{color}
+\usepackage{framed}
+\usepackage{microtype}
+\usepackage{xcolor}
 \usepackage{xspace}
 \usepackage{booktabs}
 
@@ -25,9 +28,9 @@
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
 \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\small}
-% Add '' for more characters per line
-\newenvironment{Shaded}{}{}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\footnotesize}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\hspace{.5in}\vspace-\baselineskip\begin{snugshade}}{\end{snugshade}\vspace-\baselineskip}
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
 \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
 \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
@@ -102,8 +105,6 @@
 \begin{document}
 
 %%---------------------------------------------------------------------------%%
-% TODO: new title? novel features and performance analysis for GPU EM
-% particle transport in the Celeritas code?
 \title{Novel features and GPU performance analysis for EM particle transport in
   the Celeritas code%
   %
@@ -125,6 +126,10 @@
   \fnsep\thanks{\email{johnsonsr@ornl.gov}}
   %%
   \and
+  \firstname{Stefano} \lastname{C. Tognini}\inst{1}
+  %%
+  %%
+  \and
   \firstname{Philippe} \lastname{Canal}\inst{2}
   %%
   \and
@@ -141,9 +146,6 @@
   %%
   \and
   \firstname{Vincent R.} \lastname{Pascuzzi}\inst{4}
-  %%
-  \and
-  \firstname{Stefano} \lastname{C. Tognini}\inst{1}
 }%
 %%
 \institute{%
@@ -177,48 +179,38 @@
 \section{Introduction}
 \label{sec:introduction}
 
-The new High Luminosity Large Hadron Collider (HL-LHC) Era of the LHC, along 
-with the upgrades in the detectors of its main experiments (CMS, ATLAS, ALICE, 
+The new High Luminosity Large Hadron Collider (HL-LHC) Era of the LHC, along
+with the upgrades in the detectors of its main experiments (CMS, ATLAS, ALICE,
 and LHCb), will result in a steep rise in computing resource usage, far beyond
-the expected availability within current funding scenarios 
-\cite{the_hep_software_foundation_roadmap_2019}. \ac{mc} simulations are a 
-large component of that expected increase, whose demand can be alleviated 
-through the use of \ac{hpc} hardware designed to use GPUs for better 
-performance at low power consumption, such as Summit at \ac{olcf} 
-{\color{red}[summit]}. 
-Our objective is to provide this needed capacity by developing a new software, 
-\emph{Celeritas}, that performs fast and accurate \ac{mc} particle transport  
-simulations on GPUs. Given the inherent trade-offs that come with a high
-performant GPU code, Celeritas is designed to complement, not replace Geant4, 
-satisfying the detector simulation requirements defined in Ref.
-~\cite{the_hep_software_foundation_roadmap_2019} while still benefiting from 
-the advanced architectures that will form the backbone of \ac{hpc} over the 
-next decade.
+the expected availability within current funding scenarios
+\cite{the_hep_software_foundation_roadmap_2019}. \ac{mc} simulations are a
+large component of that expected increase, whose demand can be alleviated
+through the use of \ac{hpc} hardware designed to use GPUs for better
+performance at low power consumption.
 
-Celeritas' short term goal focuses on delivering a proof-of-concept capable of 
-transporting and simulating \ac{em} physics for photons and charged leptons on 
-geometry models currently used by the \ac{hep} community, more specifically, 
-using the CMS geometry. This choice provides us the opportunity to verify the 
-performance gain of simulating \ac{em} showers, which are the most 
-computationally intensive part of a CMS event, on GPUs. To achieve such 
-compatibility with current geometry model files, Celeritas uses the VecGeom 
-\cite{VecGeom:web} package. This is a GPU compatible library that provides 
-navigation tools aimed towards optimizing calculations performed in the 
-complex, multi-level, hierarchical geometries of \ac{hep} detectors 
-\cite{Wenzel:2020zyn}, being both successfully integrated with Geant4 and 
-tested within the CMS simulation software.
-% NOTE: Should we add that validation of the navigation algs are underway?
+The new \emph{Celeritas} particle transport code aims to close the gap between
+the impending advanced architectures and the vast computational
+requirements of the upcoming HEP detector campaigns. The main focus of
+Celeritas is to implement full-fidelity high energy physics simulation of
+LHC detectors on the advanced architectures that will form the backbone of
+\ac{hpc} over the next decade.
 
-In this scenario, this paper focuses primarily on the components of the 
-Celeritas software architecture (Sec.~\ref{code-architecture}) that will enable
-high performance on GPU hardware.  Particular attention is paid to the 
-construction of the Celeritas data model (Sec.~\ref{data-model}), as memory 
-management on heterogeneous devices is critical to code performance, 
-particularly for random access algorithms such as \ac{mc}. {\color{red}
-Improvements to the VecGeom geometry package to enable \ac{mc} transport on 
-GPUs are discussed in Sec.~\ref{sec:vecgeom}.} Finally, we show some 
-preliminary performance results on a mini-application (mini-app) in 
-Sec.~\ref{sec:miniapp}.
+A short-term goal for Celeritas is a proof-of-concept app and library for
+simulating \ac{em} physics for photons and charged leptons on
+geometry models currently used by the \ac{hep} community, starting with the CMS
+detector.
+This choice provides us the opportunity to verify the
+performance gain of simulating \ac{em} showers, which are the most
+computationally intensive part of a CMS event, on GPUs. Celeritas relies on the
+CUDA-compatible VecGeom \cite{VecGeom:web} library to load and navigate existing
+Geant4-compatible geometry definitions.
+
+This paper describes in \S\ref{code-architecture} some key software architecture
+developments in Celeritas for enabling rapid implementation of high
+performance, GPU-enabled physics. Using a demonstration physics app that
+incorporates many of the these novel developments, we explore in
+\S\ref{sec:miniapp} how changes to the computational kernel and to lower-level
+Celeritas components effect run time performance on a contemporary GPU.
 
 %%---------------------------------------------------------------------------%%
 \input{code-arch.tex}
