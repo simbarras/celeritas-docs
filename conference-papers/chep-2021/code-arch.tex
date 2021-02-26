@@ -268,7 +268,7 @@ Physics & Distance to interaction, & Models, processes, \\
   \label{tab:modules}
 \end{table}
 
-In addition to the per-track attributes, each hardware thread
+.In addition to the per-track attributes, each hardware thread
 (which may correspond to numerous tracks in different events over the lifetime
 of the situation) has a persistent random number state initialized at the start
 of the program.
@@ -293,54 +293,17 @@ argument the number of elements to allocate, and if allocation is
 successful, it uses placement new to default-initialize each element and
 returns a pointer to the first element. If the capacity is exceeded
 during the allocation (or by a parallel thread also in the process of
-allocating), a null pointer is returned.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{template}\NormalTok{\textless{}}\KeywordTok{class}\NormalTok{ T\textgreater{}}
-\NormalTok{CELER\_FUNCTION }\KeywordTok{auto}\NormalTok{ StackAllocator\textless{}T\textgreater{}::}\KeywordTok{operator}\NormalTok{()(}\DataTypeTok{size\_type}\NormalTok{ count)}
-\NormalTok{    {-}\textgreater{} }\DataTypeTok{result\_type}
-\NormalTok{\{}
-    \CommentTok{// Atomic add \textquotesingle{}count\textquotesingle{} to the size pointer which resides in global memory}
-    \DataTypeTok{size\_type}\NormalTok{ start = atomic\_add(}\VariableTok{data\_}\NormalTok{.size, count);}
-    \ControlFlowTok{if}\NormalTok{ (CELER\_UNLIKELY(start + count \textgreater{} }\VariableTok{data\_}\NormalTok{.storage.size()))}
-\NormalTok{    \{}
-        \CommentTok{// Out of memory: restore the old value so that another thread can}
-        \CommentTok{// potentially use it. Multiple threads are likely to exceed the}
-        \CommentTok{// capacity simultaneously. Only one has a "start" value less than or}
-        \CommentTok{// equal to the total capacity: the remainder are (arbitrarily) higher}
-        \CommentTok{// than that.}
-        \ControlFlowTok{if}\NormalTok{ (start \textless{}= }\VariableTok{data\_}\NormalTok{.storage.size())}
-\NormalTok{        \{}
-            \CommentTok{// We were the first thread to exceed capacity, even though other}
-            \CommentTok{// threads might have failed (and might still be failing) to}
-            \CommentTok{// allocate. Restore the actual allocated size to the start value.}
-            \CommentTok{// This might allow another thread with a smaller allocation to}
-            \CommentTok{// succeed, but it also guarantees that at the end of the kernel,}
-            \CommentTok{// the size reflects the actual capacity.}
-\NormalTok{            *}\VariableTok{data\_}\NormalTok{.size = start;}
-\NormalTok{        \}}
-
-        \CommentTok{// Return null pointer, indicating failure to allocate.}
-        \ControlFlowTok{return} \KeywordTok{nullptr}\NormalTok{;}
-\NormalTok{    \}}
-
-    \CommentTok{// Initialize the data at the newly "allocated" address}
-    \DataTypeTok{value\_type}\NormalTok{* result = }\KeywordTok{new}\NormalTok{ (}\VariableTok{data\_}\NormalTok{.storage.data() + start) }\DataTypeTok{value\_type}\NormalTok{;}
-    \ControlFlowTok{for}\NormalTok{ (}\DataTypeTok{size\_type}\NormalTok{ i = }\DecValTok{1}\NormalTok{; i \textless{} count; ++i)}
-\NormalTok{    \{}
-        \CommentTok{// Initialize remaining values}
-        \KeywordTok{new}\NormalTok{ (}\VariableTok{data\_}\NormalTok{.storage.data() + start + i) }\DataTypeTok{value\_type}\NormalTok{;}
-\NormalTok{    \}}
-    \ControlFlowTok{return}\NormalTok{ result;}
-\NormalTok{\}}
-\end{Highlighting}
-\end{Shaded}
-
-In the above code, \texttt{CELER\_FUNCTION} is preprocessed to
-\texttt{\_\_host\_\_\ \_\_device\_\_} when run through CUDA, and
-\texttt{CELER\_UNLIKELY} is a compiler optimization hint that the
-enclosed condition is possible but rare.
+allocating), a null pointer is returned. Figure~\ref{fig:secondary} describes
+the allocation algorithm, including the error conditions necessary to ensure
+that the size of the allocated elements is correct even in the case of an
+overflow.
+%
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=4in]{fig/secondary-allocation}
+  \caption{Flowchart of the stack allocation algorithm.}
+  \label{fig:secondary}
+\end{figure}
 
 To accommodate large numbers of secondaries on potentially limited GPU
 memory, we define a \texttt{Secondary} class that carries the minimal
@@ -354,8 +317,6 @@ rather than as a full-fledged track:
 \NormalTok{    ParticleId       particle\_id\{\};}
 \NormalTok{    units::MevEnergy energy\{zero\_quantity()\};}
 \NormalTok{    Real3            direction;}
-
-    \KeywordTok{explicit} \KeywordTok{inline}\NormalTok{ CELER\_FUNCTION }\KeywordTok{operator} \DataTypeTok{bool}\NormalTok{() }\AttributeTok{const}\NormalTok{;}
 \NormalTok{\};}
 \end{Highlighting}
 \end{Shaded}
