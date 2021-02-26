@@ -157,7 +157,17 @@
 }%
 %%
 \abstract{%
-  Celeritas is awesome.
+  Celeritas is a new computational transport code designed for high-performance
+  simulation of high-energy physics detectors. This work describes some of its
+  current capabilities and the design choices that enable the rapid development
+  of efficient on-device physics. The abstractions that underpin the code design
+  facilitate low-level performance tweaks that require no changes to the
+  higher-level physics code. We evaluate a set of independent changes that
+  together yield an almost 40\% speedup over the original GPU code for a net
+  performance increase of $220\times$ for a single GPU over a single CPU
+  running 8.4M tracks on a small demonstration physics app.
+% CPU @ 8.4M tracks (d7c4168): 185.614546131
+% GPU @ 8.4M tracks (489992c): 0.841786799
 }%
 %%
 \maketitle
@@ -269,9 +279,9 @@ uses a single Nvidia Tesla V100 running at 1.53 GHz, compiled with CUDA 10.1 and
 \begin{figure}[htb]
   \centering
   \includegraphics[width=3.5in]{fig/cpu-gpu-comparison}
-  \caption{Performance comparison of the CPU and GPU versions of the Celeritas
-  code. The ``total'' GPU plot includes the extra kernel launches for processing
-  detector hits and the number of living tracks.}
+  \caption{Performance comparison of the CPU and original GPU versions of the
+  Celeritas code. The ``total'' GPU plot includes the extra kernel launches for
+  processing detector hits and the number of living tracks.}
   \label{fig:baseline}
 \end{figure}
 
