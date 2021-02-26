@@ -167,6 +167,7 @@
   performance increase of $220\times$ for a single GPU over a single CPU
   running 8.4M tracks on a small demonstration physics app.
 % CPU @ 8.4M tracks (d7c4168): 185.614546131
+% GPU @ 8.4M tracks (d7c4168): 1.165428383
 % GPU @ 8.4M tracks (489992c): 0.841786799
 }%
 %%
@@ -176,12 +177,12 @@
 \section{Introduction}
 \label{sec:introduction}
 
-The new High Luminosity Large Hadron Collider (HL-LHC) Era of the LHC, along with the 
-upgrades in the detectors of its main experiments (CMS, ATLAS, ALICE, and LHCb), will 
-result in a steep rise in computing resource usage, far beyond the expected 
+The new High Luminosity Large Hadron Collider (HL-LHC) Era of the LHC, along with the
+upgrades in the detectors of its main experiments (CMS, ATLAS, ALICE, and LHCb), will
+result in a steep rise in computing resource usage, far beyond the expected
 availability within current funding scenarios \cite{the_hep_software_foundation_roadmap_2019}.
-\ac{mc} simulations are a large component of that expected increase, whose demand can be 
-alleviated through the use of advanced \ac{hpc} hardware that use GPUs for improved performance 
+\ac{mc} simulations are a large component of that expected increase, whose demand can be
+alleviated through the use of advanced \ac{hpc} hardware that use GPUs for improved performance
 at low power consumption. Our objective is to provide the needed modeling capacity
 using a new application, \emph{Celeritas}, that performs fast and accurate \ac{mc}
 particle transport simulations on GPUs. Celeritas is designed to complement, not
@@ -194,11 +195,11 @@ decade.
 
 Celeritas' short term goal entails the implementation of \ac{em} physics for photons and
 charged leptons (see Sec.~\ref{TBD}) on geometry models currently used by the \ac{hep}
-community. More specifically, on the CMS geometry. This choice provides us the opportunity 
+community. More specifically, on the CMS geometry. This choice provides us the opportunity
 to simulate \ac{em} showers, which are the most computationally intensive part of an
-event, as a proof-of-principle. In order to achieve such compatibility with current geometry 
-model files, Celeritas uses the VecGeom \cite{VecGeom:web} package. This is a GPU 
-compatible library that provides navigation tools aimed towards optimizing calculations 
+event, as a proof-of-principle. In order to achieve such compatibility with current geometry
+model files, Celeritas uses the VecGeom \cite{VecGeom:web} package. This is a GPU
+compatible library that provides navigation tools aimed towards optimizing calculations
 performed in the complex, multi-level, hierarchical geometries of \ac{hep} detectors \cite{Wenzel:2020zyn},
 being both successfully integrated with Geant4 and tested within the CMS simulation software.
 % NOTE: Should we add that validation of the navigation algs are underway?
@@ -212,8 +213,8 @@ software architecture (Sec.~\ref{code-architecture}) that will enable high
 performance on GPU hardware.  Particular attention is paid to the construction
 of the Celeritas data model (Sec.~\ref{data-model}), as memory management on
 heterogeneous devices is critical to code performance, particularly for random
-access algorithms such as \ac{mc}.  Improvements to the VecGeom geometry 
-package to enable \ac{mc} transport on GPUs are discussed in Sec.~\ref{sec:vecgeom}. 
+access algorithms such as \ac{mc}.  Improvements to the VecGeom geometry
+package to enable \ac{mc} transport on GPUs are discussed in Sec.~\ref{sec:vecgeom}.
 Finally, we show some preliminary performance results on a mini-application (mini-app)
 in Sec.~\ref{sec:miniapp}.
 
@@ -247,7 +248,7 @@ Validation of the navigation algorithms on the GPU is currently underway.
 
 Using the Celeritas components, we constructed a demonstration app to verify a
 simple test problem against Geant4 results. It is the simplest physical
-simulation we can run, with photon-only transport a single
+simulation we can run, with photon-only transport and a single
 Compton scattering process using the Klein--Nishina model.  It has a single
 infinite material (aluminum) and a 100 MeV monodirectional point source.
 
@@ -265,13 +266,13 @@ memory.
 An additional kernel processes the allocated vector of detector hits into
 uniformly spaced detector bins. A final kernel performs a reduction on the
 ``alive'' state of particles to determine whether the simulation should
-terminate.
+terminate. These helper kernels are included in the timings reported below.
 
 The same code components were used to build GPU and CPU versions of the same
 stepping process, although the CPU version steps through one track at a time
 rather than many tracks in parallel.  Figure~\ref{fig:baseline} gives the
 baseline performance of the two versions. The host code uses a single core of an
-Intel "Cascade Lake" Xeon processor running at 2.3 GHz, compiled with GCC 8.3
+Intel ``Cascade Lake'' Xeon processor running at 2.3 GHz, compiled with GCC 8.3
 and \texttt{-O3 -march=skylake-avx512 -mtune=skylake-avx512}. The device code
 uses a single Nvidia Tesla V100 running at 1.53 GHz, compiled with CUDA 10.1 and
 \texttt{-O3 --use\_fast\_math}.
@@ -299,12 +300,11 @@ please add a couple of sentences.
   \label{fig:roofline}
 \end{figure}
 
-\clearpage
-
 Although this mini-app is far simpler than one that supports the full range of
 physics needed for EM shower simulation, it may be instructive to see how
 standard recommendations for performance enhancement affect the total runtime.
-
+We experimented with the demo app and underlying Celeritas components by
+independently making each of the following changes:
 \begin{itemize}
   \item \emph{Removing the ``grid striding'' wherein a single GPU thread can
     transport multiple tracks sequentially.} Preliminary studies showed
@@ -348,7 +348,7 @@ standard recommendations for performance enhancement affect the total runtime.
 \end{itemize}
 Figure~\ref{fig:speedup} shows the performance of each separate change in the
 list above, as well as a combination of all changes.
-
+%
 \begin{figure}[htb]
   \centering
   \includegraphics[width=3.5in]{fig/speedups}
@@ -368,8 +368,10 @@ percent):
   \item \emph{Copying track states into local variables} had a small positive
     effect ($+3.1\% \pm 0.6\%$). Analysis of the PTX assembly code showed that
     with the cost of a few extra arithmetic operations, the improved kernel
-    decreased the number of global memory loads from 41 to 29. For this case, a
-    25\% reduction in global memory accesses resulted only in a 3\% speedup.
+    decreased the number of global memory loads from 41 to 29, because storing
+    the values locally informs the compiler that there are no aliasing effects
+    that might cause hidden dependencies between the data. However, this a 25\%
+    reduction in global memory accesses resulted only in a 3\% speedup.
   \item \emph{Copying the RNG states into a local variable} had essentially no effect
     ($-0.8\% \pm 0.5\%$). Examining the emitted PTX code shows almost no change
     between the original and modified version. This suggests that the extensive
@@ -378,8 +380,10 @@ percent):
     be aliased or modified by external functions calls, and thus does not have
     to be reloaded between subsequent calls to the RNG functions.
   \item \emph{Using a struct-of-arrays rather than array-of-structs for particle
-    data} had zero significant effect. Coalescing memory access in this case
-    appears to be unimportant.
+    data} had zero significant effect. Coalescing memory access in this demo app
+    appears unimportant: the minor reduction in memory transactions is swamped
+    by the cost of the inherently random accesses for the cross section
+    calculation and dynamic allocations.
   \item \emph{Preallocating one secondary per interaction} improved performance
     more than any other change thus far ($+13.4\% \pm 0.3\%$). There was one
     fewer atomic operation (the detector ``hits'' still remained) and a decrease
@@ -396,22 +400,24 @@ percent):
     secondary preallocation result, this suggests that the atomic operations may
     be the single most expensive aspect of this simple demonstration kernel.
 \end{itemize}
-
-The overall speedup of $+37.7\%$ suggests that the faster and fewer atomic
+%
+The overall speedup of $+38\%$ suggests that the faster and fewer atomic
 operations negate the performance drop of the atomic-heavy interaction split
 kernel.
 
+Of these results, the lack of performance gain for a substantial increase in
+occupancy is perhaps the most surprising.
 Loosely stated, occupancy measures the ratio of threads that can be
 \emph{active} to the maximum number of threads on a \ac{sm},
 which is the core hardware computational component of a CUDA card. Higher
 occupancy can hide latency to improve overall kernel performance.
 To explore the performance implications of higher occupancy, we recompiled the
-``set of combined optimization'' changes with the \verb|--maxrregcount N| NVCC
+fully ``optimized'' kernel with the \verb|--maxrregcount N| NVCC
 compiler option to constrain kernel register usage,
 which is the limiting factor for the CUDA \ac{sm} occupancy for the demo
 interactor kernels. Figure~\ref{fig:occupancy} demonstrates that a higher
 kernel occupancy does not always translate to improved performance.
-
+%
 \begin{figure}[htb]
   \centering
   \includegraphics[width=3.5in]{fig/occupancy}
@@ -421,6 +427,22 @@ the register usage, and the light red line is local memory usage including
 memory spills.}
   \label{fig:occupancy}
 \end{figure}
+
+%%---------------------------------------------------------------------------%%
+\section{Conclusion}
+
+Although the Celeritas project is nascent and still a work in progress, its
+early developmental phase has established a foundation of core classes and
+design patterns to facilitate development of an efficient, GPU-enabled particle
+transport code for high energy physics. The initial results from a simple but
+nontrivial GPU physics simulation showed an ``unoptimized'' factor of about
+$160\times$ performance improvement over a single-CPU version of the same
+simulation with identical underpinning components. A set of potential
+optimizations was independently examined, and their cumulative effect boosted
+the speedup to about $220\times$ relative to the CPU version. The ease of
+implementing and testing each change promises that the infrastructure in place
+will enable similar optimizations in the future full-featured physics
+application.
 
 %%---------------------------------------------------------------------------%%
 \section{Acknowledgements}

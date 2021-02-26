@@ -1,11 +1,12 @@
-\hypertarget{code-architecture}{%
-\section{Code Architecture}\label{code-architecture}}
+\section{Code Architecture}\label{code-architecture}
 
 In the short term, Celeritas is designed as a standalone application
 that transport particles exclusively on device. To support robust and
 rapid unit testing, its components are designed to run natively in C++
 on traditional CPUs regardless of whether CUDA is available for
-on-device execution.
+on-device execution. This is accomplished both with simple macros that hide
+CUDA function tags when not compiling CUDA code, and a new data model for
+constructing and using complex hierarchical data on CPU and copying it to GPU.
 
 Like other GPU-enabled \ac{mc} transport codes such as
 Shift \cite{pandya_implementation_2016,hamilton_continuous-energy_2019},
@@ -16,8 +17,8 @@ essentially no cooperation between individual threads, facilitating the
 dual host/device annotation of most of Celeritas. The allocation of
 secondary particles and the initialization of new tracks from these
 secondaries both require CUDA-specific programming, but those components
-are encapsulated so that both host and device code can safely construct
-secondaries.
+are encapsulated so that physics code can correctly allocate secondaries both in
+production code (on device) and in unit tests (on the host).
 
 To support parallelizing our initial development over several team
 members, and to facilitate refactoring and performance testing of code,
@@ -33,7 +34,7 @@ secondaries from a model. In contrast to the virtual
 \texttt{G4VModel::sample\_secondaries} member function in Geant4, each
 model in Celeritas defines an independent function-like object for
 sampling secondaries. Each \texttt{Interactor} class is analogous a C++
-standard library "distribution": the distribution parameters (including
+standard library ``distribution'': the distribution parameters (including
 particle properties, incident particle energy, incident direction, and
 interacting element properties)
 are class construction arguments, and the function-like
@@ -45,6 +46,8 @@ Table~\ref{tab:interactor} summarizes the models that are implemented in
 Celeritas on device, as well as key challenges that were first encountered while
 implementing each model. Future work will elaborate on the models and the novel
 aspects of implementing them on GPU in Celeritas.
+The mini-app and performance analysis in \S\ref{sec:miniapp} will focus on the
+first interactor implemented, Klein--Nishina.
 
 \begin{table}[htb]
   \centering
@@ -66,11 +69,7 @@ aspects of implementing them on GPU in Celeritas.
   \label{tab:interactor}
 \end{table}
 
-The mini-app and performance analysis in the results section will focus on the
-first interactor implemented, Klein--Nishina.
-
-\hypertarget{data-model}{%
-\subsection{Data model}\label{data-model}}
+\subsection{Data model}\label{data-model}
 
 Software for heterogeneous architectures must manage independent
 \emph{memory spaces}. \emph{Host} allocations use \texttt{malloc} or
@@ -88,9 +87,9 @@ can act like a \texttt{std::shared\_pointer} (it is reference counted),
 a \texttt{std::vector} (it allocates and manages memory), and a
 \texttt{std::span} (it can also provide a non-owning view to stored
 data). A similar class has been developed for Celeritas but with the
-design goal of supporting the deeply hierarchical data needed for
-tabulated physics data (in contrast to Kokkos' focus on dense linear
-algebraic data).
+design goal of supporting complicated heterogeneous data structures needed for
+tabulated physics data, in contrast to Kokkos' focus on dense homogeneous linear
+algebraic data.
 
 The
 \texttt{celeritas::Collection\textless{}class,\ Ownership,\ MemSpace\textgreater{}}
@@ -99,7 +98,7 @@ primary design goal of constructing deeply hierarchical data on host at
 setup time and seamlessly copying to device. The templated
 \texttt{class} must be trivially copyable -\/- either a fundamental data
 type or a struct of such types. An individual item in a collection can
-be accessed \texttt{ItemId\textless{}class\textgreater{}}, which is a
+be accessed with \texttt{ItemId\textless{}class\textgreater{}}, which is a
 trivially copyable but type-safe index; and a range of items (returned
 as a \texttt{Span\textless{}class\textgreater{}}) can be accessed with a
 trivially copyable \texttt{ItemRange\textless{}class\textgreater{}},
@@ -116,14 +115,14 @@ materials has an array of pointers to elements and their fractions in
 that material. In a traditional C++ code this could be represented as
 \texttt{vector\textless{}vector\textless{}pair\textless{}Element*,\ double\textgreater{}\textgreater{}\textgreater{}}
 with a separately allocated
-\texttt{vector\textless{}Element\textgreater{}}. With helper libraries
-such as Thrust \cite{thrust} there is no direct CUDA analog to this
-structure because device memory management is limited to host code.
-Celeritas chooses not to use in-kernel \texttt{cudaMalloc} calls for
+\texttt{vector\textless{}Element\textgreater{}}. However, even with helper
+libraries such as Thrust \cite{thrust} there is no direct CUDA analog to this
+structure, because device memory management is limited to host code.
+We choose not to use in-kernel \texttt{cudaMalloc} calls for
 performance and portability considerations. Instead, Celeritas
 represents the nested hierarchy as a set of \texttt{Collection} objects
 bound together as a \texttt{MaterialParamsData} struct.
-
+%
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{struct}\NormalTok{ Element}
@@ -193,7 +192,7 @@ The first material in a
 instance can be accessed as:
 \begin{Shaded}
 \begin{Highlighting}[]
-\AttributeTok{const}\NormalTok{ Material\& m = data.materials[ItemId\textless{}Material\textgreater{}(}\DecValTok{1}\NormalTok{)];}
+\AttributeTok{const}\NormalTok{ Material\& m = data.materials[ItemId\textless{}Material\textgreater{}(}\DecValTok{0}\NormalTok{)];}
 \end{Highlighting}
 \end{Shaded}
 %
@@ -222,11 +221,10 @@ element data. In Celeritas, \texttt{View} objects are to
 \texttt{Collection} as \texttt{std::string\_view} is to
 \texttt{std::vector\textless{}char\textgreater{}}.
 
-\hypertarget{states-and-parameters}{%
-\subsection{States and parameters}\label{states-and-parameters}}
+\subsection{States and parameters}\label{states-and-parameters}
 
 The Celeritas data model is careful to separate persistent shared
-"parameter" data from dynamic local "state" data, as there will
+``parameter'' data from dynamic local ``state'' data, as there will
 generally one independent state per GPU thread. To illustrate the
 difference between parameters and states, consider the calculation of
 the Lorentz factor \(\gamma\) of a particle, which is a function of both
@@ -234,7 +232,7 @@ the rest mass \(mc^2\)---which is constant for all particles of the same
 type but is not a fundamental constant nor the same for all
 particles---and the kinetic energy \(K\). It is a parameterized
 expression \(\gamma(m;K) = 1 + \frac{K}{mc^2}\). Celeritas
-differentiates from shared data such as \(m\) (parameters, shortened to
+differentiates shared data such as \(m\) (parameters, shortened to
 \texttt{Params}) from state data particular to a single track such as
 kinetic energy \(K\) or particle type (\texttt{State}). Inside transport
 kernels, the \texttt{ParticleTrackView} class combines the parameter and
@@ -246,9 +244,9 @@ of its relativistic momentum.
 In Celeritas, a particle track is not a single object nor a struct of
 arrays. Instead, sets of classes (Params plus State) define aspects of a
 track, each of which is accessed through a \texttt{TrackView} class.
-Table~\ref{tab:modules} shows the current track attributes independently implemented
-in Celeritas.
-
+Table~\ref{tab:modules} shows the current track attributes independently
+implemented in Celeritas.
+%
 \begin{table}[htb]
   \centering
   \begin{tabular}{@{}lll@{}}
@@ -259,19 +257,23 @@ Particle & Kinetic energy and particle ID & Properties for each particle
 type \\
 Material & Current material ID & Material densities, elements,
 etc. \\
-Geometry & Position, direction, volume ID, VGNavState & Geometry
+Geometry & Position, direction, volume ID, NavState & Geometry
 description \\
 Sim & Track ID, Event ID, time & --- \\
 Physics & Distance to interaction, & Models, processes, \\
 & cached cross sections & cross section tables \\
 \bottomrule
   \end{tabular}
-  \caption{Different key modules in Celeritas.}
+  \caption{Existing groups of per-track state and parameter data in Celeritas.}
   \label{tab:modules}
 \end{table}
 
-\hypertarget{on-device-allocation}{%
-\subsection{On-device allocation}\label{on-device-allocation}}
+In addition to the per-track attributes, each hardware thread
+(which may correspond to numerous tracks in different events over the lifetime
+of the situation) has a persistent random number state initialized at the start
+of the program.
+
+\subsection{On-device allocation}\label{on-device-allocation}
 
 One requirement for transporting particles in electromagnetic showers is
 the efficient allocation and construction of secondary particles. The
