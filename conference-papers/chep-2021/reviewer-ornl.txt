@@ -1,0 +1,44 @@
+Intro: "HPC hardware designed to use GPUs", awkward phrasing, the GPU are        
+themselves the HPC hardware. I would consider breaking this into two sentences:  
+1) MC simulations take up a lot of computing resources 2) GPUs have become the   
+primary HPC hardware over the past decade due to lower power consumption, and    
+software design and algorithms must be changed to adapt.                         
+
+Intro/Section 2: Depending your audience, consider clarifying GPU-specific terms 
+such as "CUDA-compatible", "on-device", etc.                                     
+
+Section 2: In general this whole section becomes pretty dense. I would           
+recommend very explicitly summarizing the overarching ideas of of Sections 2.1   
+-- 2.4 in at the beginning of Section 2, that way readers have a better idea     
+what they should be paying attention to as they dive into each of these          
+subsections.                                                                     
+
+Section 2: Consider mentioning that you are using event-based, rather than       
+history-based MC.                                                                
+
+Section 2.1: "is analogous [to]"                                                 
+
+Section 2.3: Considering adding one more clause to the first sentence to         
+spell out why it is useful to differentiate between persistent/dynamics data.    
+
+Section 2.1: I am not sure what the semicolon means in \gamma(M; k). I would     
+also advise against in-text equations.                                           
+
+Figure 2: Put a box around the entire interaction kernel, not just vertical      
+lines.                                                                           
+
+Section 3: XXX @tme please add a couple of sentences                             
+
+Section 3: I would use an itemize rather than enumerate for the list of          
+changes, then include the numbers in the legend of Figure 5. This makes going    
+back and forth between the text and figure easier.                               
+
+Figure 5: Move the legend to the left of the the plot, i.e.                      
+bbox_to_anchor=(1.1, 0.5), I think.                                              
+
+Section 3: You make the argument that splitting into 2 kernels is worth the      
+negative performance for an increase in flexibility. Are there any changes that  
+you will not keep? It would be nice to have a series on Figure 5 with only the   
+changes you plan on keeping.                                                     
+
+Section 4: "Nascent" and "a work in progress" are redundant.

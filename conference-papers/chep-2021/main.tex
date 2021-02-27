@@ -7,6 +7,7 @@
 \usepackage[varg]{txfonts}   % Web of Conferences font
 \usepackage{hyperref}
 \usepackage{color}
+\usepackage{enumitem}
 \usepackage{framed}
 \usepackage{microtype}
 \usepackage{xcolor}
@@ -23,6 +24,10 @@
 \usepackage[
     detect-none,
     binary-units]{siunitx}
+
+\setlength\textfloatsep{10pt plus 2pt minus 4pt}
+\setlength\abovecaptionskip{10pt}
+\setlength\belowcaptionskip{10pt}
 
 % >>> from pandoc
 \usepackage{fancyvrb}
@@ -184,9 +189,9 @@ with the upgrades in the detectors of its main experiments (CMS, ATLAS, ALICE,
 and LHCb), will result in a steep rise in computing resource usage, far beyond
 the expected availability within current funding scenarios
 \cite{the_hep_software_foundation_roadmap_2019}. \ac{mc} simulations are a
-large component of that expected increase, whose demand can be alleviated
-through the use of \ac{hpc} hardware designed to use GPUs for better
-performance at low power consumption.
+large component of that expected increase, which can be reduced by utilizing
+the GPUs that provide the bulk of computational horsepower in modern \ac{hpc}
+due to their comparatively low power consumption.
 
 The new \emph{Celeritas} particle transport code aims to close the gap between
 the impending advanced architectures and the vast computational
@@ -226,7 +231,7 @@ Compton scattering process using the Klein--Nishina model.  It has a single
 infinite material (aluminum) and a 100 MeV monodirectional point source.
 
 The stepping kernel is parallel over particle tracks, with one launch per step,
-and ``dead'' tracks ignored. Interaction lengths are sampling with
+and ``dead'' tracks ignored. Interaction lengths are sampled with
 uniform-in-log-energy cross section calculations with linear interpolation. The
 particle states include position and directions that are updated with each step.
 Secondaries are allocated and constructed as part of each interaction, but they
@@ -272,12 +277,14 @@ is not limited by raw memory bandwidth or floating point performance.  Similar b
   \label{fig:roofline}
 \end{figure}
 
+%\clearpage
+
 Although this mini-app is far simpler than one that supports the full range of
 physics needed for EM shower simulation, it may be instructive to see how
 standard recommendations for performance enhancement affect the total runtime.
 We experimented with the demo app and underlying Celeritas components by
 independently making each of the following changes:
-\begin{itemize}
+\begin{enumerate}[left=0pt, itemsep=0pt]
   \item \emph{Removing the ``grid striding'' wherein a single GPU thread can
     transport multiple tracks sequentially.} Preliminary studies showed
     decreased performance by transporting multiple tracks per thread, so in all
@@ -317,13 +324,13 @@ independently making each of the following changes:
     Smaller data reduces memory bandwidth, and CUDA operations tend to be
     inherently faster for 32-bit types such as the native unsigned int and
     single-precision floats.
-\end{itemize}
+\end{enumerate}
 Figure~\ref{fig:speedup} shows the performance of each separate change in the
 list above, as well as a combination of all changes.
 %
 \begin{figure}[htb]%
   \centering%
-  \includegraphics[width=3.5in]{fig/speedups}%
+  \includegraphics[width=5in]{fig/speedups}%
   \caption{Incremental (thin colored lines) and cumulative (thick gray line)
   speed up for changes to the mini-app and data structures.}%
   \label{fig:speedup}%
@@ -332,18 +339,18 @@ list above, as well as a combination of all changes.
 Aggregating the speedup values for cases with more than $10^6$ tracks (mean and
 $1\sigma$ given for $\mbox{speedup}=\mbox{original}/\mbox{adjusted} - 1$, in
 percent):
-\begin{itemize}
+\begin{enumerate}[left=0pt, itemsep=0pt]
   \item \emph{Removing the ``grid striding''} had a slightly negative impact
     ($-1.3\% \pm 0.3\%$). Diagnostics showed
     that removing grid striding did in fact increase occupancy from 37.5\% to
     50\%, but this did not translate to improved performance.
   \item \emph{Copying track states into local variables} had a small positive
-    effect ($+3.1\% \pm 0.6\%$). Analysis of the PTX assembly code showed that
+    effect ($+3.1\% \pm 0.6\%$). Inspecting the PTX assembly code showed that
     with the cost of a few extra arithmetic operations, the improved kernel
     decreased the number of global memory loads from 41 to 29, because storing
     the values locally informs the compiler that there are no aliasing effects
     that might cause hidden dependencies between the data. However, this a 25\%
-    reduction in global memory accesses resulted only in a 3\% speedup.
+    reduction in global memory accesses resulted only in a marginal speedup.
   \item \emph{Copying the RNG states into a local variable} had essentially no effect
     ($-0.8\% \pm 0.5\%$). Examining the emitted PTX code shows almost no change
     between the original and modified version. This suggests that the extensive
@@ -371,7 +378,7 @@ percent):
     positive individual change ($+28.0\% \pm 0.1\%$). In conjunction with the
     secondary preallocation result, this suggests that the atomic operations may
     be the single most expensive aspect of this simple demonstration kernel.
-\end{itemize}
+\end{enumerate}
 %
 The overall speedup of $+38\%$ suggests that the faster and fewer atomic
 operations negate the performance drop of the atomic-heavy interaction split
@@ -403,8 +410,8 @@ memory spills.}%
 %%---------------------------------------------------------------------------%%
 \section{Conclusion}
 
-The Celeritas project is nascent and a work in progress, with its
-early developmental phase establishing a foundation of core classes and
+The nascent Celeritas project has established with its
+early developmental phase a foundation of core classes and
 design patterns to facilitate development of an efficient, GPU-enabled particle
 transport code for high energy physics. The initial results from a simple but
 nontrivial GPU physics simulation showed an ``unoptimized'' factor of about

@@ -33,7 +33,7 @@ As an example of the granularity of classes, consider the sampling of
 secondaries from a model. In contrast to the virtual
 \texttt{G4VModel::sample\_secondaries} member function in Geant4 \cite{geant4}, each
 model in Celeritas defines an independent function-like object for
-sampling secondaries. Each \texttt{Interactor} class is analogous a C++
+sampling secondaries. Each \texttt{Interactor} class is analogous to a C++
 standard library ``distribution'': the distribution parameters (including
 particle properties, incident particle energy, incident direction, and
 interacting element properties)
@@ -50,7 +50,8 @@ The mini-app and performance analysis in \S\ref{sec:miniapp} will focus on the
 first interactor implemented, Klein--Nishina.
 
 \begin{table}[htb]
-  \centering
+  \centering%
+  \caption{Fully implemented model interactors in Celeritas.}%
   \begin{tabular}{ll}
     \toprule %--------------------------------------------
     Model & Challenges \\
@@ -65,7 +66,6 @@ first interactor implemented, Klein--Nishina.
                                  & Dynamic number of secondaries \\
     \bottomrule %-----------------------------------------
   \end{tabular}
-  \caption{Fully implemented model interactors in Celeritas.}
   \label{tab:interactor}
 \end{table}
 
@@ -199,7 +199,8 @@ A view of its elemental component data is:
 %
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{Span\textless{}}\AttributeTok{const}\NormalTok{ MatElementComponent\textgreater{} els = data.elcomponents[material.components];}
+\NormalTok{Span\textless{}}\AttributeTok{const}\NormalTok{
+MatElementComponent\textgreater{} els = data.elcomponents[m.components];}
 \end{Highlighting}
 \end{Shaded}
 %
@@ -208,7 +209,7 @@ are:
 %
 \begin{Shaded}
 \begin{Highlighting}[]
-\AttributeTok{const}\NormalTok{ Element\& el = data.elements[data.element];}
+\AttributeTok{const}\NormalTok{ Element\& el = data.elements[els[0].element];}
 \end{Highlighting}
 \end{Shaded}
 
@@ -218,7 +219,8 @@ used by the device-compatible class \texttt{MaterialView} and
 \texttt{ElementView}, which encapsulate access to the material and
 element data. In Celeritas, \texttt{View} objects are to
 \texttt{Collection} as \texttt{std::string\_view} is to
-\texttt{std::vector\textless{}char\textgreater{}}.
+\texttt{std::vector\textless{}char\textgreater{}}: Collections and
+vectors only store the underlying data.
 
 \subsection{States and parameters}\label{states-and-parameters}
 
@@ -229,8 +231,8 @@ difference between parameters and states, consider the calculation of
 the Lorentz factor \(\gamma\) of a particle, which is a function of both
 the rest mass \(mc^2\)---which is constant for all particles of the same
 type but is not a fundamental constant nor the same for all
-particles---and the kinetic energy \(K\). It is a parameterized
-expression \(\gamma(m;K) = 1 + \frac{K}{mc^2}\). Celeritas
+particles---and the kinetic energy \(K\). It is a function of $K$
+parameterized on the mass $m$: \(\gamma(m;K) = 1 + K / mc^2\). Celeritas
 differentiates shared data such as \(m\) (parameters, shortened to
 \texttt{Params}) from state data particular to a single track such as
 kinetic energy \(K\) or particle type (\texttt{State}). Inside transport
@@ -247,7 +249,8 @@ Table~\ref{tab:modules} shows the current track attributes independently
 implemented in Celeritas.
 %
 \begin{table}[htb]
-  \centering
+  \centering%
+  \caption{Existing groups of per-track state and parameter data in Celeritas.}%
   \begin{tabular}{@{}lll@{}}
 \toprule
 Module & State & Params\tabularnewline
@@ -263,7 +266,6 @@ Physics & Distance to interaction, & Models, processes, \\
 & cached cross sections & cross section tables \\
 \bottomrule
   \end{tabular}
-  \caption{Existing groups of per-track state and parameter data in Celeritas.}
   \label{tab:modules}
 \end{table}
 
@@ -307,18 +309,8 @@ overflow.
 To accommodate large numbers of secondaries on potentially limited GPU
 memory, we define a \texttt{Secondary} class that carries the minimal
 amount of information needed to reconstruct it from the parent track,
-rather than as a full-fledged track:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{struct}\NormalTok{ Secondary}
-\NormalTok{\{}
-\NormalTok{    ParticleId       particle\_id\{\};}
-\NormalTok{    units::MevEnergy energy\{zero\_quantity()\};}
-\NormalTok{    Real3            direction;}
-\NormalTok{\};}
-\end{Highlighting}
-\end{Shaded}
+rather than as a full-fledged track. It comprises a particle ID (an
+\texttt{ItemId} into an array of particle data), an energy, and a direction.
 
 The final aspect of GPU-based secondary allocation is how to gracefully
 handle an out-of-memory condition without crashing the simulation
