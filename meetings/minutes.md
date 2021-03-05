@@ -460,3 +460,31 @@ stepping loop. Should be able to have multi-physics running on Summit by June.
 - Printed debug statements from VecGeom are an issue. Seth created a wrapper to 
 suppress the output, at least while VecGeom main repository does not remove 
 these spurious printouts.
+
+
+# Fri Mar 5, 2021
+
+- Tom, regarding funding: budget still unclear. DOE is excited with current 
+results, but not sure how to fund it. Next meeting at the end of March should
+provide a clearer scenario. Starting FY23, SCIDAC may become a funding source. 
+- Seth outlines the milestones for the next 3 years:
+  - End of next year: 
+    - Complete EM physics + integration with experimental.
+  framework.
+    - Possible portability to other platforms.
+  - End of 2022: 
+    - Runtime performance analysis.
+    - EM physics validated in simple and complex geometries.
+    - Celeritas + Geant4 integration.
+  - End of 2024:
+    - Start implementation of hadronic physics with possibility of a full event 
+    run by Celeritas.
+    - Use Celeritas as a training data generator for AI/ML simulations.
+- Daniel: Iterating with the experiments is fundamental to guarantee that
+experiments are willing to absorb Celeritas into their frameworks. These 
+iterations might be passed via HSF.
+- Soon on 3 years plan: hadron physics might start with neutron physics, since 
+neutron + EM physics encompass the vast majority of the computing time.
+- Witek will present next week on our behalf at the Geant4 Technical forum
+(see https://indico.cern.ch/event/1011728/timetable/#20210311.detailed). Most
+likely he will present our project plan for 2020-2021 FY. 
