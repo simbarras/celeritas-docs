@@ -17,6 +17,7 @@ Implement the full-featured but not necessarily validated set of "standard EM
 physics" models in Celeritas on GPU.
 - Multiple scattering
 - Spatially dependent magnetic fields.
+- Tabulated or on-the-fly sampling of elements in a material
 
 ## Prototype integration with experiment frameworks
 
@@ -26,7 +27,7 @@ including:
 - Client-defined scoring regions
 - Detector output
 
-# July 2021 -- June 2022
+# July 2022 -- June 2023
 
 ## Validate standard EM physics
 
@@ -43,7 +44,7 @@ performance/accuracy tradeoffs from using single-precision math in the code.
 Implement a plugin "Acceleritas" that uses the new tasking model in Geant4 to
 dispatch EM particles to the Celeritas GPU physics solvers.
 
-# July 2022 -- June 2023
+# July 2023 -- June 2024
 
 ## Expand physics capabilities
 
