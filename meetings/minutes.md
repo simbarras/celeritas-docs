@@ -488,3 +488,16 @@ neutron + EM physics encompass the vast majority of the computing time.
 - Witek will present next week on our behalf at the Geant4 Technical forum
 (see https://indico.cern.ch/event/1011728/timetable/#20210311.detailed). Most
 likely he will present our project plan for 2020-2021 FY. 
+
+
+# Fri Mar 19, 2021
+
+- Recent progress: Bremmstrahlung is mostly done. This and Rayleigh scattering
+are the last major electron/photon missing bits, aside from multiple scattering.
+- Upcoming DOE meeting (March 29): We won't have a multi-physics demo app, but
+there was tremendous progress and several components are completed, so we have
+strong updates.
+- April 12: HSF Working Group Meeting will include Celeritas and AdePT updates.
+- Seth: Regargind the milestones for the next couple years: in case there are
+any suggestions, please add them to the 
+`celeritas-docs/project-plan/milestones-2023` repository.
