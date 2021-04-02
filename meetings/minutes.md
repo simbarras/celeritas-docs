@@ -501,3 +501,27 @@ strong updates.
 - Seth: Regargind the milestones for the next couple years: in case there are
 any suggestions, please add them to the 
 `celeritas-docs/project-plan/milestones-2023` repository.
+
+
+# Fri Apr 2, 2021
+
+- DOE meeting went well. We should hear back from Doug or Marcel regarding
+funding in the next week or so.
+- Plan to get multiphysics with single element materials up and running soon.
+- Multi single-element materials example problem is available in 
+`benchmarks/validation`. The gdml file will be also copied to the celeritas repo
+for testing and demo app.
+- On VecGeom/Root/Geant4 geometry issues (loading/rendering/unit errors) seen in
+the past few months:
+  - Seth suggests writting a new library that acts as an intermediate layer 
+  between the GDML parser and the final G4VSolid/VUnplaced Volume/TGeoShape 
+  objects.
+  - Philippe: There's currently an effort to add a navigator in Geant4 that uses
+  VecGeom interface. This is an interesting point to present in our 
+  Celeritas/AdePT monthly meetings.
+  - Soon: Parser has 2 layers: reading and writing parts. We could have one gdml
+  reader, with different writers to create Geant/VecGeom/Root objects.
+  - Seth: another option would be to use `G4GDML -> G4VSolid -> new library`
+  instead, which would translate that to vecgeom/root objects.
+  - More on this in future meetings, but there has to be consistency between
+  the final objects used by G4, VecGeom, and ROOT.
