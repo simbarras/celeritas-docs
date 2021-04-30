@@ -525,3 +525,19 @@ the past few months:
   instead, which would translate that to vecgeom/root objects.
   - More on this in future meetings, but there has to be consistency between
   the final objects used by G4, VecGeom, and ROOT.
+
+
+# Fri Apr 16, 2021
+**Meeting adjourned**
+
+
+# Fri Apr 30, 2021
+- Team will move to a new and less formal meeting schedule with 2 meeting slots
+a week (Mondays and Thursdays) as placeholders to discuss any topic/issue, with
+meetings being confirmed as needed.
+- Stepping loop hackathon should take place next Thursday.
+- Robust hability to link against VecGeom is a pressing issue, and a surrogate
+navigator might be needed. Current errors make it impossible for us to run our
+demo app. Philippe could not join us today, so a new strategy will be discussed
+in a future team meeting.
+- No updates from DOE yet regarding our new funding request.
