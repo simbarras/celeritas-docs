@@ -1,0 +1,5 @@
+Many thanks for the detailed paper. It describes very well what you have done in order to achieve a boost in performance on the GPU side. 
+
+I have two questions:
+1) do you see any improvements on the CPU side when running the new code wrt the previous version? Does the code autovectorize?
+2) you decided to move to custom deep copy and data structures. Before getting to this conclusion, did you explore the possibility to get rid of deeply hierarchical data structures?
