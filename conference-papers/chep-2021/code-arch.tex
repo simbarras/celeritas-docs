@@ -96,7 +96,7 @@ The
 class manages data allocation and transfer between CPU and GPU with the
 primary design goal of constructing deeply hierarchical data on host at
 setup time and seamlessly copying to device. The templated
-\texttt{class} must be trivially copyable -\/- either a fundamental data
+\texttt{class} must be trivially copyable---either a fundamental data
 type or a struct of such types. An individual item in a collection can
 be accessed with \texttt{ItemId\textless{}class\textgreater{}}, which is a
 trivially copyable but type-safe index; and a range of items (returned

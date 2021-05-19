@@ -110,8 +110,8 @@
 \begin{document}
 
 %%---------------------------------------------------------------------------%%
-\title{Novel features and GPU performance analysis for EM particle transport in
-  the Celeritas code%
+\title{Novel features and GPU performance analysis\\%
+  for EM particle transport in the Celeritas code%
   %
   \footnote{%
     This manuscript has been authored by
@@ -248,8 +248,9 @@ terminate. These helper kernels are included in the timings reported below.
 
 The same code components were used to build GPU and CPU versions of the same
 stepping process, although the CPU version steps through one track at a time
-rather than many tracks in parallel.  Figure~\ref{fig:baseline} gives the
-baseline performance of the two versions. The host code uses a single core of an
+(single-threaded, no vectorization) rather than many tracks in parallel.
+Figure~\ref{fig:baseline} gives the baseline performance of the two versions.
+The host code uses a single core of an
 Intel ``Cascade Lake'' Xeon processor running at 2.3 GHz, compiled with GCC 8.3
 and \texttt{-O3 -march=skylake-avx512 -mtune=skylake-avx512}. The device code
 uses a single Nvidia Tesla V100 running at 1.53 GHz, compiled with CUDA 10.1 and
@@ -325,8 +326,8 @@ independently making each of the following changes:
     inherently faster for 32-bit types such as the native unsigned int and
     single-precision floats.
 \end{enumerate}
-Figure~\ref{fig:speedup} shows the performance of each separate change in the
-list above, as well as a combination of all changes.
+Figure~\ref{fig:speedup} shows the relative GPU performance of each separate
+change in the list above, as well as a combination of all changes.
 %
 \begin{figure}[htb]%
   \centering%
