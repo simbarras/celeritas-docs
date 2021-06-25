@@ -40,10 +40,10 @@ Year   Principal milestone
 
 -------------------------------------------------------------
 
-The technical approach in Celeritas is to extend the algorithms described in
-Hamilton and Evans, 2019[^1] for neutron Monte Carlo particle transport on
-GPUs to the complete standard model particle suite currently supported by
-Geant4 to support LHC detector simulations. We have demonstrated significant
+The technical approach in Celeritas is to develop new code based on the experiences
+and lessons learned from Shift[^1], Geant4[^4], VecGeom[^5] and GeantV[^6] and
+leveraging and reimplementing the (physics) algorithms and processes from Geant4.
+We have demonstrated significant
 progress in this area as summarized in Johnson et al., 2021[^3], in which the
 core classes and design patterns that facilitate development of an efficient,
 GPU-enabled particle transport code for high energy physics are described.  We
