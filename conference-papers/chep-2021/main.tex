@@ -350,7 +350,7 @@ percent):
     with the cost of a few extra arithmetic operations, the improved kernel
     decreased the number of global memory loads from 41 to 29, because storing
     the values locally informs the compiler that there are no aliasing effects
-    that might cause hidden dependencies between the data. However, this a 25\%
+    that might cause hidden dependencies between the data. However, this 25\%
     reduction in global memory accesses resulted only in a marginal speedup.
   \item \emph{Copying the RNG states into a local variable} had essentially no effect
     ($-0.8\% \pm 0.5\%$). Examining the emitted PTX code shows almost no change
