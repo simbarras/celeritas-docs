@@ -40,20 +40,20 @@ Year   Principal milestone
 
 -------------------------------------------------------------
 
-The technical approach in Celeritas is to develop new code based on the experiences
-and lessons learned from Shift[^1], Geant4[^4], VecGeom[^5] and GeantV[^6] and
-leveraging and reimplementing the (physics) algorithms and processes from Geant4.
-We have demonstrated significant
-progress in this area as summarized in Johnson et al., 2021[^3], in which the
-core classes and design patterns that facilitate development of an efficient,
-GPU-enabled particle transport code for high energy physics are described.  We
-have compiled initial results from a simple but nontrivial GPU physics
-simulation incorporating Klein-Nishina scattering with secondary electron
-production that showed an "unoptimized" factor of about $160\times$
-performance improvement over a single-CPU version of the same simulation with
-identical underpinning components. Using the Celeritas architecture, we have
-independently examined a set of potential optimizations that cumulatively
-boosted the speedup to about $220\times$.
+The technical approach in Celeritas is to develop new code based on the
+experiences and lessons learned from Shift[^1], Geant4, VecGeom[^4] and GeantV
+and leveraging and reimplementing the (physics) algorithms and processes from
+Geant4.  We have demonstrated significant progress in this area as summarized
+in Johnson et al., 2021[^3], in which the core classes and design patterns
+that facilitate development of an efficient, GPU-enabled particle transport
+code for high energy physics are described.  We have compiled initial results
+from a simple but nontrivial GPU physics simulation incorporating
+Klein-Nishina scattering with secondary electron production that showed an
+"unoptimized" factor of about $160\times$ performance improvement over a
+single-CPU version of the same simulation with identical underpinning
+components. Using the Celeritas architecture, we have independently examined a
+set of potential optimizations that cumulatively boosted the speedup to about
+$220\times$.
 
 Naturally, the complexity of a complete EM physics simulation will require
 additional GPU kernels, thus the full applications is expected to to have a
@@ -77,3 +77,5 @@ pp. 236–247, Jun. 2019, doi: 10.1016/j.anucene.2019.01.012.
 [^3]: S.R. Johnson, S.C. Tognini, P. Canal, T. Evans, S.Y. Jun, G. Lima,
 A. Lund, and V.R. Pascuzzi.  "Novel features and GPU performance analysis for
 EM particle transport in the Celeritas code," vCHEP 2021, 17-21 May, 2021.
+
+[^4]: *VecGeom software project*, https://gitlab.cern.ch/VecGeom/VecGeom, 2021.
