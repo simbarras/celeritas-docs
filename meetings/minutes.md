@@ -541,3 +541,25 @@ navigator might be needed. Current errors make it impossible for us to run our
 demo app. Philippe could not join us today, so a new strategy will be discussed
 in a future team meeting.
 - No updates from DOE yet regarding our new funding request.
+
+
+# Fri Oct 8, 2021
+
+- Reconvened after a long strategy meeting hiatus to discuss a few important
+updates on our long term plans.
+- In this upcoming year, we should have an answer on a new SciDAC-5 partnership
+call.
+- ORNL has set up a pre-call preparation session now in Oct 22. 
+- Tom expects FOA to happen in November. Usually they are due about 3 months
+after, thus we might expect the deadline to be around Feb/Mar. We will set up
+another meeting to discuss the proposal write up.
+- Big goals for the next FY (also outlined on GitHub):
+  - **Y2Q1**: fully validated and operational standalone application, providing
+  useful statistics and analysis.
+  - **Y2Q2**: work on last bits of EM physics, including multiple scattering,
+  multiple elements per material and magnetic field.
+  - **Y2Q3**: Explore non-Nvidia hardware (including HIP for Frontier).
+  - **Y2Q4**: Components needed for integration with experimental workflows,
+  such as CMS. That will include scoring data in sensitive detectors and dealing
+  with hit output for digitization. We will need to get in touch with CMS
+  members and work closely with them to be able to perform a test run.
