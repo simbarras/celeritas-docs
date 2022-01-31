@@ -9,22 +9,18 @@
 
 Within the next decade, experimental HEP will enter a new era of scientific
 discovery through a set of targeted programs recommended by the Particle
-Physics Project Prioritization Panel (P5). The two main ones are the upcoming
-High Luminosity LHC (HL-LHC), including the upgrade of its four main
-experiments, along with the Deep Underground Neutrino Experiment (DUNE). These
-two efforts will require an unprecedented amount of computational capacity and
-face complex challenges in every computational front, demanding advancements in
-signal processing, data management, Monte Carlo (MC), reconstruction, and
-analysis techniques. In order to alleviate one of the impending computational
-bottlenecks that both the Energy and Intensity Frontiers are expected to face,
-we present _Celeritas_, an Exascale MC particle transport code.
-_Celeritas_ is designed to leverage the vast computing power of DOE's
-Leadership Computing Facilities (LCFs) while maintaining similar physics
-capabilities currently available in Geant4.
-As it targets scalability and compatibility with the
-different heterogeneous architectures that will form the network of LCFs over
-the next decade, it is not expected to replace Geant4, but will serve as a
-highly specialized MC extension that will be orders of magnitude faster when
-run on LCFs. This paper presents the planned roadmap for _Celeritas_,
+Physics Project Prioritization Panel (P5), including the upcoming
+High Luminosity LHC (HL-LHC) upgrade and the Deep Underground Neutrino
+Experiment (DUNE). These efforts in the
+Energy and Intensity Frontiers will require an unprecedented amount of
+computational capacity on
+many fronts including Monte Carlo (MC) detector simulation.
+In order to alleviate this impending computational
+bottleneck, the _Celeritas_ MC particle transport code uses the new generation
+of heterogeneous computer architectures, including the exascale
+computing power of DOE's
+Leadership Computing Facilities (LCFs), to model targeted HEP detector
+problems at the full fidelity of Geant4.
+This paper presents the planned roadmap for _Celeritas_,
 including its proposed code architecture, physics capabilities, and strategies
-for integrating it on existing and future experimental HEP computing workflows.
+for integrating it with existing and future experimental HEP computing workflows.
