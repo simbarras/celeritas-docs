@@ -1,7 +1,7 @@
 # Celeritas---a GPU detector simulation code
 
 - T.M. Evans, S.R. Johnson, S.C. Tognini (ORNL)
-- P. Romano, A. Lund (ANL)
+- P.K. Romano, A.L. Lund (ANL)
 - P. Canal, S.Y. Jun, G. Lima, V.D. Elvira, K.L. Genser (FNAL)
 - V.R. Pascuzzi (BNL)
 
@@ -16,8 +16,8 @@ Energy and Intensity Frontiers will require an unprecedented amount of
 computational capacity on
 many fronts including Monte Carlo (MC) detector simulation.
 In order to alleviate this impending computational
-bottleneck, the _Celeritas_ MC particle transport code uses the new generation
-of heterogeneous computer architectures, including the exascale
+bottleneck, the _Celeritas_ MC particle transport code is designed to leverage
+the new generation of heterogeneous computer architectures, including the exascale
 computing power of DOE's
 Leadership Computing Facilities (LCFs), to model targeted HEP detector
 problems at the full fidelity of Geant4.
