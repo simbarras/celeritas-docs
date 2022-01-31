@@ -10,12 +10,12 @@
 Within the next decade, experimental HEP will enter a new era of scientific
 discovery through a set of targeted programs recommended by the Particle
 Physics Project Prioritization Panel (P5). The two main ones are the upcoming
-High Limuninosity LHC (HL-LHC), including the upgrade of its four main
+High Luminosity LHC (HL-LHC), including the upgrade of its four main
 experiments, along with the Deep Underground Neutrino Experiment (DUNE). These
-two efforts will require an unprecedent amount of computational capacity and
+two efforts will require an unprecedented amount of computational capacity and
 face complex challenges in every computational front, demanding advancements in
 signal processing, data management, Monte Carlo (MC), reconstruction, and
-analysis techniques. In order to aleviate one of the impending computational
+analysis techniques. In order to alleviate one of the impending computational
 bottlenecks that both the Energy and Intensity Frontiers are expected to face,
 we present _Celeritas_, an Exascale MC particle transport code.
 _Celeritas_ is designed to leverage the vast computing power of DOE's
