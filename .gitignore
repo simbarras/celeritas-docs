@@ -26,3 +26,6 @@
 *.glo
 *.ist
 .vscode
+*.gz
+*.bcf
+*.run.xml

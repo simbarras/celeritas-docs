@@ -1,0 +1,159 @@
+%%---------------------------------------------------------------------------%%
+%% wp.tex - Snowmass21 white paper
+%% Based on the Snowmmass template: https://snowmass21.org/submissions/start  
+%%---------------------------------------------------------------------------%%
+\documentclass[11pt]{article}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{authblk}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[
+  sorting=none,%
+  citestyle=numeric-comp,%
+  bibstyle=ieee,%
+  minbibnames=6,%
+  maxbibnames=6,%
+  maxcitenames=2,%
+  mincitenames=1,%
+  backend=biber,%
+  isbn=false,%
+  autolang=none,%
+  bibencoding=auto]{biblatex}
+
+\usepackage[
+  shortcuts,%
+  acronym,%
+  nonumberlist,%
+  nogroupskip,%
+  nopostdot]{glossaries}
+
+%%---------------------------------------------------------------------------%%
+% Acronyms and macros
+\newcommand\celeritas{\emph{Celeritas}}
+\newcommand\registered{\textsuperscript{\textregistered}}
+\input{references/acronyms.tex}
+
+% From template. Probably will be deleted
+% \input{references/workshopsymbols.tex}
+ 
+%%---------------------------------------------------------------------------%%
+% Preprint number (top right corner)
+\newcommand\pubnumber{CompF2 -- Beam and Detector Simulation}
+\newcommand\pubdate{\today}
+
+\fancypagestyle{plain}{%
+   \fancyhead[R]{
+       \pubnumber\\
+       \pubdate
+    }
+   \renewcommand{\headrulewidth}{0pt}
+}
+
+%%---------------------------------------------------------------------------%%
+% Title and authors
+\title{\celeritas: GPU-accelerated particle transport for detector simulation in High Energy Physics experiments}
+\date{}
+
+\author[1]{T.M.~Evans
+  \footnote{Corresponding author,
+  \href{mailto:evanstm@ornl.gov}{evanstm@ornl.gov}}}
+\author[1]{S.R.~Johnson}
+\author[1]{S.C.~Tognini}
+\author[2]{A.L.~Lund}
+\author[2]{P.K.~Romano}
+\author[3]{P.~Canal}
+\author[3]{S.Y.~Jun}
+\author[3]{G.~Lima}
+\author[3]{V.D.~Elvira}
+\author[3]{K.L.~Genser}
+\author[4]{V.R.~Pascuzzi}
+
+\affil[1]{Oak Ridge National Laboratory, Oak Ridge, TN, 37831, USA}
+\affil[2]{Argonne National Laboratory, Lemont, IL 60439, USA}
+\affil[3]{Fermi National Accelerator Laboratory, Batavia, IL 60510, USA}
+\affil[4]{Brookhaven National Laboratory, Upton, NY 11973, USA}
+
+%%---------------------------------------------------------------------------%%
+% Abstract block definition
+\newenvironment{Abstract}{
+    \begin{quotation}
+        \begin{center}
+            ABSTRACT
+        \end{center}
+        \bigskip
+    \end{quotation}
+}
+
+%%---------------------------------------------------------------------------%%
+% Snowmass block definition
+\newcommand\snowmass{
+    \begin{center}
+        \rule[-0.2in]{\hsize}{0.01in}\\
+        \rule{\hsize}{0.01in}\\
+        \vskip 0.1in Submitted to the Proceedings of the US Community Study\\ 
+        on the Future of Particle Physics (Snowmass 2021)\\ 
+        \rule{\hsize}{0.01in}\\
+        \rule[+0.2in]{\hsize}{0.01in}
+    \end{center}
+}
+
+%%---------------------------------------------------------------------------%%
+% Acknowledgements section definition
+\def\Acknowledgements{
+    \bigskip\bigskip
+    \begin{center}
+        \begin{large}
+            \bf ACKNOWLEDGEMENTS 
+        \end{large}
+    \end{center}
+}
+
+%%---------------------------------------------------------------------------%%
+\begin{document}
+\maketitle
+
+% Abstract
+\begin{Abstract}
+\noindent
+Within the next decade, experimental \ac{hep} will enter a new era of scientific
+discovery through a set of targeted programs recommended by the \ac{p5},
+including the upcoming High Luminosity \ac{lhc} \acs{hllhc} upgrade and the
+\ac{dune}. These efforts in the Energy and Intensity Frontiers will require an
+unprecedented amount of computational capacity on many fronts including \ac{mc}
+detector simulation. In order to alleviate this impending computational
+bottleneck, the \celeritas \ac{mc}  particle transport code is designed to
+leverage the new generation of heterogeneous computer architectures, including
+the exascale computing power of \ac{doe} \acp{lcf}, to model targeted \ac{hep}
+detector problems at the full fidelity of Geant4. This paper presents the
+planned roadmap for \celeritas, including its proposed code architecture,
+physics capabilities, and strategies for integrating it with existing and future
+experimental \ac{hep} computing workflows.
+\end{Abstract}
+
+% Snowmass block
+\snowmass
+
+% From template
+\def\thefootnote{\fnsymbol{footnote}}
+\setcounter{footnote}{0}
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+\section{Introduction}
+\section{Code architecture}
+\section{Physics}
+\section{Geometry}
+\section{Integration with \ac{hep} workflows}
+\section{Preliminary results}
+\section{Impact and future work}
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+% Acknowledgements
+\Acknowledgements
+We acknowledge.
+
+% Biblography
+% \bibliographystyle{JHEP}
+% \bibliography{references.bib}
+
+%%---------------------------------------------------------------------------%%
+\end{document}
