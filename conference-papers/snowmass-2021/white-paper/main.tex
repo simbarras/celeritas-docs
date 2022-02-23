@@ -1,25 +1,28 @@
 %%---------------------------------------------------------------------------%%
-%% wp.tex - Snowmass21 white paper
-%% Based on the Snowmmass template: https://snowmass21.org/submissions/start  
+%% main.tex - Snowmass21 white paper
+%% Based on the Snowmass template: https://snowmass21.org/submissions/start  
 %%---------------------------------------------------------------------------%%
 \documentclass[11pt]{article}
 \usepackage[margin=1.25in]{geometry}
 \usepackage{authblk}
 \usepackage{fancyhdr}
+\usepackage{xspace}
 \usepackage{hyperref}
-\usepackage[
-  sorting=none,%
-  citestyle=numeric-comp,%
-  bibstyle=ieee,%
-  minbibnames=6,%
-  maxbibnames=6,%
-  maxcitenames=2,%
-  mincitenames=1,%
-  backend=biber,%
-  isbn=false,%
-  autolang=none,%
-  bibencoding=auto]{biblatex}
-
+\usepackage{color}
+\usepackage{multirow}
+\usepackage{authblk}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{pdfpages}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{enumitem}
+\usepackage{microtype}
 \usepackage[
   shortcuts,%
   acronym,%
@@ -27,26 +30,51 @@
   nogroupskip,%
   nopostdot]{glossaries}
 
+\usepackage[
+  detect-none,%
+  binary-units]{siunitx}[=v2]
+
+\usepackage[
+  sorting=none,%
+  citestyle=numeric-comp,%
+  bibstyle=ieee,%
+  minbibnames=2,%
+  maxbibnames=2,%
+  maxcitenames=2,%
+  mincitenames=1,%
+  backend=biber,%
+  isbn=false,%
+  autolang=none,%
+  bibencoding=auto]{biblatex}
+
 %%---------------------------------------------------------------------------%%
-% Acronyms and macros
-\newcommand\celeritas{\emph{Celeritas}}
-\newcommand\registered{\textsuperscript{\textregistered}}
+% Environments, macros, acronyms, and references
+\input{references/common.tex}
+
+% Acronyms
+\setacronymstyle{long-short}
 \input{references/acronyms.tex}
 
-% From template. Probably will be deleted
+% .bib file
+\addbibresource{references/references.bib}
+
+% From the template. Probably will be deleted
 % \input{references/workshopsymbols.tex}
  
 %%---------------------------------------------------------------------------%%
 % Preprint number (top right corner)
-\newcommand\pubnumber{CompF2 -- Beam and Detector Simulation}
+\newcommand\pubnumber{arXiv:1234.5678}
+\newcommand\snowmassgroup{CompF2 -- Beam and Detector Simulation}
 \newcommand\pubdate{\today}
 
 \fancypagestyle{plain}{%
-   \fancyhead[R]{
-       \pubnumber\\
+   \fancyhead[L]{
+       \pubnumber
+       \hfill
+       \snowmassgroup
+       \hfill
        \pubdate
     }
-   \renewcommand{\headrulewidth}{0pt}
 }
 
 %%---------------------------------------------------------------------------%%
@@ -74,45 +102,9 @@
 \affil[4]{Brookhaven National Laboratory, Upton, NY 11973, USA}
 
 %%---------------------------------------------------------------------------%%
-% Abstract block definition
-\newenvironment{Abstract}{
-    \begin{quotation}
-        \begin{center}
-            ABSTRACT
-        \end{center}
-        \bigskip
-    \end{quotation}
-}
-
-%%---------------------------------------------------------------------------%%
-% Snowmass block definition
-\newcommand\snowmass{
-    \begin{center}
-        \rule[-0.2in]{\hsize}{0.01in}\\
-        \rule{\hsize}{0.01in}\\
-        \vskip 0.1in Submitted to the Proceedings of the US Community Study\\ 
-        on the Future of Particle Physics (Snowmass 2021)\\ 
-        \rule{\hsize}{0.01in}\\
-        \rule[+0.2in]{\hsize}{0.01in}
-    \end{center}
-}
-
-%%---------------------------------------------------------------------------%%
-% Acknowledgements section definition
-\def\Acknowledgements{
-    \bigskip\bigskip
-    \begin{center}
-        \begin{large}
-            \bf ACKNOWLEDGEMENTS 
-        \end{large}
-    \end{center}
-}
-
-%%---------------------------------------------------------------------------%%
 \begin{document}
 \maketitle
 
-% Abstract
 \begin{Abstract}
 \noindent
 Within the next decade, experimental \ac{hep} will enter a new era of scientific
@@ -133,27 +125,32 @@ experimental \ac{hep} computing workflows.
 % Snowmass block
 \snowmass
 
-% From template
+% Summary
+\tableofcontents
+
+% From the template
 \def\thefootnote{\fnsymbol{footnote}}
 \setcounter{footnote}{0}
 
 %% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
-\section{Introduction}
-\section{Code architecture}
-\section{Physics}
-\section{Geometry}
-\section{Integration with \ac{hep} workflows}
-\section{Preliminary results}
-\section{Impact and future work}
+\input{sections/introduction.tex}
+\input{sections/code-architecture.tex}
+\input{sections/physics.tex}
+\input{sections/geometry.tex}
+\input{sections/integration.tex}
+\input{sections/results.tex}
+\input{sections/future-work.tex}
 
-%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
-% Acknowledgements
 \Acknowledgements
 We acknowledge.
 
-% Biblography
-% \bibliographystyle{JHEP}
-% \bibliography{references.bib}
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+% Bibliography
+\printbibliography
+
+% From the template
+%\bibliographystyle{JHEP}
+%\bibliography{references/references.bib}
 
 %%---------------------------------------------------------------------------%%
 \end{document}

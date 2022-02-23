@@ -1,0 +1,145 @@
+%%---------------------------------------------------------------------------%%
+% introduction.tex
+%%---------------------------------------------------------------------------%%
+\section{Introduction}
+
+\ac{hep} is entering an exciting era for potential scientific discovery. A
+targeted program, as recommended by the \ac{p5} report
+\cite{ritz_building_2014}, addresses the main science drivers in all three
+\ac{doe} \ac{hep} Frontiers: Energy, Intensity, and Cosmic. Two of these
+flagship projects are the upcoming high luminosity upgrade of the \acl{lhc}
+(\acs{hllhc}) and its four main detectors, and \ac{dune} at the \ac{surf}
+and \ac{fnal}. These detectors will achieve a much higher granularity while also
+being exposed to higher readout rates than previous experiments, leading to an
+increase in data volume and complexity by orders of magnitude. As a consequence,
+there are challenges on both online and offline computing infrastructures that
+need to be overcome in order to store, process, and analyse this data.
+
+Precision measurements and new physics discoveries rely heavily on comparisons
+between recorded data and highly detailed \ac{mc} simulations. The required
+quantity of simulated \ac{mc} data can be ten times greater than the
+experimental data to reduce the influence of statistical effects and to study
+the detector response over a very large phase space of new phenomena.
+Additionally, the increased complexity, granularity, and readout rate of the
+detectors require the most accurate, and thus most compute intensive, physics
+models available. Therefore, these new facilities will require a commensurate
+increase in computational capacity for the \ac{mc} detector simulations
+necessary to extract new physics. However, projections of the computing capacity
+available in the coming decade fall far short of the estimated capacity needed
+to fully analyze the data from the \acs{hllhc}
+\cite{the_atlas_collaboration_atlas_2020,cms-offline-computing-results}. The
+contribution to this estimate from \ac{mc} full detector simulation is based on
+the performance of the current state-of-the-art and \acs{lhc} baseline \ac{mc}
+application Geant4 \cite{geant4_status_2016}, a threaded \acs{cpu}-only code
+whose performance has stagnated with the deceleration of clock rates and core
+counts in conventional processors. Overcoming this bottleneck by improving the
+performance of Geant4 or replacing components of its simulation with
+lower-fidelity ``fast'' models, such as FastCaloSim \cite{fastcalosim}, or
+\ac{ai}-based methods such as FastCaloGAN \cite{fastcalogan}, is seen as a
+critical pathway to fulfilling the computational requirements of the \acs{hllhc}
+\cite{the_hep_software_foundation_roadmap_2019}.
+
+Instead of relying on fast models to replace full-fidelity \ac{mc} transport, we
+propose to break through the computational bottleneck with \celeritas
+\cite{johnson_2021}, a new \ac{gpu}-optimized code to run full-fidelity \ac{mc}
+simulations of \acs{hep} detectors. General-purpose compute accelerators offer
+far higher performance per watt than \acp{cpu}.  \acp{gpu} are the most common
+such devices and have become commodity hardware at the \ac{doe} \acp{lcf} and
+other institutional-scale computing clusters. Of the top 10 performing
+supercomputers in the current TOP500 list \cite{top500}, all are based on
+accelerators and seven use \nvidia \acp{gpu}. However, adapting scientific codes
+to run effectively on \ac{gpu} hardware is nontrivial and indeed has been the
+goal of the multi-billion-dollar \ac{doe} \ac{ecp} \cite{ecp2019}. The
+difficulty in adaptation results both from core algorithmic properties of the
+physics and from implementation choices over the history of an existing
+scientific code. The high sensitivity of \acp{gpu} to memory access patterns,
+thread divergence, and device occupancy makes effective adaptation of \ac{mc}
+physics algorithms especially challenging. Existing \ac{cpu} physics codes such
+as Geant4 are impossible to port directly to vendor-independent \ac{gpu}
+programming models due to common \Cpp language idioms such as polymorphic
+inheritance and dynamic memory allocation.
+
+A successful example of this approach is provided by the
+\ac{doe}'s \ac{ecp}. During the course of the \ac{ecp} (2016--2023), 24 open
+science applications have been ported and optimized for deployment on \ac{doe}
+\acp{lcf} with the requirement that each meet specific performance metrics.  In
+all cases \cite{evans_survey_2021}, this effort required substantial code
+redesign involving both algorithms and data management in order to achieve
+performance on the \ac{gpu}-based architectures that constitute the next
+generation of exascale computing resources at the \acp{lcf}. For most
+applications, this resulted in complete rewrites of the core solvers.
+
+In this paper we present a roadmap for \celeritas. We describe the code
+architecture features, the physics and geometry implementation, and our plan to
+integrate \celeritas and \ac{doe} \acp{lcf} in current and future \ac{hep}
+workflows. Our primary goal is to provide a tool for efficiently using all
+available resources in \ac{hep} computing facilities by at least partially
+offloading \ac{mc} production, which is one of the most intensive computing
+tasks in an experiment, to the network of \acp{lcf}. Although it primarily aims
+to reduce the computational demand of the \acs{hllhc}, we also envision
+\celeritas being applied to the Intensity Frontier on \ac{dune}, maximizing the
+use of advanced architectures that will form the backbone of \ac{hpc} over the
+next decade.
+
+\subsection{Monte Carlo Physics on \acsp{gpu}}
+
+The first \ac{hep} \ac{mc} effort to exploit data-level parallelism, the
+\emph{GeantV} project, targeted \ac{cpu} vector processing units as an untapped
+source of computing power in deployed systems. While it demonstrated that
+improving data and code locality could substantially speed up the simulation
+software \cite{GeantV_Results_2020}, it also
+showed that simple vectorization is insufficient to achieve the concurrency
+needed for transformative performance gains. Modern \acp{gpu} offer significantly
+more opportunities for parallelism than \ac{cpu} vector processing units and
+have a more flexible programming paradigm that will allow performance
+improvements well beyond the results seen in \emph{GeantV}.
+
+Recent work in the \emph{ExaSMR: Coupled Monte Carlo Neutronics and Fluid Flow
+Simulation of Small Modular Reactors} project within \ac{ecp} has demonstrated
+speedups of $160\times$ per \ac{cpu} core on Summit for the Shift \ac{mc}
+transport code on full-featured, three-dimensional reactor models
+\cite{hamilton_continuous-energy_2019}. However, there are important differences
+between that work and the necessary capabilities required for particle physics
+detector modeling. \emph{ExaSMR} applications are not characterized by large
+showers of secondary particles, and because the particles are neutral, there are
+no \ac{em} field interactions.
+
+A recently developed \ac{gpu} code in the \ac{hep} \ac{mc} space, Opticks,
+leverages the \nvidia ray tracing library OptiX to simulate photon
+interactions in liquid argon detectors \cite{blyth_opticks_2019}. The extremely
+high (tens of millions) number of photons in flight created by a single detector
+interaction and relatively simple physics makes this problem an ideal candidate
+for \ac{gpu} acceleration, and indeed the code provides a speedup in the factor
+of hundreds compared to transporting the emitted photons through Geant4. While
+Opticks was designed to take advantage of unique architectural features
+available on \nvidia, the problem being solved there is highly specialized.  The
+requirements for tracking multiple particle types through complex geometries in
+the presence of external magnetic fields is not well suited to the ray-tracing
+approach used in Opticks.  Supporting Energy and Intensity Frontier experiments
+in \ac{hep} requires a broader set of physics and capabilities.
+
+Shortly after the start of preliminary work on \celeritas, \acs{cern} launched a
+new effort, \acs{adept}, to evaluate the performance potential of \ac{em}
+shower simulation on \acp{gpu} \cite{andrei_gheata_adept_2020}. That project
+relies heavily on annotating data structures and algorithms from Geant4, and
+initial test problem results \cite{andrei_gheata_adept_2021,hahnfield_2021} have
+demonstrated performance parity between a 24-core Geant4 simulation and a
+single-\ac{gpu} \acs{adept} simulation. Both \acs{adept} and \celeritas leverage
+the \acs{vecgeom} geometry navigation library, a product of the \emph{GeantV}
+project designed for \ac{cpu} vectorization that has since been extended to
+\ac{gpu} multithreading using \cuda \cite{apostolakis_towards_2015}.
+
+The proposed approach in \celeritas differs substantially from \emph{GeantV} and
+\acs{adept}. Whereas \acs{adept} is seeking to implement \ac{gpu} capability in
+Geant4 through minimal algorithmic and data refactoring, the \celeritas code
+architecture is designed from the outset to support algorithms and data layouts
+that are
+optimized for the unique requirements of \ac{gpu} architectures.
+The \ac{mc} particle transport method is characterized by high thread
+divergence, random data access patterns, high code complexity to sample physics
+interactions, and relatively low arithmetic intensity.  Achieving high kernel
+occupancy to manage memory latency on \acp{gpu} requires strategies that yield
+local memory collocation and optimal kernel register usage
+\cite{hamilton_continuous-energy_2019}.  These features are
+difficult or impossible to achieve simply by modifying code designed
+for cache-based architectures.
