@@ -3,18 +3,25 @@
 %%---------------------------------------------------------------------------%%
 \section{Integration with \ac{hep} workflows}
 
-To be successfully adopted by the \ac{hep} community, \celeritas must be
-integrated into established experimental detector simulation workflows and must
-provide new workflows incorporating \ac{doe}'s \acp{lcf}. In
-Fig.~\ref{fig:celeritas-hep-workflows} we present three interfaces that will
-enable \celeritas:
+\celcomment{SCT: not happy about this paragraph yet}
+
+\ac{doe} \acp{lcf} are planned to be part of \ac{hep} workflows by the
+scientific community, with their use ranging from simulation and reconstruction
+to \ac{ai} methods \cite{hep-network-requirements}. While the Cosmic Frontier is
+already taking advantage of facilities such as \ac{alcf}, \ac{nersc}, and
+\ac{olcf}, the Energy and Intensity Frontiers have less clear integrations, as
+the vast majority of tools in these workflows are \ac{cpu}-based. In this
+scenario, \celeritas aims close the gap between \ac{hep} distributed computing
+networks and \acp{lcf} networks by providing three different routes
+(Fig.~\ref{fig:celeritas-hep-workflows}). These workflows  will enable
+\celeritas:
 %%
 \begin{enumerate}[itemsep=0pt, label=(\alph*)]
   \item to accelerate standard \ac{hep} detector simulation workflows built on
     Geant4 by offloading \ac{em} particle showers to \acp{gpu} using a new
-    \acceleritas library described below (\S~\ref{sec:acceleritas}),
+    \acceleritas library (\S~\ref{sec:acceleritas});
   \item to run complete end-to-end detector simulations with comprehensive
-    \ac{sm} physics at the \acp{lcf} (\S~\ref{sec:end-to-end}), and
+    \ac{sm} physics at the \acp{lcf} (\S~\ref{sec:end-to-end}); and
   \item to generate high-resolution detector responses as training data for
     \ac{ai} networks to be deployed at experimental facilities as software
     triggers and surrogate models (\S~\ref{sec:celeritas-ai}).
@@ -42,4 +49,32 @@ enable \celeritas:
 \label{sec:celeritas-ai}
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
-\subsection{Integration of \acp{lcf} with \ac{hep} computing networks}
+\subsection{Integration challenges}
+
+The heterogeneity of \ac{hep} computing workflows, associated with the volume of
+data produced by each experiment, pose a long list of challenges that need to be
+overcome in order to make \celeritas a viable option. We outline here the most pressing ones, along with mitigation plans. 
+%%
+\begin{enumerate}[itemsep=0pt]
+  \item Simulation inputs must be flexible enough to encompass Energy and
+    Intensity Frontier needs. This includes user-defined geometry, physics,
+    events, secondary particle cutoff thresholds, and sensitive detector scoring
+    regions.
+  \item Output data, which entails \ac{mc} particle history and detector
+    scoring, should be flexible enough to make it compatible to experimental
+    workflows, while maximizing \ac{io} efficiency.
+  \item End-user interface must be seamless enough such that the balance between
+    performance gain and the work needed to adapt experimental computing
+    workflows justify the adoption.
+  \item Domestic and international networking between \acp{lcf} and \ac{hep}
+    computing centers can lead to large data migration which can result in
+    network congestions and suboptimal resource usage.  The \ac{lhc}'s ``any
+    data, anywhere, anytime'' model \cite{hep-network-requirements} might need
+    special attention.
+\end{enumerate}
+
+These main challenges, among other topics, will be discussed and addressed via a
+\celeritas \emph{User Council}. This council will be formed by members of
+different \ac{hep} experiments on both Energy and Intensity Frontiers and will
+advise the \celeritas team, so that the code develops focusing on experimental
+compatibility.

@@ -1,0 +1,34 @@
+%%---------------------------------------------------------------------------%%
+% conclusion.tex
+%%---------------------------------------------------------------------------%%
+\section{Conclusion}
+
+We have presented \celeritas, a project designed to provide high-fidelity
+\ac{mc} detector simulation transport capabilities on current and next-gen
+\ac{gpu} architectures. Over the next years, comprehensive \ac{sm} physics
+including \ac{em}, hadronic, and decay physics, along with \ac{em} fields will
+be implemented. After completion of a fully fledged \ac{io} system, including
+its integration with ROOT, \celeritas will become a viable option to alleviate
+the impending \ac{mc} computing requirements of the next generation of \ac{hep}
+experiments. With current preliminary results showing two orders of magnitude
+speedups compared to single threaded Geant4 executions, \celeritas will bring
+the tremendous computing power provided by the \ac{doe} \acp{lcf} into \ac{hep}
+workflows.
+
+The enabling technologies that will allow interfacing between end-to-end
+simulations performed at the \acp{lcf} and experimental computing centers will
+yield other long-term benefits for interactions between the \ac{doe} \acp{lcf}
+and experimental compute nodes. The planned \ac{io} capabilities that need to be
+developed for \celeritas will provide full interoperability between data
+produced at the \acp{lcf} and ROOT, which might be benefical for other \ac{hep}
+code bases.
+
+The \celeritas project foreshadows proposed efforts in federated computing, in
+which the \acp{lcf} interact directly with compute nodes at experimental
+facilities to provide optimal use of compute resources.  In this case, we
+envision a scenario where expensive \ac{mc} simulations are performed at the
+\acp{lcf} and simulation output is communicated directly to experimental
+\ac{hep} distributed computing networks for reconstruction and analysis.  The
+successful execution of this project can therefore be the genesis for a host of
+technological advancements in the use of \ac{hpc} to enable more science output
+in all three \ac{doe} \ac{hep} frontiers.

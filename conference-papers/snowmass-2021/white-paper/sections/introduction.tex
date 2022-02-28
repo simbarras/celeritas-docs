@@ -41,11 +41,11 @@ critical pathway to fulfilling the computational requirements of the \acs{hllhc}
 
 Instead of relying on fast models to replace full-fidelity \ac{mc} transport, we
 propose to break through the computational bottleneck with \celeritas
-\cite{johnson_2021}, a new \ac{gpu}-optimized code to run full-fidelity \ac{mc}
-simulations of \acs{hep} detectors. General-purpose compute accelerators offer
-far higher performance per watt than \acp{cpu}.  \acp{gpu} are the most common
-such devices and have become commodity hardware at the \ac{doe} \acp{lcf} and
-other institutional-scale computing clusters. Of the top 10 performing
+\cite{github-celeritas}, a new \ac{gpu}-optimized code to run full-fidelity
+\ac{mc} simulations of \acs{hep} detectors. General-purpose compute accelerators
+offer far higher performance per watt than \acp{cpu}.  \acp{gpu} are the most
+common such devices and have become commodity hardware at the \ac{doe} \acp{lcf}
+and other institutional-scale computing clusters. Of the top 10 performing
 supercomputers in the current TOP500 list \cite{top500}, all are based on
 accelerators and seven use \nvidia \acp{gpu}. However, adapting scientific codes
 to run effectively on \ac{gpu} hardware is nontrivial and indeed has been the
@@ -57,7 +57,8 @@ thread divergence, and device occupancy makes effective adaptation of \ac{mc}
 physics algorithms especially challenging. Existing \ac{cpu} physics codes such
 as Geant4 are impossible to port directly to vendor-independent \ac{gpu}
 programming models due to common \Cpp language idioms such as polymorphic
-inheritance and dynamic memory allocation.
+inheritance and dynamic memory allocation. Therefore, instead of porting
+existing codes, \celeritas is being developed from the outset.
 
 A successful example of this approach is provided by the \ac{doe}'s \ac{ecp}.
 During the course of the \ac{ecp} (2016--2023), 24 open science applications
@@ -82,7 +83,7 @@ use of advanced architectures that will form the backbone of \ac{hpc} over the
 next decade.
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
-\subsection{Monte Carlo Physics on \acsp{gpu}}
+\subsection{\ac{mc} simulation on \acsp{gpu}}
 
 The first \ac{hep} \ac{mc} effort to exploit data-level parallelism, the
 \emph{GeantV} project, targeted \ac{cpu} vector processing units as an untapped
