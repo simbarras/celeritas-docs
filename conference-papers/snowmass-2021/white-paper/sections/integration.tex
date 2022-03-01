@@ -3,29 +3,14 @@
 %%---------------------------------------------------------------------------%%
 \section{Integration with \ac{hep} workflows}
 
-\celcomment{SCT: not happy about this paragraph yet}
-
 \ac{doe} \acp{lcf} are planned to be part of \ac{hep} workflows by the
 scientific community, with their use ranging from simulation and reconstruction
 to \ac{ai} methods \cite{hep-network-requirements}. While the Cosmic Frontier is
 already taking advantage of facilities such as \ac{alcf}, \ac{nersc}, and
-\ac{olcf}, the Energy and Intensity Frontiers have less clear integrations, as
-the vast majority of tools in these workflows are \ac{cpu}-based. In this
-scenario, \celeritas aims close the gap between \ac{hep} distributed computing
+\ac{olcf}, the Energy and Intensity Frontiers have less clear integrations
+pathways. \celeritas aims close the gap between \ac{hep} distributed computing
 networks and \acp{lcf} networks by providing three different routes
-(Fig.~\ref{fig:celeritas-hep-workflows}). These workflows  will enable
-\celeritas:
-%%
-\begin{enumerate}[itemsep=0pt, label=(\alph*)]
-  \item to accelerate standard \ac{hep} detector simulation workflows built on
-    Geant4 by offloading \ac{em} particle showers to \acp{gpu} using a new
-    \acceleritas library (\S~\ref{sec:acceleritas});
-  \item to run complete end-to-end detector simulations with comprehensive
-    \ac{sm} physics at the \acp{lcf} (\S~\ref{sec:end-to-end}); and
-  \item to generate high-resolution detector responses as training data for
-    \ac{ai} networks to be deployed at experimental facilities as software
-    triggers and surrogate models (\S~\ref{sec:celeritas-ai}).
-\end{enumerate}
+(Fig.~\ref{fig:celeritas-hep-workflows}).
 %%
 \begin{figure}
     \centering
@@ -35,18 +20,22 @@ networks and \acp{lcf} networks by providing three different routes
     \label{fig:celeritas-hep-workflows}
 \end{figure}
 %%
-
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
-\subsection{Acceleritas}
-\label{sec:acceleritas}
-
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
-\subsection{End-to-end \celeritas}
-\label{sec:end-to-end}
-
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
-\subsection{\celeritas for \ac{ai}}
-\label{sec:celeritas-ai}
+Our three proposed workflows will enable \celeritas to:
+%%
+\begin{enumerate}[itemsep=0pt, label=(\alph*)]
+  \item accelerate standard \ac{hep} detector simulation workflows built on
+    Geant4 by offloading \ac{em} particle showers to \acp{gpu} using a new
+    \acceleritas library (\S~\ref{sec:acceleritas});
+  \item run complete end-to-end detector simulations with comprehensive \ac{sm}
+    physics at the \acp{lcf} (\S~\ref{sec:end-to-end}); and
+  \item generate high-resolution detector responses as training data for \ac{ai}
+    networks to be deployed at experimental facilities as software triggers and
+    surrogate models (\S~\ref{sec:celeritas-ai}).
+\end{enumerate}
+%%
+The next sections will discuss expected challenges and mitigation strategies,
+and describe these three envisioned plans to integrate \celeritas into
+experimental workflows.
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{Integration challenges}
@@ -63,9 +52,9 @@ overcome in order to make \celeritas a viable option. We outline here the most p
   \item Output data, which entails \ac{mc} particle history and detector
     scoring, should be flexible enough to make it compatible to experimental
     workflows, while maximizing \ac{io} efficiency.
-  \item End-user interface must be seamless enough such that the balance between
-    performance gain and the work needed to adapt experimental computing
-    workflows justify the adoption.
+  \item End-user interface must be simple enough such that the performance gain
+    and the work needed to adapt experimental computing workflows justify the
+    adoption.
   \item Domestic and international networking between \acp{lcf} and \ac{hep}
     computing centers can lead to large data migration which can result in
     network congestions and suboptimal resource usage.  The \ac{lhc}'s ``any
@@ -74,7 +63,47 @@ overcome in order to make \celeritas a viable option. We outline here the most p
 \end{enumerate}
 
 These main challenges, among other topics, will be discussed and addressed via a
-\celeritas \emph{User Council}. This council will be formed by members of
-different \ac{hep} experiments on both Energy and Intensity Frontiers and will
-advise the \celeritas team, so that the code develops focusing on experimental
-compatibility.
+\celeritas \emph{User Council}, which will be formed by members of different
+\ac{hep} experiments on both Energy and Intensity Frontiers. The incorporation
+\celeritas workflows into existing experimental simulation frameworks will
+require early engagement with the experiments. Thus, interactions with the
+\emph{User Council} will determine the tradeoffs of applying \celeritas and
+\acp{lcf} to their \ac{mc} production, as well as advise the \celeritas team
+when developing end-user interfaces, such that the code develops focusing on
+experimental compatibility.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
+\subsection{Acceleritas}
+\label{sec:acceleritas}
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
+\subsection{End-to-end \celeritas}
+\label{sec:end-to-end}
+
+\emph{End-to-end} \celeritas integration requires a mature \celeritas code,
+which will rely on the implementation of comprehensive \ac{sm} physics
+capabilities along with a fully operational \ac{io} system, including the
+possibility to run digitization still at the \acp{lcf}. This incorporation of
+\celeritas workflows into existing experimental simulation frameworks will
+require early engagement with experiments, and thus depends on a successful
+creation and interaction between the \celeritas team with members of the
+\emph{User Council}.
+
+An experimental workflow characteristic that will have to be assessed is related
+to how event-processing systems are handled on \ac{cpu} and \ac{gpu}. The most
+efficient interface would fully occupy the device by executing many events
+concurrently.  However, this is not the way that experimental workflows are
+currently configured, in which events are executed independently on each thread.
+A more seamless integration of the end-to-end workflow would be to preserve
+independent event execution.  However, this will have a dramatic effect on the
+achievable performance because the \ac{gpu} will have to accumulate sufficient
+tracks to fully occupy the device. The tradeoffs between performance and
+integration cost will be discussed and ultimately decided by the experimental
+collaborations.
+
+Finally, the volume of data transferred between \acp{lcf} and \ac{hep} computing
+networks is a concern that will require attention as the project evolves.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
+\subsection{\celeritas for \ac{ai}}
+\label{sec:celeritas-ai}
