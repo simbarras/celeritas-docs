@@ -9,6 +9,44 @@ paper}
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{Performance metrics}
 
+The range of detector geometry complexities, primary event types, and amount of output, there is no general case that provides a simple
+performance number such as a simulation rate in events per second. Therefore, our ultimate performance metric
+will be based on a set of real-world \acs{hep} detector workflow use cases. \celeritas must run the targeted models at the same
+fidelity as the current state of the art but in much less time. Two \acp{fom}
+will be used to measure success.
+
+On \ac{lcf} hardware for the next decade, \acp{gpu} will provide the bulk of the
+compute capability, so one critical performance metric is the ratio of the
+runtime of \celeritas using \acp{gpu} to using only the \acp{cpu} of a given
+machine. This \ac{fom} represents the ability of \celeritas to effectively use
+the hardware that is available and must be sufficiently high to justify running
+on \ac{lcf} resources. We will target a factor of
+$160\times$ for a single \ac{gpu} to a single \ac{cpu}, which is the relative
+\ac{gpu}/\ac{cpu} performance of the Shift \ac{mc} transport code \cite{hamilton_continuous-energy_2019}.
+
+A second performance metric is critical to the programmatic viability of
+\celeritas in the broader \ac{hep} community: the work done for the same amount
+of cost in power consumption and hardware, using Geant4 on \ac{cpu} as a
+baseline. This \ac{fom} is the motivation for \ac{hep} workflows to adapt to
+using \celeritas for \ac{mc} transport. The Geant4 team supposes that a factor
+of two speedup resulting from ``adiabatic improvements'' to their code is not
+outside the realm of possibility \cite{marc_verderi_geant4_2021}, so a $2
+\times$ cost improvement of \celeritas runtime over Geant4 runtime is our second
+target. Assuming that electricity consumption (and waste heat disposal) are the
+primary constraints for independent \ac{hep} computing centers, this factor
+should be evaluated by comparing the performance of Geant4 on \acp{cpu} with a
+comparable power requirement as \celeritas on \acp{gpu}. At the present time,
+for example, that comparison might be for an AMD 3rd Gen EPYC Processor power
+(\SI{280}{\watt} for 64 cores) to a PCIe \nvidia A100 (\SI{250}{\watt} for 108
+symmetric multiprocessors).
+
+Meeting these \acp{fom} with Geant4-equivalent physics capabilities and
+providing a solid user interface and \ac{io} integration to \ac{hep} workflows
+will be the ultimate confirmation that \celeritas is a viable option for
+\ac{hep} experiments. At this point \celeritas will be ideal for execution on
+\ac{doe} \acp{lcf} and will be sufficiently fast on its own merits to motivate
+independent adoption on capacity systems.
+
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{Test problem definition}
 

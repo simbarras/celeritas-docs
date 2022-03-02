@@ -28,4 +28,18 @@ many events concurrently.  However, this is not the way that experimental
 workflows are currently configured, in which events are executed independently
 on each thread.
 
-\celcomment{describe rapids io work}
+As \ac{hpc} evolved to make use of heterogeneous architectures, \ac{io} became
+one of the critical performance bottlenecks of many \ac{hpc} applications, being
+a main concern for \celeritas. \ac{hep} detector simulations produce large
+volumes of data, with many millions of particle tracks and detector scoring
+regions having to be recorded. Thus, the need to optimize the data movement
+between host and device and manage parallel \ac{io} requests is paramount.
+Furthermore, to be compatible with \ac{hep} experimental workflows, \celeritas
+needs to be integrated with ROOT. To mitigate these problems, we will cross
+collaborate with \ac{doe}'s \ac{rapids} team to make \ac{adios} the internal
+\ac{io} \ac{api} of \celeritas, as it is highly optimized for heterogeneous
+architectures. The ultimate goal is find optimal strategies to mitigate \ac{io}
+performance issues, and integrate \ac{adios} with ROOT for full interoperability
+with \ac{hep} workflows. This colaboration with \ac{rapids} will also explore
+data visualization tools and event filtering, allowing users to visualize,
+validate, and debug the generated data before launching production campaigns.
