@@ -20,17 +20,18 @@ networks and \acp{lcf} networks by providing three different routes
     \label{fig:celeritas-hep-workflows}
 \end{figure}
 %%
-Our three proposed workflows will enable \celeritas to:
+These workflows intend to enable \ac{hep} experiments to use \celeritas
+in three different ways:
 %%
 \begin{enumerate}[itemsep=0pt, label=(\alph*)]
-  \item accelerate standard \ac{hep} detector simulation workflows built on
-    Geant4 by offloading \ac{em} particle showers to \acp{gpu} using a new
-    \acceleritas library (\S~\ref{sec:acceleritas});
-  \item run complete end-to-end detector simulations with comprehensive \ac{sm}
-    physics at the \acp{lcf} (\S~\ref{sec:end-to-end}); and
-  \item generate high-resolution detector responses as training data for \ac{ai}
-    networks to be deployed at experimental facilities as software triggers and
-    surrogate models (\S~\ref{sec:celeritas-ai}).
+  \item \emph{Acceleritas}: accelerate standard \ac{hep} detector simulation
+    workflows built on Geant4 by offloading \ac{em} particle showers to
+    \acp{gpu} using a new \acceleritas library.
+  \item \emph{End-to-end}: run complete end-to-end detector simulations with
+    comprehensive \ac{sm} physics at the \acp{lcf}.
+  \item \emph{\ac{ai}}: generate high-resolution detector responses as training
+    data for \ac{ai} networks to be deployed at experimental facilities as
+    software triggers and surrogate models.
 \end{enumerate}
 %%
 The next sections will discuss expected challenges and mitigation strategies,
@@ -76,11 +77,40 @@ experimental compatibility.
 \subsection{Acceleritas}
 \label{sec:acceleritas}
 
+\acceleritas (Fig.~\ref{fig:celeritas-hep-workflows}a) is a library that will
+provide a hybrid workflow between \celeritas and Geant4. It leverages the Geant4
+tasking manager system to transfer parts of the simulation to \celeritas for
+concurrent execution on device. That will allow a Geant4-based \ac{hep} detector
+simulation to collect a subset of particles from either primary collisions or
+subsequent hadronic interactions and transport them in parallel on the device
+using \celeritas while processing the remainder on the host using Geant4.  The
+initial group of offloaded particles will be photons, electrons, and positrons,
+but selected hadronic physics will be conditionally integrated based on the
+performance of \acceleritas.
+
+The Geant4 tasking manager is responsible for handling all of the major steps in
+the process, which includes collecting the list of particles to be offloaded,
+launching the \celeritas on-device transport loop, and merging sensitive hits
+and particle track data from the device back to Geant4 on the host.
+
+Using Amdahl's law, we expect that the maximum gain of an \acceleritas
+application is $1/(1-f)$, where $f$ is the fraction of offloaded work in a
+\ac{cpu}-only calculation.  For typical \ac{hep} events at \acs{hllhc} and with
+the \ac{cms} detector geometry, the maximum speed-up will be roughly a factor 3
+for offloading photons and electrons to \acp{gpu} as their fractional \ac{cpu}
+contribution is around 70\%.
+
+These gains are nowhere near our expected goals for a full end-to-end \celeritas
+simulation, but \acceleritas will provide significant improvements while being
+the easiest path to adoption, as its deployment will require minimal adapations
+on current \ac{hep} workflows.
+
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{End-to-end \celeritas}
 \label{sec:end-to-end}
 
-\emph{End-to-end} \celeritas integration requires a mature \celeritas code,
+\emph{End-to-end} \celeritas integration
+(Fig.~\ref{fig:celeritas-hep-workflows}b) requires a mature \celeritas code,
 which will rely on the implementation of comprehensive \ac{sm} physics
 capabilities along with a fully operational \ac{io} system, including the
 possibility to run digitization still at the \acp{lcf}. This incorporation of
@@ -107,3 +137,21 @@ networks is a concern that will require attention as the project evolves.
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{\celeritas for \ac{ai}}
 \label{sec:celeritas-ai}
+
+\ac{ai} methods are now essential in experimental \ac{hep}, with efforts to
+unify standard \ac{ai} frameworks with \ac{hep} workflows \cite{mlaas4hep}. The
+use of \ac{ai} has been succesfully deployed in detector triggering
+\cite{ml-trigger}, training surrogate models \cite{fastcalogan}, hit and
+image-based reconstruction algorithms \cite{gnn-reco-cms,jets-deep-learning},
+and selection of candidate events in data analyses \cite{cvn-nova}. All of these
+applications require extensive generation of data for training new networks
+before their deployment and, as these techniques are very data and process
+intensive, their training can significantly impact \ac{hep} distributed
+computing network resources.
+
+With increasing use of \ac{ai} within \ac{hep}, we envision \celeritas and
+\acp{lcf} as tools to produce fast, full-fidelity \ac{mc} samples for the
+purpose of training new \ac{ai} networks and alleviate the workload on \ac{hep}
+computing centers. Standard \ac{ai} frameworks already take advantage of
+accelerated architectures, making \celeritas an ideal tool for using \acp{lcf}
+as processing centers for \ac{ai} applications in \ac{hep}.
