@@ -20,8 +20,8 @@ networks and \acp{lcf} networks by providing three different routes
     \label{fig:celeritas-hep-workflows}
 \end{figure}
 %%
-These workflows intend to enable \ac{hep} experiments to use \celeritas
-in three different ways:
+These workflows intend to enable \ac{hep} experiments to use \celeritas in three
+different ways:
 %%
 \begin{enumerate}[itemsep=0pt, label=(\alph*)]
   \item \emph{Acceleritas}: accelerate standard \ac{hep} detector simulation
@@ -36,14 +36,17 @@ in three different ways:
 %%
 The next sections will discuss expected challenges and mitigation strategies,
 and describe these three envisioned plans to integrate \celeritas into
-experimental workflows.
+experimental workflows. Since each workflow has unique traits, we expect that
+some experimental collaborations might see value in using all three workflows,
+each serving a different purpose.
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{Integration challenges}
 
 The heterogeneity of \ac{hep} computing workflows, associated with the volume of
 data produced by each experiment, pose a long list of challenges that need to be
-overcome in order to make \celeritas a viable option. We outline here the most pressing ones, along with mitigation plans. 
+overcome in order to make \celeritas a viable option. We outline here the most
+pressing ones, along with mitigation plans. 
 %%
 \begin{enumerate}[itemsep=0pt]
   \item Simulation inputs must be flexible enough to encompass Energy and
@@ -101,9 +104,9 @@ for offloading photons and electrons to \acp{gpu} as their fractional \ac{cpu}
 contribution is around 70\%.
 
 These gains are nowhere near our expected goals for a full end-to-end \celeritas
-simulation, but \acceleritas will provide significant improvements while being
-the easiest path to adoption, as its deployment will require minimal adapations
-on current \ac{hep} workflows.
+simulation, where we expect \celeritas to achieve a similar 160$\times$ speedup
+factor observed in Shift. Nevertheless, \acceleritas will provide significant
+improvements while requiring minimal adapations on current \ac{hep} workflows.
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{End-to-end \celeritas}
@@ -127,12 +130,12 @@ currently configured, in which events are executed independently on each thread.
 A more seamless integration of the end-to-end workflow would be to preserve
 independent event execution.  However, this will have a dramatic effect on the
 achievable performance because the \ac{gpu} will have to accumulate sufficient
-tracks to fully occupy the device. The tradeoffs between performance and
-integration cost will be discussed and ultimately decided by the experimental
-collaborations.
+tracks to fully occupy the device.
 
-Finally, the volume of data transferred between \acp{lcf} and \ac{hep} computing
-networks is a concern that will require attention as the project evolves.
+The tradeoffs between performance and integration cost will be discussed and
+ultimately decided by the experimental collaborations. Finally, the volume of
+data transferred between \acp{lcf} and \ac{hep} computing networks is a concern
+that will require attention as the project evolves.
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{\celeritas for \ac{ai}}

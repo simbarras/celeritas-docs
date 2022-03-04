@@ -43,12 +43,12 @@ a full-featured transport loop.
   \end{tabular}
 \end{table}
 %%
-These already implemented characteristics include \ipl{1}
-material-dependent physical properties, \ipl{2} continuous slowing down in
-matter for charged particles, \ipl{3} selecting discrete interactions among
-competing processes, \ipl{4} scattering or absorbing particles during an
-interaction, \ipl{5} emitting secondary particles, and \ipl{6} applying energy
-cutoffs to cull low-energy photons and electrons.
+These already implemented characteristics include \ipl{1} material-dependent
+physical properties, \ipl{2} continuous slowing down in matter for charged
+particles, \ipl{3} selecting discrete interactions among competing processes,
+\ipl{4} scattering or absorbing particles during an interaction, \ipl{5}
+emitting secondary particles, and \ipl{6} applying energy cutoffs to cull
+low-energy photons and electrons.
 
 The physics implementation in \celeritas focuses on maximizing work done in
 parallel. For example, all particle types use tabulated discrete interaction
@@ -104,3 +104,20 @@ separation will be determined based on performance and/or code maintainability.
   \end{tabular}
 \end{table}
 %%
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+\subsection{Cross section data}
+
+Geant4 manages cross sections by a combination of importing experimental values
+from external databases and programmatic implementations of theoretical models.
+Most of the data used in the simulation is pre-tabulated during initialization,
+with some models calculating elemental cross sections at runtime.
+
+\celeritas currently does not have a fully fledged system to load and
+pre-tabulate cross sections from these databases. Therefore, cross section
+tables are imported from Geant4 via an external application---the Geant4
+exporter in Fig.~\ref{fig:celeritas-code-base}. This application loads the
+problem geometry via a \acs{gdml} file, initializes Geant4, and stores all the
+pre-calculated cross sections for all the available physics processes and models
+into a ROOT file. This file is then used by a \celeritas application to load the
+data to host and device at initialization time.

@@ -23,7 +23,7 @@ interface to \acs{vecgeom}.
   \centering%
   \begin{subfigure}{3in}%
     \centering%
-    \includegraphics[height=2in]{figs/cms-xz.pdf}%%
+    \includegraphics[height=2in]{figs/cms-xz.pdf}%
     \caption{$y=0$}%
   \end{subfigure}%
   \begin{subfigure}{3in}%
@@ -41,17 +41,18 @@ with platform-portable navigation that uses fundamentally different algorithms
 from \acs{vecgeom}. This implementation, \ac{orange}, is an initial \ac{gpu}
 port of the new modernized geometry used by the SCALE nuclear engineering code
 suite to model complex multi-level nuclear reactor and neutral particle
-shielding problems~\cite{scale}. The \celeritas port uses the Collection paradigm
+shielding problems~\cite{scale}. The \celeritas port uses the Collection
+paradigm
 %
 \celcomment{(make sure this definition is explained)}
 %
-to store quadric surface representations and
-define cell volumes as \ac{csg} combinations of those surfaces. At present the
-\ac{gpu} prototype implementation supports only a single geometry level, but the
-extension of this implementation to the full capabilities available on \ac{cpu}
-will be relatively straightforward. We are actively collaborating with the
-\acs{vecgeom} group at \acs{cern} to research how \ac{orange} and its
-methodology could power the next generation of Geant4 tracking on \ac{gpu}.
+to store quadric surface representations and define cell volumes as \ac{csg}
+combinations of those surfaces. At present the \ac{gpu} prototype implementation
+supports only a single geometry level, but the extension of this implementation
+to the full capabilities available on \ac{cpu} will be relatively
+straightforward. We are actively collaborating with the \acs{vecgeom} group at
+\acs{cern} to research how \ac{orange} and its methodology could power the next
+generation of Geant4 tracking on \ac{gpu}.
 
 \celeritas supports on-device propagation of particles through arbitrary
 magnetic fields. Using a \Cpp-based template system for high-performance,
