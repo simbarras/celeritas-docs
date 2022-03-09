@@ -113,9 +113,9 @@ from external databases and programmatic implementations of theoretical models.
 Most of the data used in the simulation is pre-tabulated during initialization,
 with some models calculating elemental cross sections at runtime.
 
-\celeritas currently does not have a fully fledged system to load and
-pre-tabulate cross sections from these databases. Therefore, cross section
-tables are imported from Geant4 via an external application---the Geant4
+Unlike Geant4, \celeritas currently does not have a fully-fledged system to load
+and pre-tabulate cross sections from external databases. Therefore, cross
+section tables are imported from Geant4 via an external application---the Geant4
 exporter in Fig.~\ref{fig:celeritas-code-base}. This application loads the
 problem geometry via a \acs{gdml} file, initializes Geant4, and stores all the
 pre-calculated cross sections for all the available physics processes and models

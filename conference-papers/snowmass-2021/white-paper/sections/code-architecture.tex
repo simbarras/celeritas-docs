@@ -78,3 +78,74 @@ processes, \ipl{3} optimal geometric tracking, \ipl{4} optimization of the
 particle transport algorithm in the presence of external \ac{em} fields, and
 \ipl{5} addition of scoring and \ac{ui} necessary to meet \acs{hep} detector
 simulation requirements.
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+\subsection{Platform portability}
+
+The next generation platforms at the \ac{olcf}, \ac{alcf}, and \ac{nersc} will
+each feature different \ac{gpu}-based architectures as shown in
+Table~\ref{tab:lcf-arch}. Although \celeritas currently relies on \cuda, its
+highly modular data management design allows compilation and testing on standard
+multicore architectures. This strategy supports the straightforward
+implementation of programming models for platform portability, with significant
+advances using \acs{hip} being underway.
+%%
+\begin{table}
+  \caption{Exascale architectures and native programming models at \acs{doe}
+  \acsp{lcf}.}
+  \label{tab:lcf-arch}
+  \centering%
+  \begin{tabular}{lllll}\toprule
+      %%
+    Center & Machine & Integrator & \acsp{gpu} &
+    Native Programming Model\\\midrule
+        %%
+    \acs{olcf} & Frontier & HPE & \amd &
+    \acs{hip}\textsuperscript{a}\\
+        %%
+    \acs{alcf} & Aurora & \intel & \intel &
+    \oneapi/DP\Cpp/SYCL\textsuperscript{b}\\
+        %%
+    \acs{nersc} & Perlmutter & HPE & \nvidia &
+    \cuda\hspace{-.4em}\textsuperscript{c}\\
+    \bottomrule
+        %%
+    \multicolumn{5}{l}{\footnotesize
+      \textsuperscript{a}\url{https://github.com/ROCm-Developer-Tools/HIP}
+    }\\
+    \multicolumn{5}{l}{\footnotesize
+      \textsuperscript{b}\url{https://software.intel.com}
+    }\\
+    \multicolumn{5}{l}{\footnotesize
+      \textsuperscript{c}\url{https://docs.nvidia.com/cuda/cuda-runtime-api/index.html}
+    }\\
+  \end{tabular}
+\end{table}
+
+\textcite{evans_survey_2021} surveyed the various \ac{gpu} programming models
+employed by applications within the \ac{ecp} and found Kokkos
+\cite{CarterEdwards20143202}, \acs{hip}, and \acs{openmp} to be the most
+commonly employed programming models.  Each of these models has pros and cons:
+some models are not yet supported on all \ac{gpu} architectures, and experience
+in \ac{ecp} has shown that performance can vary dramatically depending on the
+maturity of both the software stack and the underlying hardware. This is also a
+time of significant change in the \Cpp language itself, particularly with
+respect to concurrency support via Standard Library algorithms. Combined with
+the increasing adoption of LLVM for \Cpp compiler development, we anticipate
+that more vendors will provide \ac{gpu}-based concurrency \acp{api} through \Cpp
+Standard Library constructs within the next \numrange[range-phrase={ to
+}]{5}{10} years, providing yet another possible means of achieving platform
+portability.
+
+The \celeritas team will evaluate and subsequently choose a programming model to
+provide portable execution across all major \ac{gpu} vendors as well as
+traditional multicore \acp{cpu}. This evaluation will be based on achievable
+performance across multiple \ac{gpu} architectures, ease of integration into
+\celeritas workflows, sustainability, availability of multiple implementations,
+and ability to perform platform-specific tuning. We also plan to engage the
+\ac{hep} \ac{cce} \ac{pps} working group to ensure our strategy is in line with
+other efforts in the \ac{hep} community. At the present time, our nominal
+performance portability plan for \celeritas is to utilize one of the \Cpp-based
+programming models (Kokkos, SYCL, or \Cpp standard library execution policies);
+however, we recognize that these models are rapidly changing as is compiler
+support, and thus a proper evaluation is necessary before making a decision.
