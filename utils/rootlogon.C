@@ -1,5 +1,5 @@
 //----------------------------------*-C++-*----------------------------------//
-// Copyright 2020 UT-Battelle, LLC, and other Celeritas developers.
+// Copyright 2020-2022 UT-Battelle, LLC, and other Celeritas developers.
 // See the top-level COPYRIGHT file for details.
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 //---------------------------------------------------------------------------//
@@ -40,12 +40,12 @@ void rootlogon()
     celeritas_style->SetPadBorderMode(0);
 
     // Set background color to white
-    celeritas_style->SetFillColor(10);
-    celeritas_style->SetFrameFillColor(10);
-    celeritas_style->SetCanvasColor(10);
-    celeritas_style->SetPadColor(10);
+    celeritas_style->SetFillColor(kWhite);
+    celeritas_style->SetFrameFillColor(kWhite);
+    celeritas_style->SetCanvasColor(kWhite);
+    celeritas_style->SetPadColor(kWhite);
+    celeritas_style->SetStatColor(kWhite);
     celeritas_style->SetTitleFillColor(0);
-    celeritas_style->SetStatColor(10);
 
     // Hide histogram stats box
     celeritas_style->SetOptStat(0);
@@ -59,8 +59,14 @@ void rootlogon()
     celeritas_style->SetNdivisions(506, "xyz");
 
     // Add tick lines on all sides of the plot
-    celeritas_style->SetPadTickX(1);
-    celeritas_style->SetPadTickY(1);
+    celeritas_style->SetPadTickX(true);
+    celeritas_style->SetPadTickY(true);
+
+    // Add grey grid lines as standard
+    celeritas_style->SetPadGridX(true);
+    celeritas_style->SetPadGridY(true);
+    celeritas_style->SetGridColor(kGray);
+    celeritas_style->SetGridStyle(0);
 
     // Use the same font on all elements in the plot
     const int celeritas_font = 42;
@@ -71,7 +77,7 @@ void rootlogon()
     celeritas_style->SetLegendFont(celeritas_font);
 
     // Set axis title sizes
-    celeritas_style->SetTitleSize(.055, "xyz");
+    celeritas_style->SetTitleSize(.06, "xyz");
 
     // Increase axis offset to avoid clashing with big numbers
     celeritas_style->SetTitleOffset(.8, "x");
@@ -83,7 +89,7 @@ void rootlogon()
     celeritas_style->SetTitleOffset(.8, "");
 
     // Define axes labels' (numbering) size and offset
-    celeritas_style->SetLabelSize(.04, "xyz");
+    celeritas_style->SetLabelSize(.05, "xyz");
     celeritas_style->SetLabelOffset(.005, "xyz");
 
     // Center titles
@@ -92,8 +98,9 @@ void rootlogon()
     celeritas_style->SetTitleY(.95);
     celeritas_style->SetTitleBorderSize(0);
 
-    // Remove borders on legengs
-    celeritas_style->SetLegendBorderSize(0);
+    // Setup legends
+    celeritas_style->SetLegendBorderSize(1);
+    celeritas_style->SetLegendTextSize(0.05);
 
     // Prevent ROOT from occasionally suppressing the zero
     celeritas_style->SetHistMinimumZero();
@@ -107,16 +114,8 @@ void rootlogon()
     // Set automatic scientific notation on axes with large numbers
     TGaxis::SetMaxDigits(3);
 
-    // Set rainbow palette as standard
-    const Int_t nRGB        = 5;
-    const Int_t nContours   = 255;
-    Double_t    stops[nRGB] = {0.00, 0.34, 0.61, 0.84, 1.00};
-    Double_t    red[nRGB]   = {0.00, 0.00, 0.87, 1.00, 0.51};
-    Double_t    green[nRGB] = {0.00, 0.81, 1.00, 0.20, 0.00};
-    Double_t    blue[nRGB]  = {0.51, 1.00, 0.12, 0.00, 0.00};
-    TColor::CreateGradientColorTable(nRGB, stops, red, green, blue, nContours);
-
-    celeritas_style->SetNumberContours(nContours);
+    // Set Viridis palette as standard
+    celeritas_style->SetPalette(kViridis);
 
     // Apply all settings
     gROOT->SetStyle("celeritas_style");
@@ -129,9 +128,7 @@ void rootlogon()
 // Free functions
 //---------------------------------------------------------------------------//
 /*!
- *  These functions help speed up writting ROOT plot macros.
- *  Feel free to extend this list. Remember to add any new functions to the
- *  help() command as well.
+ * Helper functions to speed up writing plot macros.
  */
 
 //---------------------------------------------------------------------------//
@@ -154,30 +151,6 @@ void SetPlotTitle(const char* title, double x_position)
     myTitle->SetTextSize(2 / 30.);
     myTitle->SetTextAlign(12);
     myTitle->Draw();
-}
-
-//---------------------------------------------------------------------------//
-void SetAxesTitles(TH1* histogram, const char* titleX)
-{
-    histogram->GetXaxis()->SetTitle(titleX);
-    histogram->GetXaxis()->CenterTitle();
-}
-
-//---------------------------------------------------------------------------//
-void SetAxesTitles(TH1* histogram, const char* titleX, const char* titleY)
-{
-    histogram->GetXaxis()->SetTitle(titleX);
-    histogram->GetXaxis()->CenterTitle();
-    histogram->GetYaxis()->SetTitle(titleY);
-    histogram->GetYaxis()->CenterTitle();
-}
-
-//---------------------------------------------------------------------------//
-void CenterTitles(TH1* histogram)
-{
-    histogram->GetXaxis()->CenterTitle();
-    histogram->GetYaxis()->CenterTitle();
-    histogram->GetZaxis()->CenterTitle();
 }
 
 //---------------------------------------------------------------------------//
@@ -266,16 +239,6 @@ void GrayPalette2()
 
 //---------------------------------------------------------------------------//
 /*!
- * Standard options for n are: 0, 29, 50, 51, 53, 54, 56, 93, 97, 107, or 112.
- */
-void SetStandardPalette(const Int_t n)
-{
-    TStyle* celeritas_style = new TStyle("", "");
-    celeritas_style->SetPalette(n);
-}
-
-//---------------------------------------------------------------------------//
-/*!
  * Adds either a "Preliminary" or a "Celeritas Preliminary" at the top right
  * corner of the plot.
  */
@@ -331,9 +294,9 @@ void CPreliminarySide()
  */
 void help()
 {
-    std::cout << "-----------------------------------------------" << std::endl;
-    std::cout << "             Celeritas rootlogon.C             " << std::endl;
-    std::cout << "-----------------------------------------------" << std::endl;
+    std::cout << "-----------------------" << std::endl;
+    std::cout << " Celeritas rootlogon.C " << std::endl;
+    std::cout << "-----------------------" << std::endl;
     std::cout << std::endl;
     std::cout << ">>> Plot title" << std::endl;
     std::cout << "SetPlotTitle(const char* title)" << std::endl;
@@ -342,21 +305,13 @@ void help()
     std::cout << "SetPlotTitle(const char* title, double x_position)"
               << std::endl;
     std::cout << std::endl;
-    std::cout << ">>> Axes titles" << std::endl;
-    std::cout << "SetAxesTitles(TH1* histogram, const char* titleX)"
-              << std::endl;
-    std::cout << "SetAxesTitles(TH1* histogram, const char* titleX, const "
-                 "char* titleY)"
-              << std::endl;
-    std::cout << "CenterTitles(TH1* histogram)" << std::endl;
-    std::cout << std::endl;
     std::cout << ">>> Preliminary tags" << std::endl;
     std::cout << "Preliminary()" << std::endl;
     std::cout << "PreliminarySide()" << std::endl;
     std::cout << "CPreliminary()" << std::endl;
     std::cout << "CPreliminarySide()" << std::endl;
     std::cout << std::endl;
-    std::cout << ">>> Color palettes" << std::endl;
+    std::cout << ">>> Extra color palettes" << std::endl;
     std::cout << "RainbowPalette()" << std::endl;
     std::cout << "SunsetPalette()" << std::endl;
     std::cout << "SunsetPalette2()" << std::endl;
@@ -364,9 +319,8 @@ void help()
     std::cout << "GreenToRedPalette()" << std::endl;
     std::cout << "GrayPalette()" << std::endl;
     std::cout << "GrayPalette2()" << std::endl;
-    std::cout << "SetStandardPalette(const Int_t n)" << std::endl;
-    std::cout << "  Standard options for n are:" << std::endl;
-    std::cout << "  0, 29, 50, 51, 53, 54, 56, 93, 97, 107, or 112"
+    std::cout << "For a full list of ROOT standard pallettes see "
+                 "https://root.cern/doc/master/classTColor.html#C06"
               << std::endl;
     std::cout << std::endl;
 }
