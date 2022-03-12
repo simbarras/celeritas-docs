@@ -159,3 +159,62 @@ purpose of training new \ac{ai} networks and alleviate the workload on \ac{hep}
 computing centers. Standard \ac{ai} frameworks already take advantage of
 accelerated architectures, making \celeritas an ideal tool for using \acp{lcf}
 as processing centers for \ac{ai} applications in \ac{hep}.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
+\subsection{The impact of using \acp{lcf} in \ac{hep}}
+
+The current landscape in \ac{hep} computing is evolving. Although the majority
+of computing resources will be \ac{cpu}-based for the immediate future,
+\ac{gpu}-accelerated hardware will be increasingly added with the advent of
+\ac{ai} deep-learning networks in \ac{hep} data analysis and processing
+\cite{radovic_machine_2018}. Thus, having \ac{mc} capabilities that uses both
+multicore \acp{cpu} and accelerated hardware is a necessity for maximizing use
+of available computing resources. Combining current \ac{hep} distributed
+computing networks with \acp{lcf} will be sufficient to provide experiments the
+capability to rely completely on full-fidelity \ac{mc}, instead of depending on
+lower-fidelity fast models due to lack of resources.
+
+With current solutions, \acs{lhc} experiments are expected to face stringent
+computing scenarios by the start of Run 4 \cite{LHC-schedule}. A particular case
+is the \acs{atlas} experiment, in which the projected available resources fall
+short by a factor of five \cite{the_atlas_collaboration_atlas_2020,
+the_hep_software_foundation_roadmap_2019}. To show the impact that \acp{lcf} can
+have on experiments if fully integrated, we present a hypothetical projection
+comparing the compute capacity of \ac{cpu} vs. \ac{gpu} on \acs{atlas}.
+Figure~\ref{fig:gpu-projection} plots the projected \ac{cpu} total resources
+(blue and orange lines) and \ac{mc} computing needs for Run 4 (red data point)
+using the data provided by Ref.~\cite{the_atlas_collaboration_atlas_2020} and
+converts said compute capacity to \ac{gpu} (green dashed line). Here, the
+increase in \ac{cpu} capacity is based on 10\% and 20\% hardware annual
+improvement assuming a sustained funding, and the \ac{mc} data point represents
+39\% of the total computing needs for \acs{atlas}. We use the following
+assumptions to project the computing capacity achieved by replacing \acp{cpu}
+with \acp{gpu}: \ipl{1} the power consumption from \ac{cpu} computing is
+converted into \ac{gpu} capacity; \ipl{2} the compute capability of the
+\acp{gpu} will increase 20\% per year through a combination of increased
+performance and capacity---this estimated yearly capacity improvement is
+justified by recently observed \nvidia performance, which has increased
+approximately $1.5\times$ in the last \numrange{3}{4} years; and \ipl{3} each
+\ac{gpu} is equivalent to 160 cores using the current performance achieved by
+Shift \cite{hamilton_continuous-energy_2019}---a performance metric that we plan
+to achieve with \celeritas.
+
+\begin{figure}
+  \centering%
+  \includegraphics[width=0.6\textwidth]{figs/gpu-projection-atlas.pdf}%
+  \caption{Compute capability converted into \si{MHS06.year} units for \acs{mc}
+  simulation. The 10\% and 20\% \ac{cpu} capacities and 2028 \acs{mc} baseline
+  projections are the estimates for \acs{atlas} taken directly from
+  Ref.~\cite{the_atlas_collaboration_atlas_2020}.  The green line is the compute
+  capacity if all the current computing were converted to \acp{gpu} running at
+  equivalent power.}%
+  \label{fig:gpu-projection}
+\end{figure}
+
+The Summit supercomputer at the \ac{olcf} alone has a total of \num{27648}
+\acp{gpu} that, using the aforementioned factor of 160, represents the
+equivalent of \num{4423680} \ac{cpu} cores. For comparison purposes, in 2017 the
+\ac{wlcg} encompassed approximately \num{500000} \ac{cpu}
+cores~\cite{valassi_using_2020}. Incorporating \ac{doe}'s network of \acp{lcf}
+will bring the total \ac{hep} computing resources to an unprecedent level and
+significantly alleviate current \ac{cpu} demanding needs.
