@@ -5,7 +5,8 @@
 
 A detailed description of the \celeritas code architecture is given in
 \textcite{johnson_2021}. The code base (Fig.~\ref{fig:celeritas-code-base})
-relies on external dependencies for key capabilities that will be discussed over the next sections.
+relies on external dependencies for key capabilities that will be discussed over
+the next sections.
 %%
 \begin{figure}
   \centering
@@ -97,11 +98,10 @@ advances using \acs{hip} being underway.
   \centering%
   \begin{tabular}{lllll}\toprule
       %%
-    Center & Machine & Integrator & \acsp{gpu} &
-    Native Programming Model\\\midrule
+    Center & Machine & Integrator & \acsp{gpu} & Native Programming
+    Model\\\midrule
         %%
-    \acs{olcf} & Frontier & HPE & \amd &
-    \acs{hip}\textsuperscript{a}\\
+    \acs{olcf} & Frontier & HPE & \amd & \acs{hip}\textsuperscript{a}\\
         %%
     \acs{alcf} & Aurora & \intel & \intel &
     \oneapi/DP\Cpp/SYCL\textsuperscript{b}\\
@@ -111,14 +111,12 @@ advances using \acs{hip} being underway.
     \bottomrule
         %%
     \multicolumn{5}{l}{\footnotesize
-      \textsuperscript{a}\url{https://github.com/ROCm-Developer-Tools/HIP}
-    }\\
+      \textsuperscript{a}\url{https://github.com/ROCm-Developer-Tools/HIP} }\\
     \multicolumn{5}{l}{\footnotesize
-      \textsuperscript{b}\url{https://software.intel.com}
-    }\\
+      \textsuperscript{b}\url{https://software.intel.com} }\\
     \multicolumn{5}{l}{\footnotesize
       \textsuperscript{c}\url{https://docs.nvidia.com/cuda/cuda-runtime-api/index.html}
-    }\\
+      }\\
   \end{tabular}
 \end{table}
 

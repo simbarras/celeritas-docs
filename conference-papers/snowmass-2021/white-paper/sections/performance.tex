@@ -9,20 +9,23 @@ paper}
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{Performance metrics}
 
-The range of detector geometry complexities, primary event types, and amount of output, there is no general case that provides a simple
-performance number such as a simulation rate in events per second. Therefore, our ultimate performance metric
-will be based on a set of real-world \acs{hep} detector workflow use cases. \celeritas must run the targeted models at the same
-fidelity as the current state of the art but in much less time. Two \acp{fom}
-will be used to measure success.
+Given the range of detector geometry complexities, primary event types, and
+amount of output, there is no general case that provides a simple performance
+number such as a simulation rate in events per second. Therefore, our ultimate
+performance metric will be based on a set of real-world \acs{hep} detector
+workflow use cases. \celeritas must run the targeted models at the same fidelity
+as the current state of the art but in much less time. Two \acp{fom} will be
+used to measure success.
 
 On \ac{lcf} hardware for the next decade, \acp{gpu} will provide the bulk of the
 compute capability, so one critical performance metric is the ratio of the
 runtime of \celeritas using \acp{gpu} to using only the \acp{cpu} of a given
 machine. This \ac{fom} represents the ability of \celeritas to effectively use
 the hardware that is available and must be sufficiently high to justify running
-on \ac{lcf} resources. We will target a factor of
-$160\times$ for a single \ac{gpu} to a single \ac{cpu}, which is the relative
-\ac{gpu}/\ac{cpu} performance of the Shift \ac{mc} transport code \cite{hamilton_continuous-energy_2019}.
+on \ac{lcf} resources. We will target a factor of $160\times$ for a single
+\ac{gpu} to a single \ac{cpu}, which is the relative \ac{gpu}/\ac{cpu}
+performance of the Shift \ac{mc} transport code
+\cite{hamilton_continuous-energy_2019}.
 
 A second performance metric is critical to the programmatic viability of
 \celeritas in the broader \ac{hep} community: the work done for the same amount
