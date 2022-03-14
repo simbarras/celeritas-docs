@@ -1,0 +1,382 @@
+%%---------------------------------------------------------------------------%%
+% celeritas-code.tex
+%%---------------------------------------------------------------------------%%
+\section{\celeritas code}
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+%% Code Architecture
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+\subsection{Code Architecture}
+
+A detailed description of the \celeritas code architecture is given in
+\textcite{johnson_2021}. The code base (Fig.~\ref{fig:celeritas-code-base})
+relies on external dependencies for key capabilities that will be discussed over
+the next sections.
+%%
+\begin{figure}
+  \centering
+  \includegraphics[scale=.6]{figs/software-deps.pdf}
+  \caption{\celeritas code base (white) and its existing (gray) and proposed
+    (magenta) third-party dependencies, both required (solid lines) and optional
+    (dashed lines).}
+  \label{fig:celeritas-code-base}
+\end{figure}
+%%
+
+\celeritas supports intra-node concurrency on multi-core architectures through
+\acs{openmp} and on \nvidia \acp{gpu} using \cuda, which we plan to supplement
+with a programming model for vendor-independent portability.  Internode
+parallelism is currently implemented using the \ac{mpi} communication library
+through a domain replication model in which particle events are decomposed
+across \ac{mpi} ranks.
+
+Like other \ac{gpu}-enabled \ac{mc} transport codes such as Shift
+\cite{pandya_implementation_2016,hamilton_multigroup_2018,
+hamilton_continuous-energy_2019,hamilton_domain_2022}, the low-level component
+code used by transport kernels is designed so that each particle track
+corresponds to a single thread. There is no cooperation between individual
+threads, facilitating the dual host/device annotation of most of \celeritas.
+\celeritas also uses a modular programming approach based on composition rather
+than inheritance in order to accommodate device-based architectures, which have
+poor support for runtime polymorphism.  Furthermore, the use of simple classes
+that define function-object interfaces enables lambda semantics for kernel
+launches. These features will simplify the adaptation to a performance
+portability model.
+
+The \celeritas programming model uses the \ac{dop} paradigm \cite{dop_2022} to
+facilitate platform portability, improve memory access patterns, and accelerate
+development. \ac{dop} separates execution code from data, and as part of this
+model \celeritas carefully partitions immutable, shared ``parameter'' data from
+dynamic thread-local ``state'' data. Object-oriented design patterns encapsulate
+the data storage implementation, temporarily combining parameter and state data
+into ``view'' classes.  Higher-level classes use composition to combine the data
+from the multiple entities that comprise a particle track's complete state.
+
+In the first 1.5 years of \celeritas' development, nine \ac{gpu}-compatible
+physics models (Table~\ref{tab:em-physics}) have been implemented. This shows
+\ac{dop} to be highly effective for development on heterogeneous architectures
+that have independent \emph{memory spaces} between which data must be
+transferred. One challenge faced by \ac{mc} physics application codes is the
+ubiquity of complicated \emph{heterogeneous} data structures needed for
+tabulated physics and particle data, as opposed to the simpler
+\emph{homogeneous} data layouts required by deterministic numerical solvers. A
+novel programming model in \celeritas enables the composition of new, deep data
+types (e.g., material properties) that are required by geometric and physics
+operations during the transport loop without fragmenting the underlying data
+layout on device.
+
+One requirement for transporting particles in \ac{em} showers is the efficient
+allocation and construction of secondary particles during a physics interaction.
+On \acp{gpu}, managing dynamic allocations efficiently is a significant
+challenge.  To enable runtime dynamic allocation of secondary particles, we have
+developed a function-like stack allocator that accesses a large on-device
+allocated array with a fixed capacity and uses an atomic addition to
+unambiguously reserve one or more items in the array. The final aspect of
+\ac{gpu}-based secondary allocation is how to gracefully handle an out-of-memory
+condition without crashing the simulation \emph{or} invalidating its
+reproducibility. A novel algorithm in \celeritas guarantees robustness when
+allocating secondaries, which we will extend to guarantee complete
+reproducibility of \ac{hep} workflow results.
+
+The \celeritas code architecture just summarized is designed to enable \ipl{1}
+performance portability, \ipl{2} implementation of new physics models and
+processes, \ipl{3} optimal geometric tracking, \ipl{4} optimization of the
+particle transport algorithm in the presence of external \ac{em} fields, and
+\ipl{5} addition of scoring and \ac{ui} necessary to meet \acs{hep} detector
+simulation requirements.
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+\subsubsection{Platform portability}
+
+The next generation platforms at the \ac{olcf}, \ac{alcf}, and \ac{nersc} will
+each feature different \ac{gpu}-based architectures as shown in
+Table~\ref{tab:lcf-arch}. Although \celeritas currently relies on \cuda, its
+highly modular data management design allows compilation and testing on standard
+multicore architectures. This strategy supports the straightforward
+implementation of programming models for platform portability, with significant
+advances using \acs{hip} being underway.
+%%
+\begin{table}
+  \caption{Exascale architectures and native programming models at \acs{doe}
+  \acsp{lcf}.}
+  \label{tab:lcf-arch}
+  \centering%
+  \begin{tabular}{lllll}\toprule
+      %%
+    Center & Machine & Integrator & \acsp{gpu} & Native Programming
+    Model\\\midrule
+        %%
+    \acs{olcf} & Frontier & HPE & \amd & \acs{hip}\textsuperscript{a}\\
+        %%
+    \acs{alcf} & Aurora & \intel & \intel &
+    \oneapi/DP\Cpp/SYCL\textsuperscript{b}\\
+        %%
+    \acs{nersc} & Perlmutter & HPE & \nvidia &
+    \cuda\hspace{-.4em}\textsuperscript{c}\\
+    \bottomrule
+        %%
+    \multicolumn{5}{l}{\footnotesize
+      \textsuperscript{a}\url{https://github.com/ROCm-Developer-Tools/HIP} }\\
+    \multicolumn{5}{l}{\footnotesize
+      \textsuperscript{b}\url{https://software.intel.com} }\\
+    \multicolumn{5}{l}{\footnotesize
+      \textsuperscript{c}\url{https://docs.nvidia.com/cuda/cuda-runtime-api/index.html}
+      }\\
+  \end{tabular}
+\end{table}
+
+\textcite{evans_survey_2021} surveyed the various \ac{gpu} programming models
+employed by applications within the \ac{ecp} and found Kokkos
+\cite{CarterEdwards20143202}, \acs{hip}, and \acs{openmp} to be the most
+commonly employed programming models.  Each of these models has pros and cons:
+some models are not yet supported on all \ac{gpu} architectures, and experience
+in \ac{ecp} has shown that performance can vary dramatically depending on the
+maturity of both the software stack and the underlying hardware. This is also a
+time of significant change in the \Cpp language itself, particularly with
+respect to concurrency support via Standard Library algorithms. Combined with
+the increasing adoption of LLVM for \Cpp compiler development, we anticipate
+that more vendors will provide \ac{gpu}-based concurrency \acp{api} through \Cpp
+Standard Library constructs within the next \numrange[range-phrase={ to
+}]{5}{10} years, providing yet another possible means of achieving platform
+portability.
+
+The \celeritas team will evaluate and subsequently choose a programming model to
+provide portable execution across all major \ac{gpu} vendors as well as
+traditional multicore \acp{cpu}. This evaluation will be based on achievable
+performance across multiple \ac{gpu} architectures, ease of integration into
+\celeritas workflows, sustainability, availability of multiple implementations,
+and ability to perform platform-specific tuning. We also plan to engage the
+\ac{hep} \ac{cce} \ac{pps} working group to ensure our strategy is in line with
+other efforts in the \ac{hep} community. At the present time, our nominal
+performance portability plan for \celeritas is to utilize one of the \Cpp-based
+programming models (Kokkos, SYCL, or \Cpp standard library execution policies);
+however, we recognize that these models are rapidly changing as is compiler
+support, and thus a proper evaluation is necessary before making a decision.
+
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+%% Physics
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+\subsection{Physics}
+
+The key physics component in \celeritas is a \emph{process}, which defines an
+observed physical phenomenon such as the photoelectric effect or bremsstrahlung.
+Each process is implemented as one or more models that each mathematically
+describe or approximate the process in a given energy regime.
+
+The initial implementation in \celeritas targets \ac{em} physics between
+\SI{100}{eV} and \SI{100}{TeV} for photons, electrons, and positrons. This
+minimal set of capabilities, with physical processes and associated numerical
+models itemized in Table~\ref{tab:em-physics}, is necessary to generate
+realistic simulations of \ac{em} showers and demonstrate key characteristics of
+a full-featured transport loop.
+%%
+\begin{table}
+  \caption{Current status of \celeritas \acs{em} physics. The initial
+  implementation ($\gamma$ and $e^\pm$) is almost complete, and muon physics is
+  in its initial stage. Particle symbols are defined in
+  \textcite{tanabashi_review_2018}.}
+  \label{tab:em-physics}
+  \centering
+  \begin{tabular}{clll}\toprule Particle & Process & Model(s) & Status\\
+    \midrule
+    %% gamma
+    \multirow{4}{*}{$\gamma$}
+    & photon conversion & Bethe--Heitler & implemented\\
+    & Compton scattering & Klein--Nishina & verified\\
+    & photoelectric effect & Livermore & implemented\\
+    & Rayleigh scattering & Livermore & implemented\\
+    \midrule
+    %% e^+-
+    \multirow{4}{*}{$e^\pm$}
+    & ionization & M\o{}ller--Bhabha & implemented\\
+    & bremsstrahlung & Seltzer--Berger, relativistic & implemented\\
+    & pair annihilation & EPlusGG & implemented\\
+    & multiple scattering & Urban, WentzelVI & in progress\\
+    \midrule
+    $\mu^\pm$ & muon bremsstrahlung & Muon Bremsstrahlung & implemented\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+%%
+These already implemented characteristics include \ipl{1} material-dependent
+physical properties, \ipl{2} continuous slowing down in matter for charged
+particles, \ipl{3} selecting discrete interactions among competing processes,
+\ipl{4} scattering or absorbing particles during an interaction, \ipl{5}
+emitting secondary particles, and \ipl{6} applying energy cutoffs to cull
+low-energy photons and electrons.
+
+The physics implementation in \celeritas focuses on maximizing work done in
+parallel. For example, all particle types use tabulated discrete interaction
+cross sections calculated simultaneously in a single kernel. The primary
+deviation from this rule is that each model of a discrete process launches an
+independent kernel that applies only to tracks undergoing an interaction with
+that process. This set of kernel launches is performed polymorphically from
+\ac{cpu} host code, allowing arbitrary noninvasive extensions to \celeritas
+physics.
+
+In order to meet the detector simulation requirements for \acs{hep} experiments,
+\celeritas physics will be expanded from its initial \ac{em} prototype to a full
+set of particles with decay and hadronic physics.  A complete list of the
+required physics processes and particles is shown in
+Table~\ref{tab:proposed-physics}, where only processes are explicit as model
+separation will be determined based on performance and/or code maintainability.
+%%
+\begin{table}
+  \caption{Proposed physics development in \celeritas.}
+  \label{tab:proposed-physics}
+  \centering
+  \begin{tabular}{llll}
+    \toprule
+    Physics & Process & Particle(s)\\
+    \midrule
+    %% EM
+    \multirow{10}{*}{\acs{em}} & photon conversion & $\gamma$\\
+    & pair annihilation & $e^\pm$\\
+    & photoelectric effect& $\gamma$\\
+    & ionization & charged leptons, hadrons, and ions\\
+    & bremsstrahlung & charged leptons and hadrons\\
+    & Rayleigh scattering & $\gamma$\\
+    & Compton scattering & $\gamma$\\
+    & Coulomb scattering & charged leptons, hadrons\\
+    & multiple scattering & charged leptons, hadrons\\
+    & continuous energy loss & charged leptons, hadrons, and ions\\
+    \midrule
+    %% Decay
+    \multirow{3}{*}{Decay}
+    & two body decay & $\mu^\pm$, $\tau^\pm$, hadrons\\
+    & three body decay & $\mu^\pm$, $\tau^\pm$, hadrons\\
+    & n-body decay & $\mu^\pm$, $\tau^\pm$, hadrons\\
+    \midrule
+    %% Hadronic
+    \multirow{6}{*}{Hadronic}
+    & photon-nucleus & $\gamma$ \\
+    & lepton-nucleus & leptons \\
+    & nucleon-nucleon & $p$, $n$\\
+    & hadron-nucleon & hadrons\\
+    & hadron-nucleus & hadrons\\
+    & nucleus-nucleus & hadrons\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+%%
+
+Geant4 manages cross sections by a combination of importing experimental values
+from external databases and programmatic implementations of theoretical models.
+Most of the data used in the simulation is pre-tabulated during initialization,
+with some models calculating elemental cross sections at runtime. Unlike Geant4,
+\celeritas currently does not have a fully-fledged system to load and
+pre-tabulate cross sections from external databases. Therefore, cross section
+tables are imported from Geant4 via an external application---the Geant4
+exporter in Fig.~\ref{fig:celeritas-code-base}. This application loads the
+problem geometry via a \acs{gdml} file, initializes Geant4, and stores all the
+pre-calculated cross sections for all the available physics processes and models
+into a ROOT file. This file is then used by a \celeritas application to load the
+data to host and device at initialization time.
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+%% Geometry
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+\subsection{Geometry and \ac{em} fields}
+
+Accurate simulation of \ac{hep} detector output requires a highly detailed model
+of the detector apparatus and nearby components. \ac{mc} transport requires that
+the model geometry be well-defined at every point in space, requiring a model
+that is ``watertight,'' or heuristics for recovering from inconsistencies (e.g.,
+overlapping or missing regions), or both. Since particles undergo collisions and
+charged particles constantly change direction as they move through the magnetic
+fields in the detector, traditional straight-line ray tracing is necessary but
+not sufficient to correctly navigate the geometry.
+
+The \acs{vecgeom} library supports navigation through Geant4-defined detector
+geometries in \ac{cpu}-only code and on \cuda-enabled devices
+\cite{apostolakis_towards_2015} and is the initial and primary geometry package
+in \celeritas. Figure~\ref{fig:vecgeom-cms} is a representation of the \ac{cms}
+geometry traced in parallel on \ac{gpu} using the \celeritas particle tracking
+interface to \acs{vecgeom}.
+%%
+\begin{figure}
+  \centering%
+  \begin{subfigure}{3in}%
+    \centering%
+    \includegraphics[height=2in]{figs/cms-xz.pdf}%
+    \caption{$y=0$ [cm]}%
+  \end{subfigure}%
+  \begin{subfigure}{3in}%
+    \centering%
+    \includegraphics[height=2in]{figs/cms-xy.pdf}%
+    \caption{$z=0$ [cm]}%
+  \end{subfigure}
+  \caption{On-device \acs{vecgeom} ray traces of the \acs{cms} generated with
+the \celeritas ray trace demonstration app.}
+\label{fig:vecgeom-cms}
+\end{figure}
+
+A new, alternate geometry in \celeritas provides a test bed for experimenting
+with platform-portable navigation that uses fundamentally different algorithms
+from \acs{vecgeom}. This implementation, \ac{orange}, is an initial \ac{gpu}
+port of the new modernized geometry used by the SCALE nuclear engineering code
+suite to model complex multi-level nuclear reactor and neutral particle
+shielding problems~\cite{scale}. The \celeritas port uses the Collection
+paradigm
+%
+\celcomment{(make sure this definition is explained)}
+%
+to store quadric surface representations and define cell volumes as \ac{csg}
+combinations of those surfaces. At present the \ac{gpu} prototype implementation
+supports only a single geometry level, but the extension of this implementation
+to the full capabilities available on \ac{cpu} will be relatively
+straightforward. We are actively collaborating with the \acs{vecgeom} group at
+\acs{cern} to research how \ac{orange} and its methodology could power the next
+generation of Geant4 tracking on \ac{gpu}.
+
+\celeritas supports on-device propagation of particles through arbitrary
+magnetic fields. Using a \Cpp-based template system for high-performance,
+platform-independent extensibility, it allows different integration algorithms
+for different user-defined fields.
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+%% User-interface and I/O
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %%
+\subsection{User-interface and \ac{io}}
+
+The key challenge in providing user interfaces is developing a framework that
+supports integration into existing experimental \ac{mc} simulation sequences
+that \ipl{1} provides the minimum required code barrier for incorporation and
+\ipl{2} preserves performance.  Existing experimental frameworks are built on
+the Geant4 toolkit, which provides user actions that allow users to control the
+program and data flow at the level of run, event, track, and step. In Geant4
+scoring is done using dedicated stepping actions in which information from the
+sensitive detector volumes is accessible through callback semantics into these
+parts of the simulation.  This approach provides great user flexibility at the
+cost of higher computational overhead and increased system complexity.
+Furthermore, callback functions will not work in accelerator code because it is
+not possible to call host functions in the middle of device kernel execution.
+
+\celeritas will not operate as a toolkit as Geant4 does, since this would leave
+many implementation decisions to the end-user, hindering performance. Therefore,
+to address the purely technical challenges of supporting experimental workflows,
+we will implement an \ac{api} through which clients can specify geometric
+regions for scoring and \ac{mc} particle data. Using this \ac{api} the desired
+scoring data can be processed on the host at runtime, and the necessary data
+fields for tallies can then be configured for execution in kernel code on the
+device.  The most efficient interface would fully occupy the device by executing
+many events concurrently.  However, this is not the way that experimental
+workflows are currently configured, in which events are executed independently
+on each thread.
+
+As \ac{hpc} evolved to make use of heterogeneous architectures, \ac{io} became
+one of the critical performance bottlenecks of many \ac{hpc} applications, being
+a main concern for \celeritas. \ac{hep} detector simulations produce large
+volumes of data, with many millions of particle tracks and detector scoring
+regions having to be recorded. Thus, the need to optimize the data movement
+between host and device and manage parallel \ac{io} requests is paramount.
+Furthermore, to be compatible with \ac{hep} experimental workflows, \celeritas
+needs to be integrated with ROOT. To mitigate these problems, we will cross
+collaborate with \ac{doe}'s \ac{rapids} team to make \ac{adios} the internal
+\ac{io} \ac{api} of \celeritas, as it is highly optimized for heterogeneous
+architectures. The ultimate goal is find optimal strategies to mitigate \ac{io}
+performance issues, and integrate \ac{adios} with ROOT for full interoperability
+with \ac{hep} workflows. This colaboration with \ac{rapids} will also explore
+data visualization tools and event filtering, allowing users to visualize,
+validate, and debug the generated data before launching production campaigns.
