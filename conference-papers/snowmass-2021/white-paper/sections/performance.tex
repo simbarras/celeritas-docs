@@ -62,13 +62,19 @@ every aspect of the code, including physics, geometry, \ac{em} fields, and
 which is a geometry composed of 50 rectangular layers, each containing a Pb
 absorber and a liquid Ar gap.
 
-In order to run a comparison between the three codes, we ported \acs{adept}'s
-implementation of the \emph{TestEm3} geometry to a Geant4 application, which in
-turn exported the geometry as a \acs{gdml} file, the current default input used
-by \celeritas. All three applications are running the same physics models with
-the same secondary production thresholds. The main caveats here are the use of
-different \acp{prng} and the fact that Geant4 uses its own navigation system,
-whereas \celeritas and \acs{adept} rely on \acs{vecgeom}.
+In order to run a comparison between the three codes, we ported the
+\acs{adept}'s implementation of the \emph{TestEm3} geometry to a Geant4
+application, which in turn exported the geometry as a \acs{gdml} file, which is
+the current default input used by \celeritas. All three applications are running
+the same physics models with the same secondary production thresholds.
+Nevertheless, there are a few main caveats:
+\begin{itemize}[itemsep=0pt]
+    \item \celeritas and \acs{adept} use different \acp{prng};
+    \item Geant4 uses its own navigation system, whereas \celeritas and
+    \acs{adept} rely on \acs{vecgeom};
+    \item \acs{adept} runs one event at a time, while celeritas loads and runs
+    all primaries concurrently;
+\end{itemize}
 
 The results are produced using a particle-gun type input with \num{100000}, 10
 GeV, electron primaries placed before the first layer. Their momentum direction
@@ -78,16 +84,21 @@ is similar to \ac{olcf}'s Summit: it has Intel Xeon Gold 5218 (Cascade Lake)
 core, with \SI{188}{\giga\byte} total memory), and \nvidia V100 \acp{gpu} (each
 with 80 symmetric multiprocessors, 64 CUDA cores per multiprocessor, and
 \SI{16}{\giga\byte} memory). The current physics equivalency relies only on the
-mean deposited energy per layer (Fig.~\ref{fig:testem3-edep}), which shows all
-codes to be in good agreement. The performance is measured in events per
-second---where an event here is one primary particle---and presented in
-table~\ref{tab:testem3-performance}. \celeritas shows a speed-up factor of blah
-when compared to Geant4, and is bleh faster than \acs{adept}. If \celeritas is
-run on CPU, it is still bloh faster than Geant4.
+mean deposited energy per layer (Fig.~\ref{fig:testem3-edep}), which shows good
+agreement between \acs{adept} and Geant4, with \celeritas being within a few
+percent. The discrepancy is likely caused by \celeritas' current linear
+interpolation of energy loss cross-section data. Geant's manual explicitly
+describes that for accurate physics results, higher-order interpolations
+methods, such as splined-based or log-log, are needed. The performance is
+measured in events per second---where an event here is one primary
+particle---and presented in table~\ref{tab:testem3-performance}. \celeritas
+shows a speed-up factor of 178$\times$ when compared to Geant4, and is
+approximately 3.3$\times$ faster than \acs{adept}. For a serial \ac{cpu} run,
+\celeritas is about 1.8$\times$ faster than Geant4.
 
 \begin{figure}
     \centering
-    %\includegraphics[width=0.5\textwidth]{figs/testem3-edep.pdf}
+    \includegraphics[width=0.7\textwidth]{figs/testem3_edep.pdf}
     \caption{Mean energy deposition per layer, represented by integer numbers
     in the $x$ axis. Each layer is composed by a pair of absorber and gap made
     of Pb and liquid Ar.}
@@ -96,17 +107,18 @@ run on CPU, it is still bloh faster than Geant4.
 
 \begin{table}
     \caption{Comparison between \celeritas, \acs{adept}, and Geant4 performances
-    in events per second.}
+    in events per second. The speed-up factor is calculated with respect to
+    Geant4.}
     \label{tab:testem3-performance}
     \centering
     \begin{tabular}{llrr}
         \toprule
         Application & Execution & Performance [events/s] & Speed-up factor\\
         \midrule
-        Geant4      & \ac{cpu} (serial) & 10 & 1\\
-        \acs{adept} & \ac{gpu}          & 10 & 1\\
-        \celeritas  & \ac{gpu}          & 10 & 1\\
-        \celeritas  & \ac{cpu} (serial) & 10 & 1\\
+        Geant4      & \ac{cpu} (serial) & 11.4   & 1.0\\
+        \acs{adept} & \ac{gpu}          & 618.5  & 54.0\\
+        \celeritas  & \ac{gpu}          & 2040.9 & 178.2\\
+        \celeritas  & \ac{cpu} (serial) & 18.5   & 1.6\\
         \bottomrule
     \end{tabular}
   \end{table}
