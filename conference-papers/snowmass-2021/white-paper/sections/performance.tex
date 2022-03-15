@@ -52,19 +52,20 @@ independent adoption on capacity systems.
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{Preliminary results}
 
-The \celeritas team will develop a series of internal test problems to validate
+The \celeritas team is developing a series of internal test problems to validate
 every aspect of the code, including physics, geometry, \ac{em} fields, and
-\ac{io}. Here, we present a small set of preliminary results comparing
-\celeritas against Geant4 and \acs{adept}. These results are produced using the
-\emph{TestEm3} example, available in \acs{adept}'s repository\footnote {
+\ac{io}. Additionaly, we are participating with the \acs{adept} project on a
+series of common physics and performance benchmarks. Here, we present a small
+set of preliminary results comparing \celeritas against Geant4 and \acs{adept}
+using the \emph{TestEm3} benchmark test problem, available in \acs{adept}'s
+repository\footnote {
     \url{https://github.com/apt-sim/AdePT}
-},
-which is a geometry composed of 50 rectangular layers, each containing a Pb
-absorber and a liquid Ar gap.
+}. This problem's geometry is composed of 50 rectangular layers, each
+containing a Pb absorber and a liquid Ar gap.
 
 In order to run a comparison between the three codes, we ported the
 \acs{adept}'s implementation of the \emph{TestEm3} geometry to a Geant4
-application, which in turn exported the geometry as a \acs{gdml} file, which is
+application, which in turn exported the geometry as a \acs{gdml} file that is
 the current default input used by \celeritas. All three applications are running
 the same physics models with the same secondary production thresholds.
 Nevertheless, there are a few main caveats:
@@ -78,23 +79,24 @@ Nevertheless, there are a few main caveats:
 
 The results are produced using a particle-gun type input with \num{100000}, 10
 GeV, electron primaries placed before the first layer. Their momentum direction
-is fixed and pointed perpendicularly towards the layers. The compute node used
-is similar to \ac{olcf}'s Summit: it has Intel Xeon Gold 5218 (Cascade Lake)
-\acp{cpu} running at 2.3GHz (2 sockets of 16 cores with 2 hardware threads per
-core, with \SI{188}{\giga\byte} total memory), and \nvidia V100 \acp{gpu} (each
-with 80 symmetric multiprocessors, 64 CUDA cores per multiprocessor, and
+is fixed and pointed perpendicularly towards the layers. The compute node uses
+the same \acp{gpu} as \ac{olcf}'s Summit: it has Intel Xeon Gold 5218 (Cascade
+Lake) \acp{cpu} running at 2.3GHz (2 sockets of 16 cores with 2 hardware threads
+per core, with \SI{188}{\giga\byte} total memory), and \nvidia V100 \acp{gpu}
+(each with 80 symmetric multiprocessors, 64 CUDA cores per multiprocessor, and
 \SI{16}{\giga\byte} memory). The current physics equivalency relies only on the
 mean deposited energy per layer (Fig.~\ref{fig:testem3-edep}), which shows good
 agreement between \acs{adept} and Geant4, with \celeritas being within a few
-percent. The discrepancy is likely caused by \celeritas' current linear
-interpolation of energy loss cross-section data. Geant's manual explicitly
-describes that for accurate physics results, higher-order interpolations
-methods, such as splined-based or log-log, are needed. The performance is
-measured in events per second---where an event here is one primary
-particle---and presented in table~\ref{tab:testem3-performance}. \celeritas
-shows a speed-up factor of 178$\times$ when compared to Geant4, and is
-approximately 3.3$\times$ faster than \acs{adept}. For a serial \ac{cpu} run,
-\celeritas is about 1.8$\times$ faster than Geant4.
+percent. Although the reason for this discrepancy still has to be fully
+understood, it is likely caused by \celeritas' current linear interpolation of
+energy-loss cross-section data. Geant's documentation explicitly states that for
+accurate physics results, higher-order interpolations methods, such as
+splined-based or log-log, are needed. The performance is measured in events per
+second---where an event here is one primary particle---and presented in
+Table~\ref{tab:testem3-performance}. \celeritas shows a speedup factor of
+178$\times$ when compared to Geant4, and is approximately 3.3$\times$ faster
+than \acs{adept}. For a serial \ac{cpu} run, \celeritas is about 1.8$\times$
+faster than Geant4.
 
 \begin{figure}
     \centering
@@ -107,13 +109,13 @@ approximately 3.3$\times$ faster than \acs{adept}. For a serial \ac{cpu} run,
 
 \begin{table}
     \caption{Comparison between \celeritas, \acs{adept}, and Geant4 performances
-    in events per second. The speed-up factor is calculated with respect to
+    in events per second. The speedup factor is calculated with respect to
     Geant4.}
     \label{tab:testem3-performance}
     \centering
     \begin{tabular}{llrr}
         \toprule
-        Application & Execution & Performance [events/s] & Speed-up factor\\
+        Application & Execution & Performance [events/s] & Speedup factor\\
         \midrule
         Geant4      & \ac{cpu} (serial) & 11.4   & 1.0\\
         \acs{adept} & \ac{gpu}          & 618.5  & 54.0\\

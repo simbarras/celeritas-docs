@@ -221,7 +221,9 @@ Table~\ref{tab:proposed-physics}, where only processes are explicit as model
 separation will be determined based on performance and/or code maintainability.
 %%
 \begin{table}
-  \caption{Proposed physics development in \celeritas.}
+  \caption{Proposed physics development in \celeritas. Model definitions are
+  ommited as these will be determined based on code performance and/or
+  maintainability.}
   \label{tab:proposed-physics}
   \centering
   \begin{tabular}{llll}
@@ -340,16 +342,16 @@ for different user-defined fields.
 
 The key challenge in providing user interfaces is developing a framework that
 supports integration into existing experimental \ac{mc} simulation sequences
-that \ipl{1} provides the minimum required code barrier for incorporation and
-\ipl{2} preserves performance.  Existing experimental frameworks are built on
-the Geant4 toolkit, which provides user actions that allow users to control the
-program and data flow at the level of run, event, track, and step. In Geant4
-scoring is done using dedicated stepping actions in which information from the
-sensitive detector volumes is accessible through callback semantics into these
-parts of the simulation.  This approach provides great user flexibility at the
-cost of higher computational overhead and increased system complexity.
-Furthermore, callback functions will not work in accelerator code because it is
-not possible to call host functions in the middle of device kernel execution.
+that provides the minimum required code barrier for incorporation and preserves
+performance.  Existing experimental frameworks are built on the Geant4 toolkit,
+which provides user actions that allow users to control the program and data
+flow at the level of run, event, track, and step. In Geant4 scoring is done
+using dedicated stepping actions in which information from the sensitive
+detector volumes is accessible through callback semantics into these parts of
+the simulation.  This approach provides great user flexibility at the cost of
+higher computational overhead and increased system complexity. Furthermore,
+callback functions will not work in accelerator code because it is not possible
+to call host functions in the middle of device kernel execution.
 
 \celeritas will not operate as a toolkit as Geant4 does, since this would leave
 many implementation decisions to the end-user, hindering performance. Therefore,
@@ -370,8 +372,8 @@ volumes of data, with many millions of particle tracks and detector scoring
 regions having to be recorded. Thus, the need to optimize the data movement
 between host and device and manage parallel \ac{io} requests is paramount.
 Furthermore, to be compatible with \ac{hep} experimental workflows, \celeritas
-needs to be integrated with ROOT. To mitigate these problems, we will cross
-collaborate with \ac{doe}'s \ac{rapids} team to make \ac{adios} the internal
+needs to be integrated with ROOT. To address these challenges, we are
+collaborating with \ac{doe}'s \ac{rapids} team to make \ac{adios} the internal
 \ac{io} \ac{api} of \celeritas, as it is highly optimized for heterogeneous
 architectures. The ultimate goal is to find optimal strategies to mitigate
 \ac{io} performance issues and integrate \ac{adios} with ROOT for full
