@@ -38,10 +38,7 @@ corresponds to a single thread. There is no cooperation between individual
 threads, facilitating the dual host/device annotation of most of \celeritas.
 \celeritas also uses a modular programming approach based on composition rather
 than inheritance in order to accommodate device-based architectures, which have
-poor support for runtime polymorphism.  Furthermore, the use of simple classes
-that define function-object interfaces enables lambda semantics for kernel
-launches. These features will simplify the adaptation to a performance
-portability model.
+poor support for runtime polymorphism.
 
 The \celeritas programming model uses the \ac{dop} paradigm \cite{dop_2022} to
 facilitate platform portability, improve memory access patterns, and accelerate
@@ -90,11 +87,12 @@ simulation requirements.
 
 The next generation platforms at the \ac{olcf}, \ac{alcf}, and \ac{nersc} will
 each feature different \ac{gpu}-based architectures as shown in
-Table~\ref{tab:lcf-arch}. Although \celeritas currently relies on \cuda, its
-highly modular data management design allows compilation and testing on standard
-multicore architectures. This strategy supports the straightforward
-implementation of programming models for platform portability, with significant
-advances using \acs{hip} being underway.
+Table~\ref{tab:lcf-arch}, so \celeritas cannot rely on a single proprietary
+programming model. The code currently uses a limited set of macros and
+automatically generated kernels to support \cuda, \acs{hip}, and \acs{openmp}.
+Its highly modular data management design and function-like objects used to
+launch kernels will allow for straightforward adaptation to other programming
+models as needed.
 %%
 \begin{table}
   \caption{Exascale architectures and native programming models at \acs{doe}
@@ -377,6 +375,6 @@ collaborate with \ac{doe}'s \ac{rapids} team to make \ac{adios} the internal
 \ac{io} \ac{api} of \celeritas, as it is highly optimized for heterogeneous
 architectures. The ultimate goal is find optimal strategies to mitigate \ac{io}
 performance issues, and integrate \ac{adios} with ROOT for full interoperability
-with \ac{hep} workflows. This colaboration with \ac{rapids} will also explore
+with \ac{hep} workflows. This collaboration with \ac{rapids} will also explore
 data visualization tools and event filtering, allowing users to visualize,
 validate, and debug the generated data before launching production campaigns.
