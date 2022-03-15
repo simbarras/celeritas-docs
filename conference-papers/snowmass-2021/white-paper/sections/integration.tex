@@ -11,15 +11,6 @@ already taking advantage of facilities such as \ac{alcf}, \ac{nersc}, and
 pathways. \celeritas aims close the gap between \ac{hep} distributed computing
 networks and \acp{lcf} networks by providing three different routes
 (Fig.~\ref{fig:celeritas-hep-workflows}).
-%%
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figs/celeritas_integration-all}
-    \caption{Proposed \acs{hep} integration workflows for (a) \acceleritas, (b)
-    end-to-end \celeritas, and (c) \celeritas for \acs{ai}.}
-    \label{fig:celeritas-hep-workflows}
-\end{figure}
-%%
 These workflows intend to enable \ac{hep} experiments to use \celeritas in three
 different ways:
 %%
@@ -40,6 +31,14 @@ and describe these three envisioned plans to integrate \celeritas into
 experimental workflows. Since each workflow has unique traits, we expect that
 some experimental collaborations might see value in using all three workflows,
 each serving a different purpose.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figs/celeritas_integration-all}
+    \caption{Proposed \acs{hep} integration workflows for (a) \acceleritas, (b)
+    end-to-end \celeritas, and (c) \celeritas for \acs{ai}.}
+    \label{fig:celeritas-hep-workflows}
+\end{figure}
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{Integration challenges}
@@ -199,7 +198,7 @@ approximately $1.5\times$ in the last \numrange{3}{4} years; and \ipl{3} each
 Shift \cite{hamilton_continuous-energy_2019}---a performance metric that we plan
 to achieve with \celeritas.
 
-\begin{figure}
+\begin{figure}[h]
   \centering%
   \includegraphics[width=0.6\textwidth]{figs/gpu-projection-atlas.pdf}%
   \caption{Compute capability converted into \si{MHS06.year} units for \acs{mc}

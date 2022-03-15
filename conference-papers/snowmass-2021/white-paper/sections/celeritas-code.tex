@@ -94,7 +94,7 @@ Its highly modular data management design and function-like objects used to
 launch kernels will allow for straightforward adaptation to other programming
 models as needed.
 %%
-\begin{table}
+\begin{table}[h]
   \caption{Exascale architectures and native programming models at \acs{doe}
   \acsp{lcf}.}
   \label{tab:lcf-arch}
@@ -169,7 +169,7 @@ models itemized in Table~\ref{tab:em-physics}, is necessary to generate
 realistic simulations of \ac{em} showers and demonstrate key characteristics of
 a full-featured transport loop.
 %%
-\begin{table}
+\begin{table}[h]
   \caption{Current status of \celeritas \acs{em} physics. The initial
   implementation ($\gamma$ and $e^\pm$) is almost complete, and muon physics is
   in its initial stage. Particle symbols are defined in
@@ -220,7 +220,7 @@ required physics processes and particles is shown in
 Table~\ref{tab:proposed-physics}, where only processes are explicit as model
 separation will be determined based on performance and/or code maintainability.
 %%
-\begin{table}
+\begin{table}[h]
   \caption{Proposed physics development in \celeritas. Model definitions are
   ommited as these will be determined based on code performance and/or
   maintainability.}
@@ -318,14 +318,10 @@ from \acs{vecgeom}. This implementation, \ac{orange}, is an initial \ac{gpu}
 port of the new modernized geometry used by the SCALE nuclear engineering code
 suite to model complex multi-level nuclear reactor and neutral particle
 shielding problems~\cite{scale}. The \celeritas port uses the Collection
-paradigm
-%
-\celcomment{(make sure this definition is explained)}
-%
-to store quadric surface representations and define cell volumes as \ac{csg}
-combinations of those surfaces. At present the \ac{gpu} prototype implementation
-supports only a single geometry level, but the extension of this implementation
-to the full capabilities available on \ac{cpu} will be relatively
+paradigm to store quadric surface representations and define cell volumes as
+\ac{csg} combinations of those surfaces. At present the \ac{gpu} prototype
+implementation supports only a single geometry level, but the extension of this
+implementation to the full capabilities available on \ac{cpu} will be relatively
 straightforward. We are actively collaborating with the \acs{vecgeom} group at
 \acs{cern} to research how \ac{orange} and its methodology could power the next
 generation of Geant4 tracking on \ac{gpu}.
