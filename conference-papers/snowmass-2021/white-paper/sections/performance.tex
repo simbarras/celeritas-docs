@@ -10,8 +10,8 @@ performance metric will be based on a set of real-world \acs{hep} detector
 workflow use cases. \celeritas must run the targeted models at the same fidelity
 as the current state of the art but in much less time. In the next sections,  we
 will present the two \acp{fom} that will be used to measure success, along with
-a few preliminary performance results comparing \celeritas with current state of
-the art \ac{mc} codes.
+a few preliminary performance results comparing \celeritas with current
+state-of-the-art \ac{mc} codes.
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{Performance metrics}
@@ -52,30 +52,28 @@ independent adoption on capacity systems.
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
 \subsection{Preliminary results}
 
-\celeritas will develop a series of internal test problems to validate every
-aspect of the code, including physics, geometry, \ac{em} fields, and \ac{io}.
-Here, we present a small set of preliminary results comparing \celeritas against
-Geant4 and \acs{adept}. These results are produced using the \emph{TestEm3}
-example, available in \acs{adept}'s repository\footnote
-{
+The \celeritas team will develop a series of internal test problems to validate
+every aspect of the code, including physics, geometry, \ac{em} fields, and
+\ac{io}. Here, we present a small set of preliminary results comparing
+\celeritas against Geant4 and \acs{adept}. These results are produced using the
+\emph{TestEm3} example, available in \acs{adept}'s repository\footnote {
     \url{https://github.com/apt-sim/AdePT}
 },
-which is a geometry composed by 50 rectangular layers, each composed by an
-absorber and a gap made of Pb and liquid Ar.
+which is a geometry composed of 50 rectangular layers, each containing a Pb
+absorber and a liquid Ar gap.
 
-In order to run a comparison between the three codes, we ported the
-\acs{adept}'s implementation of the \emph{TestEm3} geometry to a Geant4
-application, which in turn exported the geometry as a \acs{gdml} file, which is
-the current default input used by \celeritas. All three applications are running
-the same physics models with the same secondary production thresholds. The main
-caveats here are the use of different \acp{prng}, and the fact that Geant4 uses
-its own navigation system, whereas \celeritas and \acs{adept} rely on
-\acs{vecgeom}.
+In order to run a comparison between the three codes, we ported \acs{adept}'s
+implementation of the \emph{TestEm3} geometry to a Geant4 application, which in
+turn exported the geometry as a \acs{gdml} file, the current default input used
+by \celeritas. All three applications are running the same physics models with
+the same secondary production thresholds. The main caveats here are the use of
+different \acp{prng} and the fact that Geant4 uses its own navigation system,
+whereas \celeritas and \acs{adept} rely on \acs{vecgeom}.
 
 The results are produced using a particle-gun type input with \num{100000}, 10
 GeV, electron primaries placed before the first layer. Their momentum direction
-is fixed and pointed perpendicularly towards the layers. The device used is
-similar to \ac{olcf}'s Summit: it has Intel Xeon Gold 5218 (Cascade Lake)
+is fixed and pointed perpendicularly towards the layers. The compute node used
+is similar to \ac{olcf}'s Summit: it has Intel Xeon Gold 5218 (Cascade Lake)
 \acp{cpu} running at 2.3GHz (2 sockets of 16 cores with 2 hardware threads per
 core, with \SI{188}{\giga\byte} total memory), and \nvidia V100 \acp{gpu} (each
 with 80 symmetric multiprocessors, 64 CUDA cores per multiprocessor, and
