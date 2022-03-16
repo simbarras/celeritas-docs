@@ -30,13 +30,14 @@ to fully analyze the data from the \acs{hllhc}
 \cite{the_atlas_collaboration_atlas_2020,cms-offline-computing-results}. The
 contribution to this estimate from \ac{mc} full detector simulation is based on
 the performance of the current state-of-the-art and \acs{lhc} baseline \ac{mc}
-application Geant4 \cite{geant4_status_2016}, a threaded \acs{cpu}-only code
-whose performance has stagnated with the deceleration of clock rates and core
-counts in conventional processors. Overcoming this bottleneck by improving the
-performance of Geant4 or replacing components of its simulation with
-lower-fidelity ``fast'' models, such as FastCaloSim \cite{fastcalosim}, or
-\ac{ai}-based methods such as FastCaloGAN \cite{fastcalogan}, is seen as a
-critical pathway to fulfilling the computational requirements of the \acs{hllhc}
+application Geant4 \cite{geant4,geant4_2006,geant4_status_2016}, a threaded
+\acs{cpu}-only code whose performance has stagnated with the deceleration of
+clock rates and core counts in conventional processors. Overcoming this
+bottleneck by improving the performance of Geant4 or replacing components of its
+simulation with lower-fidelity ``fast'' models, such as FastCaloSim
+\cite{fastcalosim}, or \ac{ai}-based methods such as FastCaloGAN
+\cite{fastcalogan}, is seen as a critical pathway to fulfilling the
+computational requirements of the \acs{hllhc}
 \cite{the_hep_software_foundation_roadmap_2019}.
 
 Instead of relying on fast models to replace full-fidelity \ac{mc} transport, we
@@ -138,17 +139,15 @@ architectures.
 Outside the realm of \ac{hep}, recent work in the \emph{ExaSMR: Coupled Monte
 Carlo Neutronics and Fluid Flow Simulation of Small Modular Reactors} project
 within \ac{ecp} has demonstrated speedups of $160\times$ per \ac{cpu} core on
-Summit\footnote
-{
+Summit\footnote {
     \url{https://www.olcf.ornl.gov/olcf-resources/compute-systems/summit/}
-}
-for the Shift \ac{mc} transport code on full-featured, three-dimensional reactor
-models \cite{hamilton_continuous-energy_2019}. There are important differences
-between this work and the necessary capabilities required for particle physics
-detector modeling. For instance, \emph{ExaSMR} applications are not
-characterized by large showers of secondary particles, and because the particles
-are neutral, there are no \ac{em} field interactions. Despite the more complex
-needs of \ac{hep} \ac{mc} simulations, current preliminary results presented on
-this paper show a promising outcome for this project, with a fully fledged
-\celeritas potentially reaching comparable speedup factors when compared to
-Geant4.
+} for the Shift \ac{mc} transport code on full-featured, three-dimensional
+reactor models \cite{hamilton_continuous-energy_2019}. There are important
+differences between this work and the necessary capabilities required for
+particle physics detector modeling. For instance, \emph{ExaSMR} applications are
+not characterized by large showers of secondary particles, and because the
+particles are neutral, there are no \ac{em} field interactions. Despite the more
+complex needs of \ac{hep} \ac{mc} simulations, current preliminary results
+presented on this paper show a promising outcome for this project, with a fully
+fledged \celeritas potentially reaching comparable speedup factors when compared
+to Geant4.
