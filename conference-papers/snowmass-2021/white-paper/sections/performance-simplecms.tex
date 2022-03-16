@@ -1,0 +1,211 @@
+%%---------------------------------------------------------------------------%%
+% performance.tex
+%%---------------------------------------------------------------------------%%
+\section{\celeritas performance}
+
+Given the range of detector geometry complexities, primary event types, and
+amount of output, there is no general case that provides a simple performance
+number such as a simulation rate in events per second. Therefore, our ultimate
+performance metric will be based on a set of real-world \acs{hep} detector
+workflow use cases. \celeritas must run the targeted models at the same fidelity
+as the current state of the art but in much less time. In the next sections,  we
+will present the two \acp{fom} that will be used to measure success, along with
+a few preliminary performance results comparing \celeritas with current
+state-of-the-art \ac{mc} codes.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
+\subsection{Performance metrics}
+
+On \ac{lcf} hardware for the next decade, \acp{gpu} will provide the bulk of the
+compute capability, so one critical performance metric is the ratio of the
+runtime of \celeritas using \acp{gpu} to using only the \acp{cpu} of a given
+machine. This \ac{fom} represents the ability of \celeritas to effectively use
+the hardware that is available and must be sufficiently high to justify running
+on \ac{lcf} resources. We will target a factor of $160\times$ for a single
+\ac{gpu} to a single \ac{cpu}, which is the relative \ac{gpu}/\ac{cpu}
+performance of the Shift \ac{mc} transport code
+\cite{hamilton_continuous-energy_2019}.
+
+A second performance metric is critical to the programmatic viability of
+\celeritas in the broader \ac{hep} community: the work done for the same amount
+of cost in power consumption and hardware, using Geant4 on \ac{cpu} as a
+baseline. This \ac{fom} is the motivation for \ac{hep} workflows to adapt to
+using \celeritas for \ac{mc} transport. The Geant4 team supposes that a factor
+of two speedup resulting from ``adiabatic improvements'' to their code is not
+outside the realm of possibility \cite{marc_verderi_geant4_2021}, so a $2
+\times$ cost improvement of \celeritas runtime over Geant4 runtime is our second
+target. Assuming that electricity consumption (and waste heat disposal) are the
+primary constraints for independent \ac{hep} computing centers, this factor
+should be evaluated by comparing the performance of Geant4 on \acp{cpu} with a
+comparable power requirement as \celeritas on \acp{gpu}. At the present time,
+for example, that comparison might be for an AMD 3rd Gen EPYC Processor power
+(\SI{280}{\watt} for 64 cores) to a PCIe \nvidia A100 (\SI{250}{\watt} for 108
+symmetric multiprocessors).
+
+Meeting these \acp{fom} with Geant4-equivalent physics capabilities and
+providing a solid user interface and \ac{io} integration to \ac{hep} workflows
+will be the ultimate confirmation that \celeritas is a viable option for
+\ac{hep} experiments. At this point \celeritas will be ideal for execution on
+\ac{doe} \acp{lcf} and will be sufficiently fast on its own merits to motivate
+independent adoption on capacity systems.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
+\subsection{Preliminary results}
+
+The \celeritas team will develop a series of internal test problems to validate
+every aspect of the code, including physics, geometry, \ac{em} fields, and
+\ac{io}. Here, we present a small set of preliminary results comparing
+\celeritas against Geant4 using our most recently implemented high-level
+verification problem. This test evaluates the current code as a whole, including
+features such as multiple materials, secondary production, and energy cutoffs
+with the full array of currently implemented physics processes for $\gamma$,
+$e^-$, and $e^+$ (Table~\ref{tab:em-physics}). The test geometry is an idealized
+coarse representation of the main components of the \ac{cms} detector,
+comprising six cylindrical shells centered about the $z$ axis up to
+\SI{375}{\centi\meter}. Each cylinder and shell is composed of a single element:
+vacuum, Si, Pb, C, Ti, and Fe. 
+
+The first preliminary results are on a compute node that uses the same \acp{gpu}
+as \ac{olcf}'s Summit: it has Intel Xeon Gold 5218 (Cascade Lake) \acp{cpu}
+running at 2.3GHz (2 sockets of 16 cores with 2 hardware threads per core, with
+\SI{188}{\giga\byte} total memory), and \nvidia V100 \acp{gpu} (each with 80
+symmetric multiprocessors, 64 CUDA cores per multiprocessor, and
+\SI{16}{\giga\byte} memory). The simulation input is an isotropic
+\SI{1}{\giga\electronvolt} photon point source at the origin, composed of 100
+events each with \num{1000} photon primaries.
+
+The initial physics validation tallies the cumulative energy deposition over the
+$z$ axis (Fig.~\ref{fig:physics-results:edep}), and the distribution of number
+of steps per track, separated by particle type
+(Fig.~\ref{fig:physics-results:steps}). These show the two \ac{mc} codes to be
+in agreement within statistical uncertainties.
+%%
+\begin{figure}
+  \centering%
+  \begin{subfigure}{\textwidth/2}%
+    \includegraphics[height=2.6in]{figs/cumulative-z}%%
+    \caption{Cumulative energy deposition over the $z$ axis.}%
+    \label{fig:physics-results:edep}
+  \end{subfigure}%
+  \begin{subfigure}{\textwidth/2}%
+    \includegraphics[height=2.6in]{figs/steps-per-track}%
+    \caption{Steps per track, separated by particle type.}%
+    \label{fig:physics-results:steps}
+  \end{subfigure}
+  \caption{Comparison between Geant4 and \celeritas simulation runs. Results are
+  in agreement within the statistical errors.}
+  \label{fig:physics-results}
+\end{figure}
+%%
+The performance numbers can only provide a baseline prediction for the eventual
+performance of \celeritas, as it has only a small subset of its eventual
+capabilities. Output routines are disabled in order to control for the potential
+latency of disk \ac{io}, which will be improved in the future. Because the
+current \celeritas application uses the same transport loop algorithm for both
+\ac{cpu} and \ac{gpu} implementations, where each step is divided into numerous
+kernels with many synchronization points, many tracks must be ``in flight''
+simultaneously to amortize the overhead of thread synchronization on \ac{cpu}.
+On \ac{gpu}, one thread corresponds to a single track, but the \ac{cpu} can
+transport an arbitrary number of tracks per physical core. This problem uses
+\num{1024} total tracks regardless of core count on \ac{cpu}. For the results
+presented in Fig.~\ref{fig:celeritas-performance}, only one \ac{cpu} socket (up
+to 16 physical cores) and a single \ac{gpu} are used. Peak \ac{gpu} performance
+is reached with about a million simultaneous tracks. At this peak, the \ac{gpu}
+was about $30 \times$ faster than a 16-core run of the OpenMP version of
+\celeritas,  $170 \times$ faster than the single-core \ac{cpu} \celeritas
+runtime, and about $240 \times$ faster than the single-core \ac{cpu} Geant4
+runtime.
+
+\begin{figure}
+    \centering
+    \includegraphics{figs/performance.pdf}
+    \caption{Performance of Celeritas and Geant4 on \acs{cpu} and \acs{gpu}.
+    Higher values are better.}
+    \label{fig:celeritas-performance}
+\end{figure}
+
+These initial results, where a single \nvidia V100 is equivalent to 240 Intel
+Xeon Gold 5218 \ac{cpu} cores at 2.3 GHz, are surprisingly good for an initial
+unoptimized simulation of a realistic problem with multiple realistic physics,
+but they do come with caveats:
+\begin{itemize}[itemsep=0pt]
+  \item This demonstration version of \celeritas supports only a single element
+    per material, and the demonstration problem is hardwired to have no magnetic
+    field. Including those features will slow down the simulation even if they
+    are unused.
+  \item The \ac{prng} used in the \celeritas demonstration ({XORWOW}) is faster
+    and less statistically random than the \ac{prng} in Geant4 ({MixMax}).
+  \item The current \celeritas algorithm and data structures are designed for
+    massive \ac{gpu} parallelism and are not optimal for \ac{cpu} parallelism,
+    especially with a small thread count.
+  \item Aside from early performance analysis on a small subset of the present
+    code base in \cite{johnson_2021}, \emph{no optimization work has been
+    performed} for this demonstration, so \celeritas may become faster.
+  \item The simulation results are reproducible with the same number of threads,
+    but individual track IDs (used for ``MC truth'' debugging analysis) are
+    arbitrary.
+  \item As with all other \ac{gpu} applications, good performance requires
+    saturating the \ac{gpu} with work to do, hiding latency for memory accesses
+    and amortizing the launch cost and \ac{cpu} overhead. Experimental workflows
+    may need to batch multiple events together to achieve peak \ac{gpu}
+    performance.
+\end{itemize}
+Taking these considerations together, we extrapolate these initial results to be
+representative of expected performance on a fully featured \celeritas \ac{em}
+simulation.
+
+Figure~\ref{fig:celeritas-steps} dives into the performance characteristics of
+the many-threaded \ac{gpu} execution by enabling extra diagnostics and detailed
+timing.
+%%
+\begin{figure}
+    \centering%
+    \begin{subfigure}{\textwidth/2}%
+      \includegraphics[height=2.6in]{figs/alive-steps.pdf}%%
+      \caption{Track and secondaries}%
+      \label{fig:gpu-thread-active}%
+    \end{subfigure}%
+    \begin{subfigure}{\textwidth/2}%
+      \includegraphics[height=2.5in]{figs/time-per-step.pdf}%
+      \caption{Performance per step}%
+      \label{fig:gpu-thread-time}%
+    \end{subfigure}%
+    \caption{Characterization on \acs{gpu} of (a) number of tracks in-flight and
+    queued, and (b) time taken for each parallel step.}%
+    \label{fig:celeritas-steps}%
+\end{figure}
+%%
+As plotted in Fig.~\ref{fig:gpu-thread-active}, the behavior of the tracks in
+flight (blue lines, left axis) and queued secondary initializers (red line,
+right axis) determines the maximum thread count in the current implementation,
+which is limited by the memory requirements of the initializers: the current
+peak of \num{2.5e7} secondaries must at present be below a user-selected
+preallocated secondary capacity. For the first ${\sim}10$ steps the total
+particle count rises precipitously; but a lower active track count will tend to
+complete the transport of low-energy secondaries before starting to transport
+the high-energy particles that will increase the total number of tracks in
+flight. By preferentially selecting lower-energy particles for tracking,
+algorithmic improvements could reduce the total capacity requirement. Additional
+code improvements should allow the secondary capacity to reallocate dynamically
+and even buffer secondaries in \ac{cpu} memory or \ac{nvm}, maximizing the
+number of active tracks and taking full advantage of massive \ac{gpu}
+parallelism.
+
+The timing breakdown in Fig.~\ref{fig:gpu-thread-time} zooms in on time
+requirements of the steep rise and slow fall of active tracks. The simulation
+required seven step iterations to saturate the \ac{gpu} with $2^{21}$ (about two
+million) active tracks from the \num{100000} initial primaries. The increase in
+time from the initial step (all tracks encounter a boundary since they are born
+in a vacuum) to the next step (many tracks interact in matter) is the cost of
+running nontrivial physics interaction kernels. Almost a third of the total
+iterations are to ``drain'' the pipeline of secondaries. Notably, at the end of
+the transport loop, the minimum step iteration time is still more than 10\% of
+the maximum step time even with a handful of active tracks. This reiterates the
+importance of exposing parallelism for \ac{gpu} performance.
+
+With these initial results we have established a rough projection of the code's
+eventual performance and have begun to characterize its behavior on device as a
+function of workload. We will continue to use performance results to inform both
+low-level code optimizations (to efficiently simulate many tracks in parallel)
+and high-level workflow integration (to ensure enough tracks are being simulated
+simultaneously).
