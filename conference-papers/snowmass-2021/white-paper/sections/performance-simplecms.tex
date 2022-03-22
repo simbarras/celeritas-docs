@@ -63,7 +63,7 @@ $e^-$, and $e^+$ (Table~\ref{tab:em-physics}). The test geometry is an idealized
 coarse representation of the main components of the \ac{cms} detector,
 comprising six cylindrical shells centered about the $z$ axis up to
 \SI{375}{\centi\meter}. Each cylinder and shell is composed of a single element:
-vacuum, Si, Pb, C, Ti, and Fe. 
+vacuum, Si, Pb, C, Ti, and Fe.
 
 The first preliminary results are on a compute node that uses the same \acp{gpu}
 as \ac{olcf}'s Summit: it has Intel Xeon Gold 5218 (Cascade Lake) \acp{cpu}
@@ -112,21 +112,19 @@ presented in Fig.~\ref{fig:celeritas-performance}, only one \ac{cpu} socket (up
 to 16 physical cores) and a single \ac{gpu} are used. Peak \ac{gpu} performance
 is reached with about a million simultaneous tracks. At this peak, the \ac{gpu}
 was about $30 \times$ faster than a 16-core run of the OpenMP version of
-\celeritas,  $170 \times$ faster than the single-core \ac{cpu} \celeritas
-runtime, and about $240 \times$ faster than the single-core \ac{cpu} Geant4
-runtime.
+\celeritas, the equivalent performance of $170$ single-core \ac{cpu} \celeritas
+runs or $240$ \acp{cpu} running Geant4.
 
 \begin{figure}
     \centering
     \includegraphics{figs/performance.pdf}
-    \caption{Performance of Celeritas and Geant4 on \acs{cpu} and \acs{gpu}.
-    Higher values are better.}
+    \caption{Performance of Celeritas on \acs{cpu} and \acs{gpu} with
+  single-core Geant4 performance for reference.}
     \label{fig:celeritas-performance}
 \end{figure}
 
-These initial results, where a single \nvidia V100 is equivalent to 240 Intel
-Xeon Gold 5218 \ac{cpu} cores at 2.3 GHz, are surprisingly good for an initial
-unoptimized simulation of a realistic problem with multiple realistic physics,
+These initial results are surprisingly good for an initial
+unoptimized simulation of a problem with multiple realistic physics,
 but they do come with caveats:
 \begin{itemize}[itemsep=0pt]
   \item This demonstration version of \celeritas supports only a single element

@@ -113,11 +113,10 @@ requires a broader set of physics and capabilities.
 
 Shortly after the start of preliminary work on \celeritas, \acs{cern} launched a
 new effort, \acs{adept}, to evaluate the performance potential of \ac{em} shower
-simulation on \acp{gpu} \cite{andrei_gheata_adept_2020}. That project relies
-heavily on annotating data structures and algorithms from Geant4, and initial
+simulation on \acp{gpu} \cite{andrei_gheata_adept_2020}. Initial
 test problem results \cite{andrei_gheata_adept_2021,hahnfield_2021} have
-demonstrated performance parity between a 24-core Geant4 simulation and a
-single-\ac{gpu} \acs{adept} simulation. Both \acs{adept} and \celeritas leverage
+demonstrated performance parity between a 24-core Geant4 simulation and an
+\acs{adept} simulation on a single consumer-level \ac{gpu}. Both \acs{adept} and \celeritas leverage
 the \acs{vecgeom} geometry navigation library, a product of the \emph{GeantV}
 project designed for \ac{cpu} vectorization that has since been extended to
 \ac{gpu} multithreading using \cuda \cite{apostolakis_towards_2015}.
@@ -138,7 +137,8 @@ architectures.
 
 Outside the realm of \ac{hep}, recent work in the \emph{ExaSMR: Coupled Monte
 Carlo Neutronics and Fluid Flow Simulation of Small Modular Reactors} project
-within \ac{ecp} has demonstrated speedups of $160\times$ per \ac{cpu} core on
+within \ac{ecp} has demonstrated equivalence of $160$ \ac{cpu} cores per
+\ac{gpu} on
 Summit\footnote {
     \url{https://www.olcf.ornl.gov/olcf-resources/compute-systems/summit/}
 } for the Shift \ac{mc} transport code on full-featured, three-dimensional
@@ -149,5 +149,5 @@ not characterized by large showers of secondary particles, and because the
 particles are neutral, there are no \ac{em} field interactions. Despite the more
 complex needs of \ac{hep} \ac{mc} simulations, current preliminary results
 presented on this paper show a promising outcome for this project, with a fully
-fledged \celeritas potentially reaching comparable speedup factors when compared
-to Geant4.
+fledged \celeritas potentially reaching equivalent \ac{gpu}-to-\ac{cpu}
+performance.
