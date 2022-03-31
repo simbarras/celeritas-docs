@@ -7,24 +7,23 @@
 //---------------------------------------------------------------------------//
 /*!
  * To set this as default:
- * Create a .rootrc file in your home directory with the following content:
+ * Create a .rootrc file in your home directory with:
  *
  * \code
  *   Rint.Logon: /path/to/rootlogon.C
  * \endcode
  *
- * To load it only for specific macros, just keep both macro and rootlogon.C on
- * the same folder.
+ * To use it only for specific plots: copy rootlogon.C to the macro folder.
  */
 //---------------------------------------------------------------------------//
 #include <iostream>
-#include <TStyle.h>
-#include <TROOT.h>
 #include <TColor.h>
-#include <TLatex.h>
 #include <TGaxis.h>
 #include <TH1.h>
 #include <TH2.h>
+#include <TLatex.h>
+#include <TROOT.h>
+#include <TStyle.h>
 
 void rootlogon()
 {
@@ -34,7 +33,7 @@ void rootlogon()
     TStyle* celeritas_style
         = new TStyle("celeritas_style", "Celeritas plot style");
 
-    // Remove the colored frame around the plots
+    // Remove colored frame around plots
     celeritas_style->SetFrameBorderMode(0);
     celeritas_style->SetCanvasBorderMode(0);
     celeritas_style->SetPadBorderMode(0);
@@ -92,7 +91,7 @@ void rootlogon()
     celeritas_style->SetLabelSize(.05, "xyz");
     celeritas_style->SetLabelOffset(.005, "xyz");
 
-    // Center titles
+    // Center plot titles
     celeritas_style->SetTitleAlign(22);
     celeritas_style->SetTitleX(.5);
     celeritas_style->SetTitleY(.95);
@@ -114,8 +113,9 @@ void rootlogon()
     // Set automatic scientific notation on axes with large numbers
     TGaxis::SetMaxDigits(3);
 
-    // Set Viridis palette as standard
+    // Set Viridis palette as standard and increase number of contours
     celeritas_style->SetPalette(kViridis);
+    celeritas_style->SetNumberContours(255);
 
     // Apply all settings
     gROOT->SetStyle("celeritas_style");
@@ -132,25 +132,54 @@ void rootlogon()
  */
 
 //---------------------------------------------------------------------------//
-void SetPlotTitle(const char* title)
+/*!
+ * Adds either a "Preliminary" or a "Celeritas Preliminary" at the top right
+ * corner of the plot.
+ */
+// Horizontal
+void Preliminary()
 {
-    TLatex* myTitle = new TLatex(0.1, 0.95, title);
-    myTitle->SetTextColor(1);
-    myTitle->SetNDC();
-    myTitle->SetTextSize(2 / 30.);
-    myTitle->SetTextAlign(12);
-    myTitle->Draw();
+    TLatex* prelim = new TLatex(.9, .95, "Preliminary");
+    prelim->SetTextColor(38);
+    prelim->SetNDC();
+    prelim->SetTextSize(2 / 30.);
+    prelim->SetTextAlign(32);
+    prelim->Draw();
 }
 
-//---------------------------------------------------------------------------//
-void SetPlotTitle(const char* title, double x_position)
+// Vertical
+void PreliminarySide()
 {
-    TLatex* myTitle = new TLatex(x_position, 0.95, title);
-    myTitle->SetTextColor(1);
-    myTitle->SetNDC();
-    myTitle->SetTextSize(2 / 30.);
-    myTitle->SetTextAlign(12);
-    myTitle->Draw();
+    TLatex* prelim = new TLatex(.93, .9, "Preliminary");
+    prelim->SetTextColor(38);
+    prelim->SetNDC();
+    prelim->SetTextSize(2 / 30.);
+    prelim->SetTextAngle(270);
+    prelim->SetTextAlign(12);
+    prelim->Draw();
+}
+
+// Horizontal
+void CPreliminary()
+{
+    TLatex* prelim = new TLatex(.9, .95, "Celeritas Preliminary");
+    prelim->SetTextColor(38);
+    prelim->SetNDC();
+    prelim->SetTextSize(2 / 30.);
+    prelim->SetTextAlign(32);
+    prelim->Draw();
+}
+
+// Vertical
+void CPreliminarySide()
+{
+    TLatex* prelim = new TLatex(.93, .9, "Celeritas Preliminary");
+    prelim->SetTextColor(38);
+    prelim->SetNDC();
+    prelim->SetTextSize(2 / 30.);
+    prelim->SetTextAngle(270);
+    prelim->SetTextAlign(12);
+    prelim->Draw();
 }
 
 //---------------------------------------------------------------------------//
@@ -239,57 +268,6 @@ void GrayPalette2()
 
 //---------------------------------------------------------------------------//
 /*!
- * Adds either a "Preliminary" or a "Celeritas Preliminary" at the top right
- * corner of the plot.
- */
-// Horizontal
-void Preliminary()
-{
-    TLatex* prelim = new TLatex(.9, .95, "Preliminary");
-    prelim->SetTextColor(38);
-    prelim->SetNDC();
-    prelim->SetTextSize(2 / 30.);
-    prelim->SetTextAlign(32);
-    prelim->Draw();
-}
-
-// Vertical
-void PreliminarySide()
-{
-    TLatex* prelim = new TLatex(.93, .9, "Preliminary");
-    prelim->SetTextColor(38);
-    prelim->SetNDC();
-    prelim->SetTextSize(2 / 30.);
-    prelim->SetTextAngle(270);
-    prelim->SetTextAlign(12);
-    prelim->Draw();
-}
-
-// Horizontal
-void CPreliminary()
-{
-    TLatex* prelim = new TLatex(.9, .95, "Celeritas Preliminary");
-    prelim->SetTextColor(38);
-    prelim->SetNDC();
-    prelim->SetTextSize(2 / 30.);
-    prelim->SetTextAlign(32);
-    prelim->Draw();
-}
-
-// Vertical
-void CPreliminarySide()
-{
-    TLatex* prelim = new TLatex(.93, .9, "Celeritas Preliminary");
-    prelim->SetTextColor(38);
-    prelim->SetNDC();
-    prelim->SetTextSize(2 / 30.);
-    prelim->SetTextAngle(270);
-    prelim->SetTextAlign(12);
-    prelim->Draw();
-}
-
-//---------------------------------------------------------------------------//
-/*!
  * Print help.
  */
 void help()
@@ -297,13 +275,6 @@ void help()
     std::cout << "-----------------------" << std::endl;
     std::cout << " Celeritas rootlogon.C " << std::endl;
     std::cout << "-----------------------" << std::endl;
-    std::cout << std::endl;
-    std::cout << ">>> Plot title" << std::endl;
-    std::cout << "SetPlotTitle(const char* title)" << std::endl;
-    std::cout << "SetPlotTitle(const char* title, double x_position)"
-              << std::endl;
-    std::cout << "SetPlotTitle(const char* title, double x_position)"
-              << std::endl;
     std::cout << std::endl;
     std::cout << ">>> Preliminary tags" << std::endl;
     std::cout << "Preliminary()" << std::endl;
