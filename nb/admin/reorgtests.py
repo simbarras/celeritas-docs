@@ -18,7 +18,7 @@ from pathlib import Path
 HEADER_EXTS = {'.cuh', '.h', '.hh'}
 
 SOURCE_DIR = Path('/rnsdhpc/code/celeritas')
-NEW_SHA = '5d8a0c73bd5e6b574a6830d2c643acb56a9c72cd'
+NEW_SHA = 'efdf9b41d231e9599841322e478e928f0fdd027f'
 
 log = logging.getLogger('rewriter')
 log.setLevel(logging.INFO)
@@ -95,25 +95,6 @@ class HeaderListing:
             self.dirs[dirname] = result
         return result
 
-#    def relative_to(self, dirname):
-#        """Get a list of all directories relative to the given directory.
-#
-#        Filter out directories outside of the dir."""
-#        try:
-#            # cached
-#            return self._relative[dirname]
-#        except KeyError:
-#            pass
-#
-#        result = {}
-#        for (k, v) in self.dirs.items():
-#            if not k.startswith(dirname):
-#                continue
-#            result[k[len(dirname):]] = v
-#
-#        self._relative[dirname] = result
-#        return result
-
     def exists(self, filename):
         return filename in self.filenames
 
@@ -138,21 +119,21 @@ class IncludeProcessor:
         """
         self.headers = headers
         self.search_paths = search_paths
-        self.dirname = dirname(filename)
+        self.dirname = dirname(filename).rstrip('/')
 
     def __call__(self, filename):
         """Convert the given filename to an absolute path.
         """
         # Try relative
         test_dir = self.dirname
-        test_path = filename
-        while test_path.startswith('../'):
-            test_dir = dirname(self.dirname)
-            test_path = test_path
+        rel_path = filename
+        while rel_path.startswith('../'):
+            test_dir = dirname(self.dirname).rstrip('/')
+            rel_path = rel_path[3:]
 
-        test_path = joinpath(test_dir, test_path)
+        test_path = joinpath(test_dir, rel_path)
         if self.headers.exists(test_path):
-            return (test_dir, filename)
+            return (test_dir, rel_path)
 
         # Try remaining paths
         for test_dir in self.search_paths:
@@ -165,31 +146,43 @@ class IncludeProcessor:
 
 
 class SourceFileConverter:
-    def __init__(self, headers, changes, orig_filename):
-        self.process_include = IncludeProcessor(oldh, orig_filename)
+    def __init__(self, headers, changes, search_paths, orig_filename):
+        self.process_include = IncludeProcessor(headers, search_paths, orig_filename)
         self.changes = changes
+        self.search_paths = search_paths
         # Break old and new filename into components
         self.new = changes[orig_filename]
         self.is_detail = (len(self.new) > 2 and self.new[-2] == 'detail')
 
     def __call__(self, filename):
         """Convert a within-file include to an updated path."""
-        old_path = self.process_include(filename)
-        if not old_path:
+        (parent, relative) = self.process_include(filename)
+        if parent is None:
             # System include
             return filename
 
         # Remap from old to new path
-        new_path = self.changes[old_path]
+        new_path = self.changes[joinpath(parent, relative)]
 
         # Find index of first not-common component to make relative
         min_len = len(self.new) - 1
         if self.new[:min_len] == new_path[:min_len]:
-            new_path = new_path[min_len:]
+            # Same directory
+            new_path = '/'.join(new_path[min_len:])
         elif self.is_detail and self.new[:min_len - 1] == new_path[:min_len - 1]:
-            new_path = ['..'] + new_path[min_len - 1:]
+            # Parent directory from detail
+            new_path = '../' + '/'.join(new_path[min_len - 1:])
+        else:
+            # Drop search path
+            new_path = '/'.join(new_path)
+            for sp in self.search_paths:
+                if new_path.startswith(sp):
+                    new_path = new_path[len(sp) + 1:]
+                    break
+            else:
+                assert False, f"No search path found for {new_path}"
 
-        return '/'.join(new_path)
+        return new_path
 
 
 class ReWriter:
@@ -255,6 +248,59 @@ class ReWriter:
         """
         return (self.infile, self.outfile)
 
+
+re_header = re.compile(r'^[#%]\s*include\s*"([^"]+)"')
+re_doxfile = re.compile(r'^//!\s*\\file')
+
+
+class LineUpdater:
+    def __init__(self, headers, changes, search_paths, orig_filename):
+        self.update_include = SourceFileConverter(
+            headers, changes, search_paths, orig_filename
+        )
+        new_fn = '/'.join(changes[orig_filename])
+        rel_fn = new_fn
+        for sp in search_paths:
+            if rel_fn.startswith(sp + '/'):
+                rel_fn = rel_fn[len(sp) + 1:]
+                break
+        self.new_filename = new_fn
+        self.new_rel_filename = rel_fn
+
+    def __call__(self, line):
+        match = re_header.match(line)
+        if match is not None:
+            old_incl = match.group(1)
+            new_incl = self.update_include(old_incl)
+            if old_incl == new_incl:
+                return line
+            return "".join([line[:match.start(1)], new_incl, line[match.end(1):]])
+
+        match = re_doxfile.match(line)
+        if match:
+            return r"//! \file " + self.new_rel_filename + "\n"
+
+        return line
+
+
+class FileUpdater:
+    def __init__(self, headers, changes):
+        # TODO: update search paths based on compile_commands.json
+        search_paths = ['test', 'src']
+        def make_updater(filename):
+            return LineUpdater(headers, changes, search_paths, filename)
+        self.make_updater = make_updater
+
+    def __call__(self, old_filename):
+        update_line = self.make_updater(old_filename)
+
+        with ReWriter(SOURCE_DIR / update_line.new_filename) as rewriter:
+            (old, new) = rewriter.files
+            for old_line in old:
+                line = update_line(old_line)
+                if line != old_line:
+                    rewriter.dirty = True
+                new.write(line)
 
 
 #-----------------------------------------------------------------------------#
