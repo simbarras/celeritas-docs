@@ -2,6 +2,41 @@
 
 _Celeritas_: An HPC-targeted HEP detector simulation code
 
+
+# Authors
+
+## Oak Ridge National Laboratory  
+Thomas M. Evans  
+evanstm@ornl.gov
+
+Seth R. Jonhson  
+jonhsonsr@ornl.gov
+
+Stefano C. Tognini  
+togninis@ornl.gov  
+
+## Argonne National Laboratory
+Paul Romano  
+promano@anl.gov
+
+Amanda Lund  
+alund@anl.gov
+
+## Fermi National Accelerator Laboratory
+Philippe Canal  
+pcanal@fnal.gov
+
+Soon Yung Jun  
+syjun@fnal.gov
+
+Guilherme Lima  
+lima@fnal.gov
+
+## Brookhaven National Laboratory
+Vincent Pascuzzi  
+pascuzzi@bnl.gov
+
+
 # Abstract
 
 The previous Particle Physics Project Prioritization Panel (P5) report was
@@ -16,8 +51,14 @@ Carlo (MC) detector simulations. To alleviate this bottleneck, we present
 _Celeritas_, a new GPU MC detector simulation code designed to take advantage of
 the massive processing power of the DOE's Leadership Computing Facilities
 (LCFs). With _Celeritas_ we plan to bridge the gap between HEP computing
-frameworks and the expanding DOE LCF network, vastly expanding the total compute
-capacity available to experiments for MC production campaigns. Here we present a
-roadmap for _Celeritas_, its architecture, physics capabilities, and strategies
-for its integration with existing and future experimental HEP computing
-workflows.
+frameworks and the expanding DOE LCF network, vastly increasing the total
+compute capacity available to experiments for MC production campaigns. Here we
+present a roadmap for _Celeritas_, including its architecture, physics
+capabilities, and strategies for its integration with existing and future
+experimental HEP computing workflows.
+
+
+# Tracks
+
+- Computational Frontier
+  - Theoretical Calculations and Simulation
