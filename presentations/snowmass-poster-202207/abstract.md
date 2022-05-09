@@ -9,8 +9,8 @@ _Celeritas_: An HPC-targeted HEP detector simulation code
 Thomas M. Evans
 evanstm@ornl.gov
 
-Seth R. Jonhson
-jonhsonsr@ornl.gov
+Seth R. Johnson
+johnsonsr@ornl.gov
 
 Stefano C. Tognini
 togninis@ornl.gov
