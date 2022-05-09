@@ -5,35 +5,35 @@ _Celeritas_: An HPC-targeted HEP detector simulation code
 
 # Authors
 
-## Oak Ridge National Laboratory  
-Thomas M. Evans  
+## Oak Ridge National Laboratory
+Thomas M. Evans
 evanstm@ornl.gov
 
-Seth R. Jonhson  
+Seth R. Jonhson
 jonhsonsr@ornl.gov
 
-Stefano C. Tognini  
-togninis@ornl.gov  
+Stefano C. Tognini
+togninis@ornl.gov
 
 ## Argonne National Laboratory
-Paul Romano  
+Paul K. Romano
 promano@anl.gov
 
-Amanda Lund  
+Amanda L. Lund
 alund@anl.gov
 
 ## Fermi National Accelerator Laboratory
-Philippe Canal  
+Philippe Canal
 pcanal@fnal.gov
 
-Soon Yung Jun  
+Soon Yung Jun
 syjun@fnal.gov
 
-Guilherme Lima  
+Guilherme Lima
 lima@fnal.gov
 
 ## Brookhaven National Laboratory
-Vincent Pascuzzi  
+Vincent Pascuzzi
 pascuzzi@bnl.gov
 
 
