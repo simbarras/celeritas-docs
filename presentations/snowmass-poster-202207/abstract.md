@@ -33,7 +33,7 @@ Guilherme Lima
 lima@fnal.gov
 
 ## Brookhaven National Laboratory
-Vincent Pascuzzi
+Vincent R. Pascuzzi
 pascuzzi@bnl.gov
 
 
