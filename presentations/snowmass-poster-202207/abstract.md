@@ -1,6 +1,6 @@
 # Title
 
-_Celeritas_: An HPC-targeted HEP detector simulation code
+_Celeritas_: HEP detector simulation on GPUs
 
 
 # Authors
@@ -44,8 +44,9 @@ responsible for consolidating a set of long term High Energy Physics (HEP)
 programs to address scientific questions on all three Department of Energy (DOE)
 Cosmic, Energy, and Intensity Frontiers. Two of these efforts are the High
 Luminosity Large Hadron Collider (HL-LHC) and its main experiments, and the Deep
-Underground Neutrino Experiment (DUNE). The unprecedent scale of these endeavors
-is followed by equally challenging computing capacity and storage requirements,
+Underground Neutrino Experiment (DUNE). The unprecedented scale of these
+endeavors
+demands equally challenging computing capacity and storage requirements,
 with a commensurate fraction of the total computing cost being driven by Monte
 Carlo (MC) detector simulations. To alleviate this bottleneck, we present
 _Celeritas_, a new GPU MC detector simulation code designed to take advantage of
