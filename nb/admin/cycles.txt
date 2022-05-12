@@ -1,10 +1,26 @@
-celeritas/em/distribution -> celeritas/track -> celeritas/track/generated -> celeritas/phys
-celeritas/em/distribution -> celeritas/track -> celeritas/phys
-celeritas/em/distribution -> celeritas/phys
 celeritas/track -> celeritas/track/generated
-orange/univ -> orange/surf -> orange
-orange/univ -> orange
-celeritas -> orange
-corecel/io -> corecel/sys
-corecel/io -> corecel/data -> corecel/sys
-corecel/sys -> corecel/data
+celeritas/track -> celeritas/track/generated -> celeritas/track/detail
+celeritas/track -> celeritas/track/detail
+celeritas/field/detail -> celeritas/field
+celeritas/em/xs -> celeritas/em/interactor/detail
+celeritas/em/xs -> celeritas/em/interactor/detail -> celeritas/em/distribution -> celeritas/phys
+celeritas/em/xs -> celeritas/em/interactor/detail -> celeritas/phys
+celeritas/phys -> celeritas/em/distribution
+celeritas/phys -> celeritas/phys/detail
+celeritas/random/detail -> celeritas/random
+orange/surf/detail -> orange/surf
+orange/surf/detail -> orange -> orange/univ/detail -> orange/univ -> orange/surf
+orange/surf/detail -> orange -> orange/univ/detail -> orange/surf
+orange/surf/detail -> orange -> orange/univ -> orange/univ/detail -> orange/surf
+orange/surf/detail -> orange -> orange/univ -> orange/surf
+orange/surf -> orange -> orange/univ/detail -> orange/univ
+orange/surf -> orange -> orange/univ/detail
+orange/surf -> orange -> orange/univ -> orange/univ/detail
+orange/surf -> orange -> orange/univ
+orange -> orange/univ/detail -> orange/univ
+orange -> orange/univ/detail
+orange -> orange/univ -> orange/univ/detail
+orange -> orange/univ
+orange/univ/detail -> orange/univ
+corecel/io/detail -> corecel/io
+corecel/data/detail -> corecel/data

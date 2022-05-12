@@ -5,7 +5,6 @@ digraph packages {
 "corecel/data" -> "corecel/data/detail" [weight=0.300] // [0.2, 0.3333333333333333, 0.3333333333333333, 0.3333333333333333]
 "corecel/data" -> "corecel/sys" [weight=0.333] // [0.3333333333333333]
 "corecel/io" -> "corecel/io/detail" [weight=0.567] // [1.0, 0.2, 0.5]
-"corecel/sys" -> "corecel/data" [weight=0.321] // [0.14285714285714285, 0.5]
 "corecel/cont" -> "corecel/cont/detail" [weight=0.750] // [1.0, 0.5]
 "corecel/io" -> "corecel/cont" [weight=0.350] // [0.2, 0.5]
 "corecel/io" -> "corecel/data" [weight=0.200] // [0.2]
@@ -13,7 +12,5 @@ digraph packages {
 "corecel/data" -> "corecel/math" [weight=0.500] // [0.5]
 "corecel/data/detail" -> "corecel/data" [weight=0.200] // [0.2]
 "corecel/data/detail" -> "corecel/cont" [weight=0.225] // [0.2, 0.25]
-"corecel/cont/detail" -> "corecel/data" [weight=0.333] // [0.3333333333333333]
-"corecel/sys" -> "corecel/io" [weight=1.000] // [1.0]
 "corecel/io/detail" -> "corecel/io" [weight=1.000] // [1.0]
 }

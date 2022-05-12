@@ -18,7 +18,7 @@ from pathlib import Path
 HEADER_EXTS = {'.cuh', '.h', '.hh'}
 
 SOURCE_DIR = Path('/rnsdhpc/code/celeritas')
-NEW_SHA = 'efdf9b41d231e9599841322e478e928f0fdd027f'
+NEW_SHA = '5ce485f79fd811384876f8ccacb85f067dcb1a3f'
 
 log = logging.getLogger('rewriter')
 log.setLevel(logging.INFO)
