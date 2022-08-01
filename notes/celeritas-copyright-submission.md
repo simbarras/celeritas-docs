@@ -1,6 +1,5 @@
 # Celeritas Copyright submission
 
-
 ```
 Amanda Lund <alund@anl.gov> / 9700 S. Cass Avenue Lemont, IL 60439 /  Argonne National Laboratory
 Ben Morgan <ben.morgan@warwick.ac.uk> / Coventry CV4 7AL, UK / University of Warwick
@@ -15,16 +14,47 @@ Stefano C Tognini <togninis@ornl.gov> / 1 Bethel Valley Rd, Oak Ridge, TN 37831 
 
 # Problem that was solved
 
-Detector simulation is one of the most intense computational sinks in analysis
-workflows for High Energy Physics.
+In order to interpret the results from the complex CMS and ATLAS detectors used
+by the Large Hadron Collider (LHC), analysts must execute numerous
+computationally expensive Monte Carlo simulations of the detector response to
+hypothetical physics reactions. These simulations currently rely on the Geant4
+detector simulation software that only runs on CPUs, but computational centers
+are increasingly reliant on GPUs for the bulk of numerical processing power.
+New particle transport algorithms and physics implementations are necessary to
+adapt detector simulations to the present-day high performance computational
+hardware which will be the standard computational hardware of the future.
 
 # Solution provided by the computer code
 
+Celeritas is a novel code that implements Monte Carlo particle transport for
+high-energy physics detectors simulations. The primary innovation is the
+development of algorithms and code layout compatible with GPU offloading, which
+is currently implemented with CUDA, HIP, and OpenMP.
+
 # Computer code’s functionality
+
+Celeritas currently implements standard EM physics, including multiple
+1scattering and energy loss fluctuations. It supports propagation through
+magnetic fields with user-implemented field types. Geometry support is provided
+through VecGeom for GDML (Geant4 detector description) navigation, and ORANGE
+(Oak Ridge Advanced Nested Geometry Engine) for testing and experimentation.
+Celeritas performs particle transport on GPUs using the CUDA and HIP libraries,
+and can also transport (primarily for testing) on CPUs with optional OpenMP for multithreading support.
 
 # Advantages / Benefits
 
+Celeritas has a factor-of-two performance advantage on CPU compared to Geant4
+for select problems, and a factor-of-forty performance advantage on Summit,
+where the GPUs account for the bulk of processing power.
+
 # Multiplatform
 
-Targeted at LCF supercomputers but also tested and performant on personal computers (laptops) and smaller clusters (for grid computing).
+Celeritas is targeted at LCF supercomputers but also tested and performant on personal computers (laptops) and smaller clusters (for grid computing).
+
+# DOE sponsor
+
+Christine Chalk
+Phone: 301-903-5152
+Email: christine.chalk@science.doe.gov
+
 
