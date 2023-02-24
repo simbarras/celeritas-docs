@@ -11,13 +11,14 @@ if ! hash cloc ; then
 fi
 
 cd /Users/seth/.local/src/celeritas-temp
-VERSION=$(git describe --tags --match='v*')
+COMMIT=backports/v0.2
+VERSION=$(git describe --tags --match='v*' ${COMMIT})
 
 OUTDIR=${ADMINDIR}/run-cloc/${VERSION}
 mkdir $OUTDIR || true
 
 function run_cloc() {
-  cloc --git HEAD --force-lang=CUDA,hip --csv --quiet
+  cloc --git ${COMMIT} --force-lang=CUDA,hip --csv --quiet $@
 }
 
 run_cloc --exclude-dir=app,generated,scripts,test > $OUTDIR/library.csv
