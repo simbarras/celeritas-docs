@@ -33,17 +33,19 @@ is currently implemented with CUDA, HIP, and OpenMP.
 
 # Computer code’s functionality
 
-Celeritas currently implements standard EM physics, including multiple
-1scattering and energy loss fluctuations. It supports propagation through
-magnetic fields with user-implemented field types. Geometry support is provided
-through VecGeom for GDML (Geant4 detector description) navigation, and ORANGE
-(Oak Ridge Advanced Nested Geometry Engine) for testing and experimentation.
-Celeritas performs particle transport on GPUs using the CUDA and HIP libraries,
-and can also transport (primarily for testing) on CPUs with optional OpenMP for multithreading support.
+Celeritas currently supports on-GPU simulation of EM particle showers. It
+currently implements standard EM physics, including multiple scattering and
+energy loss fluctuations. The code supports propagation through magnetic fields
+with user-implemented field types. Geometry support is provided through VecGeom
+for GDML (Geant4 detector description) navigation, and ORANGE (Oak Ridge
+Advanced Nested Geometry Engine) for testing and experimentation.  Celeritas
+performs particle transport on GPUs using the CUDA and HIP libraries, and can
+also transport (primarily for testing) on CPUs with optional OpenMP for
+multithreading support.
 
 # Advantages / Benefits
 
-Celeritas has a factor-of-two performance advantage on CPU compared to Geant4
+Celeritas has a 50% performance advantage on CPU compared to Geant4
 for select problems, and a factor-of-forty performance advantage on Summit,
 where the GPUs account for the bulk of processing power.
 
@@ -53,8 +55,5 @@ Celeritas is targeted at LCF supercomputers but also tested and performant on pe
 
 # DOE sponsor
 
-Christine Chalk
-Phone: 301-903-5152
-Email: christine.chalk@science.doe.gov
-
+DOE ASCR / Christine Chalk / christine.chalk@science.doe.gov / 301-903-5152
 
