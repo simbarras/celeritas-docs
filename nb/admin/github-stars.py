@@ -36,4 +36,5 @@ stars = celer_stars
 (fig, ax) = plt.subplots(figsize=(3,3))
 stars.plot(ylabel='# stars', ax=ax);
 ax.grid(which='major', c=(0.85,)*3)
+plt.tight_layout()
 fig.savefig('github-stars.pdf', transparent=True)
