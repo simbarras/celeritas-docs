@@ -1,0 +1,41 @@
+{
+"brem_combined": false,
+"action_diagnostic": true,
+"step_diagnostic": true,
+"step_diagnostic_maxsteps": 1000,
+"geant_options": {
+"coulomb_scattering": false,
+"eloss_fluctuation": false,
+"em_bins_per_decade": 56,
+"lpm": true,
+"msc": "none",
+"physics": "em_basic",
+"rayleigh_scattering": true
+},
+"mctruth_filename": "/home/alund/celeritas_project/celeritas/cms2018-mctruth.root",
+"mctruth_filter": {"track_id": [11580, 3768, 11296]},
+"geometry_filename": "/home/alund/celeritas_project/regression/input/cms2018.gdml",
+"_hepmc3_filename": "/home/alund/celeritas_project/regression/input/simple-cms-13TeV.hepmc3",
+"primary_gen_options": {
+"direction": {"distribution": "isotropic", "params": []},
+"energy": 10000,
+"num_events": 1,
+"pdg": 11,
+"position": [
+0,
+0,
+0
+],
+"primaries_per_event": 1300
+},
+"initializer_capacity": 524288,
+"merge_events": true,
+"max_events": 7,
+"max_num_tracks": 4096,
+"max_steps": 1000000,
+"physics_filename": "/home/alund/celeritas_project/regression/input/cms2018.gdml",
+"secondary_stack_factor": 3.0,
+"seed": 20220904,
+"sync": true,
+"use_device": false
+}
